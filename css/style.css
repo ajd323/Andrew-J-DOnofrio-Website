@@ -245,7 +245,7 @@ a  { color: inherit; text-decoration: none; }
    PAGE HEADER
    ============================================================ */
 .page-header {
-  padding: var(--space-12) var(--space-8) var(--space-8);
+  padding: var(--space-6) var(--space-8) var(--space-4);
   max-width: var(--max-w);
   margin-inline: auto;
   border-bottom: 1px solid var(--clr-rule);
