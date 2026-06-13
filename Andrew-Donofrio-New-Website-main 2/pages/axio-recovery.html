@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Axio Recovery Andrew J. D'Onofrio</title>
+  <meta name="description" content="Axio Recovery: a wearable non-invasive elbow torque tracker for UCL rehabilitation, built by Cornell DEBUT team. Led by Andrew D'Onofrio." />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Detail page layout ── */
+    .detail-hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-16);
+      align-items: start;
+      padding-block: var(--space-24) var(--space-16);
+    }
+    .detail-hero__img img {
+      width: 100%;
+      border-radius: 2px;
+      box-shadow: 8px 8px 0 var(--clr-accent-lt);
+    }
+    .detail-hero__meta {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+    .detail-hero__eyebrow {
+      font-size: var(--text-xs);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+    }
+    .detail-hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(var(--text-xl), 4vw, var(--text-3xl));
+      line-height: 1.15;
+    }
+    .detail-hero__subtitle {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: var(--text-lg);
+      color: var(--clr-ink-muted);
+      line-height: 1.5;
+    }
+    .detail-hero__lead {
+      font-size: var(--text-base);
+      color: var(--clr-ink-muted);
+      line-height: 1.8;
+    }
+
+    /* ── Stat row ── */
+    .stat-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-8);
+      padding: var(--space-8) 0;
+      border-top: 1px solid var(--clr-rule);
+      border-bottom: 1px solid var(--clr-rule);
+      margin-block: var(--space-8);
+    }
+    .stat-row__item { display: flex; flex-direction: column; gap: 2px; }
+    .stat-row__num {
+      font-family: var(--font-serif);
+      font-size: var(--text-2xl);
+      color: var(--clr-accent);
+      line-height: 1;
+    }
+    .stat-row__label {
+      font-size: var(--text-xs);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--clr-ink-muted);
+    }
+
+    /* ── Tags ── */
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-2);
+    }
+    .tag {
+      font-size: var(--text-xs);
+      letter-spacing: 0.06em;
+      padding: 2px 10px;
+      border: 1px solid var(--clr-rule);
+      border-radius: 100px;
+      color: var(--clr-ink-muted);
+    }
+
+    /* ── Section label (inline divider) ── */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      margin-bottom: var(--space-8);
+    }
+    .section-label span {
+      font-size: var(--text-xs);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      white-space: nowrap;
+      font-weight: 500;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--clr-rule);
+    }
+
+    /* ── Body copy blocks ── */
+    .detail-body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-16);
+      padding-block: var(--space-16);
+      border-top: 1px solid var(--clr-rule);
+    }
+    .detail-section p {
+      font-size: var(--text-base);
+      color: var(--clr-ink-muted);
+      line-height: 1.85;
+      margin-bottom: var(--space-4);
+    }
+    .detail-section p:last-child { margin-bottom: 0; }
+    .detail-section h3 {
+      font-family: var(--font-serif);
+      font-size: var(--text-xl);
+      margin-bottom: var(--space-4);
+    }
+
+    /* ── Two-col content grid ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-12);
+      align-items: start;
+    }
+
+    /* ── Spec table ── */
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+    }
+    .spec-table tr { border-bottom: 1px solid var(--clr-rule); }
+    .spec-table tr:last-child { border-bottom: none; }
+    .spec-table td {
+      padding: var(--space-3) var(--space-4);
+      vertical-align: top;
+    }
+    .spec-table td:first-child {
+      font-weight: 500;
+      color: var(--clr-ink);
+      white-space: nowrap;
+      width: 40%;
+    }
+    .spec-table td:last-child { color: var(--clr-ink-muted); }
+
+    /* ── Video wrapper ── */
+    .video-wrapper {
+      position: relative;
+      padding-top: 56.25%;
+      border-radius: 2px;
+      overflow: hidden;
+      background: var(--clr-surface);
+      margin-top: var(--space-6);
+    }
+    .video-wrapper iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .video-label {
+      font-size: var(--text-xs);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--clr-ink-muted);
+      margin-bottom: var(--space-2);
+    }
+
+    /* ── Competitor callout ── */
+    .callout {
+      background: var(--clr-surface);
+      border-left: 3px solid var(--clr-accent);
+      padding: var(--space-6) var(--space-8);
+      border-radius: 0 2px 2px 0;
+    }
+    .callout p {
+      font-size: var(--text-base);
+      color: var(--clr-ink-muted);
+      line-height: 1.75;
+      margin: 0;
+    }
+    .callout strong { color: var(--clr-ink); }
+
+    /* ── Back link ── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-sm);
+      color: var(--clr-accent);
+      font-weight: 500;
+      padding-top: var(--space-8);
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--clr-ink); }
+    .back-link svg {
+      width: 14px; height: 14px;
+      stroke: currentColor; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .detail-hero { grid-template-columns: 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav" id="nav">
+    <a class="nav__logo" href="../index.html">Andrew J. D'Onofrio</a>
+    <button class="nav__toggle" aria-label="Toggle menu" onclick="toggleMenu()">&#9776;</button>
+    <ul class="nav__links" id="navLinks">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="projects.html" class="active">Projects</a></li>
+      <li><a href="resume.html">Resume / CV</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <a class="back-link" href="projects.html">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Projects
+    </a>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section class="container">
+    <div class="detail-hero">
+      <div class="detail-hero__img">
+        <img
+          src="../assets/images/Screenshot+2026-01-03+at+6.42.10 PM.webp"
+          alt="Axio Recovery V2.0 wearable sensor bands and datalogger"
+        />
+      </div>
+      <div class="detail-hero__meta">
+        <p class="detail-hero__eyebrow">Sports Medicine · Diagnostic Device · Cornell DEBUT · VentureWell</p>
+        <h1>Axio Recovery</h1>
+        <p class="detail-hero__subtitle">A Non-Invasive Valgus Elbow Torque Tracker for Real-Time, In-Field UCL Rehabilitation Monitoring</p>
+        <p class="detail-hero__lead">Wearable sEMG and IMU platform that estimates elbow torque continuously during UCL reconstruction recovery bringing research-grade biomechanical accuracy out of the motion capture lab and onto the field.</p>
+
+        <div class="stat-row">
+          <div class="stat-row__item">
+            <span class="stat-row__num">2.58%</span>
+            <span class="stat-row__label">Peak Torque Error vs. OptiTrack</span>
+          </div>
+          <div class="stat-row__item">
+            <span class="stat-row__num">8</span>
+            <span class="stat-row__label">Team Members</span>
+          </div>
+          <div class="stat-row__item">
+            <span class="stat-row__num">510(k)</span>
+            <span class="stat-row__label">Regulatory Pathway</span>
+          </div>
+          <div class="stat-row__item">
+            <span class="stat-row__num">$7.2M</span>
+            <span class="stat-row__label">Projected SOM</span>
+          </div>
+        </div>
+
+        <div class="tag-row">
+          <span class="tag">sEMG</span>
+          <span class="tag">IMU</span>
+          <span class="tag">Hill's Musculoskeletal Model</span>
+          <span class="tag">Python</span>
+          <span class="tag">ESP32 / C++</span>
+          <span class="tag">OptiTrack Validation</span>
+          <span class="tag">FDA Class II</span>
+          <span class="tag">VentureWell / DEBUT</span>
+          <span class="tag">PCB Design</span>
+          <span class="tag">OpenSim</span>
+        </div>
+
+        <a
+          href="https://www.youtube.com/watch?v=kjjIC4S8IDw"
+          target="_blank"
+          rel="noopener"
+          style="display:inline-flex;align-items:center;gap:var(--space-2);margin-top:var(--space-4);font-size:var(--text-sm);color:var(--clr-accent);font-weight:500;">
+          <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+          Watch Competition Submission
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BODY ── -->
+  <section class="section">
+    <div class="container">
+      <div class="detail-body">
+
+        <!-- Problem -->
+        <div class="detail-section">
+          <div class="section-label"><span>The Problem</span></div>
+          <div class="two-col">
+            <div>
+              <h3>UCL Injuries Are a Growing Crisis</h3>
+              <p>Ulnar collateral ligament (UCL) injuries are a rising challenge among overhead athletes baseball pitchers, javelin throwers, and tennis players. UCL reconstruction (Tommy John surgery) increased 40% from 2010 to 2019 in MLB alone, with 54% of all reported injuries occurring in athletes aged 15–19. In New York State, reconstruction procedures increased 343% between 2003 and 2014, with 88.5% occurring in athletes aged 15–24.</p>
+              <p>For MLB pitchers, returning to game play after Tommy John surgery requires an average of 20.5 months (~600 days). Even then, performance is frequently reduced. Across the US, approximately 40,000 UCL-related injuries annually could immediately benefit from better rehabilitation monitoring tools.</p>
+            </div>
+            <div>
+              <h3>The Monitoring Gap</h3>
+              <p>Current tools for characterizing UCL stress during rehabilitation fall into three categories all with significant limitations:</p>
+              <p><strong>Consumer wearables</strong> (e.g., Driveline's Pulse) are accessible but biomechanically inaccurate, carrying an estimated 38.7% error in elbow torque estimation.</p>
+              <p><strong>MRI consultations</strong> can diagnose structural damage but cannot continuously assess dynamic elbow loading during throwing and rehabilitation activities.</p>
+              <p><strong>Motion capture studios</strong> (e.g., Kinitrax Hawkeye) offer research-grade accuracy but cost over $1,000,000 to install and require controlled lab environments, making field deployment impossible.</p>
+              <div class="callout" style="margin-top:var(--space-6);">
+                <p>No device on the market delivers <strong>accurate, personalized, non-invasive, and low-cost UCL stress analysis</strong> for athletes in the field.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- My Role -->
+        <div class="detail-section">
+          <div class="section-label"><span>My Role</span></div>
+          <p>As Team Captain and Project Manager for the Cornell DEBUT team, I led a group of eight engineers across all phases of development from initial problem scoping and stakeholder interviews (10+ clinical staff and D1 athletes) through to hardware iteration, software development, validation testing, and the VentureWell Phase 2B submission.</p>
+          <p>My direct contributions included leading the translation of the Hill's Musculoskeletal Model into the Python-based processing pipeline, coordinating the OptiTrack motion capture validation sessions at Cornell, overseeing PCB design reviews, and authoring the regulatory and commercialization sections of the feasibility report. I also led our market research immersion sessions with baseball and tennis players that informed the final wearability-versus-accuracy design tradeoffs.</p>
+        </div>
+
+        <!-- How It Works -->
+        <div class="detail-section">
+          <div class="section-label"><span>How It Works</span></div>
+          <h3>Patient-Specific Hill's Musculoskeletal Model</h3>
+          <p>Axio Recovery estimates valgus elbow torque using a patient-specific Hill's Musculoskeletal Model (HMM), calibrated to the individual athlete with a one-time setup protocol guided by the prescribing physician. The core equation is:</p>
+          <p style="font-family:var(--font-serif);font-size:var(--text-lg);text-align:center;padding:var(--space-6);background:var(--clr-surface);border-radius:2px;letter-spacing:0.05em;">
+            τ(θ, t) = Σ r(θ, t) · F(θ, t)
+          </p>
+          <p>Where the radius component <em>r</em> represents the distance from each muscle head to the elbow joint (measured via IMUs), and the force component <em>F</em> represents the contraction of each target muscle group (measured via sEMG). The model targets the biceps brachii long head, triceps brachii long head, and pronator teres identified through extensive experimentation as dominant contributors (>10% each) to UCL stress.</p>
+          <p>Unlike generalized biomechanical models used in lab settings, the HMM is calibrated to each athlete's individual anthropometrics and muscle activation profiles, reducing reliance on population-average assumptions.</p>
+
+          <div class="two-col" style="margin-top:var(--space-8);">
+            <div>
+              <h3>Hardware</h3>
+              <p>The physical system consists of wearable sensor bands and a waist-worn datalogger. MyoWare 2.0 sEMG sensors and LGD320 9DOF IMUs are encased in ABS plastic housings mounted on nylon compression bands. These connect to a Sparkfun ESP32-WROOM microcontroller via I2C (IMUs) and analog channels (sEMGs).</p>
+              <p>Custom PCBs include analog bandpass filters, USB-C charging, and I2C multiplexers. The ESP32 firmware (C++) handles signal processing at ~10 kHz sampling, compiling, and packing data to a microSD card. The system provides 3+ hours of continuous datalogging covering a full training session with a sensor band mass under 75g and surface temperature below 40°C.</p>
+            </div>
+            <div>
+              <h3>Software</h3>
+              <p>The processing pipeline is built in Python and hosted on the Axio Recovery web platform. After a session, the athlete or clinician uploads the recorded .CSV from the datalogger. The Hill-Musculoskeletal pipeline processes the raw sEMG and IMU signals, applies the calibrated model, and outputs elbow torque estimates with session-level analytics for the physician.</p>
+              <p>The software stack is stored in an ISO-compliant GitLab repository. Edge case assessments including biceps curls and lateral arm movements confirmed motion-detection error below 5% for arm kinematics outside of throwing activities.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Specs -->
+        <div class="detail-section">
+          <div class="section-label"><span>Device Specifications</span></div>
+          <div class="two-col">
+            <table class="spec-table">
+              <tr><td>Sensors</td><td>MyoWare 2.0 sEMG · LGD320 9DOF IMU</td></tr>
+              <tr><td>Microcontroller</td><td>Sparkfun ESP32-WROOM</td></tr>
+              <tr><td>Data Rate</td><td>~10 kHz sampling</td></tr>
+              <tr><td>Battery Life</td><td>3+ hours continuous logging</td></tr>
+              <tr><td>Band Mass</td><td>&lt; 75 g per band</td></tr>
+              <tr><td>Surface Temp</td><td>&lt; 40°C</td></tr>
+              <tr><td>Connectivity</td><td>MicroSD (current) · LoRa / BLE (planned)</td></tr>
+            </table>
+            <table class="spec-table">
+              <tr><td>Software Stack</td><td>Python · ISO-compliant GitLab · Cloud-hosted</td></tr>
+              <tr><td>Calibration</td><td>One-time physician-guided protocol</td></tr>
+              <tr><td>Target Muscles</td><td>Biceps brachii long head · Triceps brachii long head · Pronator teres</td></tr>
+              <tr><td>Regulatory Class</td><td>FDA Class II 21 CFR 890.1375</td></tr>
+              <tr><td>Predicate Device</td><td>CMAP Pro™ (K113074)</td></tr>
+              <tr><td>Retail Price</td><td>$549.99 (3 bands + datalogger + software)</td></tr>
+              <tr><td>COGS</td><td>~$353.73 per unit</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Validation -->
+        <div class="detail-section">
+          <div class="section-label"><span>Verification &amp; Validation Testing</span></div>
+          <div class="two-col">
+            <div>
+              <h3>Verification (V2.0)</h3>
+              <p>Verification testing with six participants confirmed the prototype satisfies all user-defined design requirements. Participants completed full baseball pitching regimens without observable restriction in range of motion, and no electrical dropouts or sensor migration occurred across an 8-hour continuous wear trial. One participant reported mild contact dermatitis from EKG pad exposure, flagged for resolution in the next iteration.</p>
+            </div>
+            <div>
+              <h3>Initial Validation</h3>
+              <p>Preliminary validation was conducted in the OptiTrack motion capture studio at Cornell University. Low-intensity overhand throws (~20 mph) were recorded simultaneously with Axio Recovery and the OptiTrack system. Elbow torque from OptiTrack was computed via the Upper Extremity Dynamic Model in OpenSim with MATLAB post-processing using athlete anthropometrics.</p>
+              <p>In one representative trial, Axio Recovery estimated a peak torque of <strong>55.6 N·m</strong> against the OptiTrack ground truth of <strong>54.2 N·m</strong> yielding <strong>2.58% error</strong>. This is a 15× improvement over the 38.7% error reported for Driveline's Pulse.</p>
+            </div>
+          </div>
+
+          <div style="margin-top:var(--space-10);">
+            <p class="video-label">Motion Capture Studio Validation Session</p>
+            <div class="video-wrapper">
+              <iframe
+                src="https://www.youtube.com/embed/ATjkNZ2zBJQ"
+                title="Axio Recovery Motion Capture Validation"
+                allowfullscreen
+                loading="lazy">
+              </iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- Competition submission -->
+        <div class="detail-section">
+          <div class="section-label"><span>DEBUT Competition Submission</span></div>
+          <p>The team submitted Axio Recovery as a Phase 2B entry to the VentureWell DEBUT (Design by Biomedical Undergraduate Teams) competition in June 2026. The submission covers the full commercialization pathway regulatory strategy (510(k) via 21 CFR 890.1375), reimbursement (RTM CPT codes 98975–98985), manufacturing cost analysis (COGS ~$353.73, retail $549.99), and a market impact analysis projecting a serviceable obtainable market of ~$7.22M annually at 5% adoption of the U.S. wearable sports monitoring segment.</p>
+          <p class="video-label" style="margin-top:var(--space-8);">DEBUT VentureWell Competition Submission Video</p>
+          <div class="video-wrapper">
+            <iframe
+              src="https://www.youtube.com/embed/kjjIC4S8IDw"
+              title="Axio Recovery DEBUT Competition Submission"
+              allowfullscreen
+              loading="lazy">
+            </iframe>
+          </div>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="detail-section">
+          <div class="section-label"><span>Next Steps</span></div>
+          <div class="two-col">
+            <div>
+              <h3>Hardware Roadmap</h3>
+              <p>The immediate priority is wireless data streaming transitioning from wired Molex connectors to Low Range Radio (LoRa) or Bluetooth Low Energy (BLE) to improve athlete comfort. The next iteration also integrates a 2.7" LCD touchscreen into the datalogger for a digitized calibration walkthrough, replacing the current paper IFU-guided protocol.</p>
+            </div>
+            <div>
+              <h3>Clinical Validation</h3>
+              <p>A Comparative Effectiveness Research (CER) study comparing Axio Recovery against professional motion capture is in process for IRB approval through Cornell University. The study will recruit experienced baseball players and directly compare estimated valgus elbow torque against OptiTrack inverse kinematics across realistic throwing intensities establishing the evidence base for 510(k) submission and clinical adoption.</p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /detail-body -->
+    </div><!-- /container -->
+  </section>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span>&copy; 2026 Andrew J. D'Onofrio</span>
+      <div class="footer__links">
+        <a href="http://www.linkedin.com/in/ajd323/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:ajd323@cornell.edu">ajd323@cornell.edu</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
