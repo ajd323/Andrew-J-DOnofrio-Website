@@ -9,13 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
-    /* ──────────────────────────────────────────────────────────
-       Typography baseline for this page
-       Serif (EB Garamond): h1, project h2, category labels
-       Sans (Inter):        eyebrows, body, buttons, metadata
-       ────────────────────────────────────────────────────────── */
-
-    /* Filter bar */
     .filter-bar {
       position: sticky;
       top: var(--nav-h);
@@ -41,8 +34,6 @@
       gap: var(--space-2);
       align-items: center;
     }
-
-    /* Unified small uppercase label style — used for filter label & project eyebrows */
     .filter-label,
     .project-item__eyebrow {
       font-family: var(--font-sans);
@@ -57,7 +48,6 @@
       color: var(--clr-accent);
       margin-bottom: var(--space-2);
     }
-
     .filter-btn {
       font-family: var(--font-sans);
       font-size: var(--text-sm);
@@ -71,21 +61,9 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-    .filter-btn:hover {
-      border-color: var(--clr-ink);
-      color: var(--clr-ink);
-    }
-    .filter-btn.active {
-      background: var(--clr-accent);
-      border-color: var(--clr-accent);
-      color: var(--clr-white);
-    }
-
-    .filter-search {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
+    .filter-btn:hover { border-color: var(--clr-ink); color: var(--clr-ink); }
+    .filter-btn.active { background: var(--clr-accent); border-color: var(--clr-accent); color: var(--clr-white); }
+    .filter-search { position: relative; display: flex; align-items: center; }
     .filter-search input {
       font-family: var(--font-sans);
       font-size: var(--text-sm);
@@ -98,82 +76,40 @@
       outline: none;
       transition: border-color 0.2s, width 0.2s;
     }
-    .filter-search input:focus {
-      border-color: var(--clr-accent);
-      width: 260px;
-    }
+    .filter-search input:focus { border-color: var(--clr-accent); width: 260px; }
     .filter-search svg {
-      position: absolute;
-      left: 12px;
-      width: 14px;
-      height: 14px;
-      color: var(--clr-ink-muted);
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      pointer-events: none;
+      position: absolute; left: 12px; width: 14px; height: 14px;
+      color: var(--clr-ink-muted); stroke: currentColor; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none;
     }
-
-    /* Result count — matches body text */
     .result-count {
-      font-family: var(--font-sans);
-      font-size: var(--text-sm);
-      color: var(--clr-ink-muted);
-      padding-top: var(--space-4);
-      padding-inline: var(--space-8);
-      max-width: var(--max-w);
-      margin-inline: auto;
+      font-family: var(--font-sans); font-size: var(--text-sm);
+      color: var(--clr-ink-muted); padding-top: var(--space-4);
+      padding-inline: var(--space-8); max-width: var(--max-w); margin-inline: auto;
     }
     .result-count strong { color: var(--clr-ink); font-weight: 600; }
-
-    /* Empty state — matches body text size */
     .no-results {
-      display: none;
-      text-align: center;
-      padding: var(--space-16) var(--space-8);
-      font-family: var(--font-sans);
-      font-size: var(--text-base);
-      color: var(--clr-ink-muted);
+      display: none; text-align: center; padding: var(--space-16) var(--space-8);
+      font-family: var(--font-sans); font-size: var(--text-base); color: var(--clr-ink-muted);
     }
     .no-results.show { display: block; }
     .no-results strong {
-      font-family: var(--font-serif);
-      font-size: var(--text-xl);
-      font-weight: 500;
-      color: var(--clr-ink);
-      display: block;
-      margin-bottom: var(--space-2);
+      font-family: var(--font-serif); font-size: var(--text-xl); font-weight: 500;
+      color: var(--clr-ink); display: block; margin-bottom: var(--space-2);
     }
-
-    /* Project summary — unified body size */
     .project-summary {
-      font-family: var(--font-sans);
-      font-size: var(--text-base);
-      color: var(--clr-ink-muted);
-      line-height: 1.65;
-      margin-bottom: var(--space-3);
+      font-family: var(--font-sans); font-size: var(--text-base);
+      color: var(--clr-ink-muted); line-height: 1.65; margin-bottom: var(--space-3);
     }
-    .project-summary strong {
-      color: var(--clr-ink);
-      font-weight: 600;
-    }
-
-    /* Tags click hover */
-    .tag {
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s, border-color 0.2s;
-    }
-    .tag:hover {
-      background: var(--clr-accent);
-      color: var(--clr-white);
-      border-color: var(--clr-accent);
-    }
-
+    .project-summary strong { color: var(--clr-ink); font-weight: 600; }
+    .tag { cursor: pointer; transition: background 0.2s, color 0.2s, border-color 0.2s; }
+    .tag:hover { background: var(--clr-accent); color: var(--clr-white); border-color: var(--clr-accent); }
     .project-category.hidden { display: none; }
     .project-item.hidden { display: none; }
-
+    /* Real images in project cards */
+    .project-item__img img {
+      width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 4px;
+    }
     @media (max-width: 700px) {
       .filter-bar__inner { gap: var(--space-3); padding-inline: var(--space-4); }
       .filter-search input { width: 100%; }
@@ -197,7 +133,7 @@
   <div class="page-header">
     <p class="page-header__eyebrow">Selected Work</p>
     <h1>Projects</h1>
-    <p class="projects-intro">Selected professional and academic work across medical device design, IoT, FEA, and consumer product development. Projects associated with Siemens Healthineers and J&amp;J MedTech are omitted for confidentiality. Feel free to <a href="mailto:ajd323@cornell.edu" style="color:var(--clr-accent)">reach out</a> with questions.</p>
+    <p class="projects-intro">Selected professional and academic work across medical device design, robotics, FEA, and electromechanical product development. Projects associated with Siemens Healthineers and J&amp;J MedTech are omitted for confidentiality. Feel free to <a href="mailto:ajd323@cornell.edu" style="color:var(--clr-accent)">reach out</a> with questions.</p>
   </div>
 
   <div class="filter-bar">
@@ -205,7 +141,7 @@
       <div class="filter-group">
         <span class="filter-label">Filter:</span>
         <button class="filter-btn active" data-category="all">All</button>
-        <button class="filter-btn" data-category="consumer">Consumer</button>
+        <button class="filter-btn" data-category="hardware">Hardware &amp; Robotics</button>
         <button class="filter-btn" data-category="medical">Medical Device</button>
         <button class="filter-btn" data-category="simulation">Simulations</button>
       </div>
@@ -221,19 +157,42 @@
   <section class="section" style="padding-top: var(--space-4);">
     <div class="container">
 
-      <!-- CONSUMER PRODUCTS -->
-      <div class="project-category" data-category="consumer">
-        <div class="project-category__label"><span>Consumer Products</span></div>
+      <!-- HARDWARE & ROBOTICS -->
+      <div class="project-category" data-category="hardware">
+        <div class="project-category__label"><span>Hardware &amp; Robotics</span></div>
         <div class="project-list">
 
-          <article class="project-item" data-category="consumer" data-search="iot lorawan gps baton tracker red newt racing seneca arduino streamlit 3d printing user research">
+          <!-- Fast Robots -->
+          <article class="project-item" data-category="hardware" data-search="fast robots autonomous robot pid kalman filter ble bluetooth artemis nano c++ python imu tof localization mapping stunt embedded systems control">
+            <div class="project-item__img">
+              <a href="fast-robots.html">
+                <img src="../assets/images/FR_Title_1.png" alt="Fast Robots autonomous robot" loading="lazy" />
+              </a>
+            </div>
+            <div class="project-item__body">
+              <p class="project-item__eyebrow">Robotics · Embedded C++ · PID Control · Kalman Filter · BLE</p>
+              <h2>Autonomous High-Speed Robot <em>(Fast Robots, MAE 4190)</em></h2>
+              <p class="project-summary">A full-semester embedded systems sequence building a <strong>BLE-controlled autonomous stunt car</strong>; implemented linear and orientation <strong>PID controllers</strong>, <strong>Kalman filtering</strong> for ToF state estimation, and a localization pipeline — all communicated wirelessly via Python notebooks over Bluetooth.</p>
+              <div class="project-tags">
+                <span class="tag">C++ / Artemis Nano</span>
+                <span class="tag">PID Control</span>
+                <span class="tag">Kalman Filter</span>
+                <span class="tag">BLE / Python</span>
+                <span class="tag">ToF Sensing</span>
+                <span class="tag">Localization</span>
+              </div>
+              <a class="project-item__link" href="https://ajd323.github.io/Fast-Robots-MAE4190/" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                View Project Site
+              </a>
+            </div>
+          </article>
+
+          <!-- IoT Baton -->
+          <article class="project-item" data-category="hardware" data-search="iot lorawan gps baton tracker red newt racing seneca arduino streamlit 3d printing user research">
             <div class="project-item__img">
               <a href="iot-baton.html">
-                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="400" height="300" fill="#0A1A2A"/>
-                  <text x="200" y="140" font-family="Inter,sans-serif" font-size="64" font-weight="700" fill="#C0402A" text-anchor="middle">IoT</text>
-                  <text x="200" y="180" font-family="Inter,sans-serif" font-size="14" fill="#90A0B0" text-anchor="middle">GPS Baton Tracker</text>
-                </svg>
+                <img src="../assets/images/Baton_Visual_1.png" alt="Red Newt Racing GPS Baton Tracker" loading="lazy" />
               </a>
             </div>
             <div class="project-item__body">
@@ -254,22 +213,20 @@
             </div>
           </article>
 
-          <article class="project-item" data-category="consumer" data-search="aerodry clothes drying fan college dfm fusion360 financial modeling prototyping consumer product mechanical design">
+          <!-- AeroDry -->
+          <article class="project-item" data-category="hardware" data-search="aerodry clothes drying fan college dfm fusion360 ansys fluent financial modeling prototyping consumer product mechanical design">
             <div class="project-item__img">
               <a href="aerodry.html">
-                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="400" height="300" fill="#1A2A1A"/>
-                  <text x="200" y="140" font-family="Inter,sans-serif" font-size="64" font-weight="700" fill="#C0402A" text-anchor="middle">AD</text>
-                  <text x="200" y="180" font-family="Inter,sans-serif" font-size="14" fill="#90A0B0" text-anchor="middle">AeroDry</text>
-                </svg>
+                <img src="../assets/images/AeroDry_Title_1.webp" alt="AeroDry clothes drying device" loading="lazy" />
               </a>
             </div>
             <div class="project-item__body">
-              <p class="project-item__eyebrow">Consumer Product · Mechanical Design · DFM</p>
+              <p class="project-item__eyebrow">Consumer Product · Mechanical Design · DFM · ANSYS Fluent</p>
               <h2>Custom Clothes Fan for College Students <em>(AeroDry)</em></h2>
               <p class="project-summary">A closet-mounted air-distribution tube achieving a <strong>~20x reduction in drying time</strong> for damp laundry, validated through iterative prototyping, MATLAB flow modeling, and ANSYS Fluent FEA matching hand calculations to <strong>>90% accuracy</strong>.</p>
               <div class="project-tags">
                 <span class="tag">Fusion360</span>
+                <span class="tag">ANSYS Fluent</span>
                 <span class="tag">DFM</span>
                 <span class="tag">Financial Modeling</span>
                 <span class="tag">Prototyping</span>
@@ -289,14 +246,11 @@
         <div class="project-category__label"><span>Medical Device</span></div>
         <div class="project-list">
 
+          <!-- Axio Recovery -->
           <article class="project-item" data-category="medical" data-search="axio recovery ucl torque tracker sports medicine sEMG IMU hills musculoskeletal python optitrack fda 510k venturewell debut baseball mlb diagnostic device">
             <div class="project-item__img">
               <a href="axio-recovery.html">
-                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="400" height="300" fill="#2C3E50"/>
-                  <text x="200" y="140" font-family="Inter,sans-serif" font-size="64" font-weight="700" fill="#C0402A" text-anchor="middle">AR</text>
-                  <text x="200" y="180" font-family="Inter,sans-serif" font-size="14" fill="#90A0B0" text-anchor="middle">Axio Recovery</text>
-                </svg>
+                <img src="../assets/images/ETT_Build_1.webp" alt="Axio Recovery elbow torque tracker" loading="lazy" />
               </a>
             </div>
             <div class="project-item__body">
@@ -317,14 +271,11 @@
             </div>
           </article>
 
+          <!-- Steady Stride -->
           <article class="project-item" data-category="medical" data-search="steady stride tremor resistant cane parkinson assistive technology rapid prototyping matlab irb clinical trials medtronic bmes award winner">
             <div class="project-item__img">
               <a href="steady-stride.html">
-                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="400" height="300" fill="#1A1A2A"/>
-                  <text x="200" y="140" font-family="Inter,sans-serif" font-size="64" font-weight="700" fill="#C0402A" text-anchor="middle">SS</text>
-                  <text x="200" y="180" font-family="Inter,sans-serif" font-size="14" fill="#90A0B0" text-anchor="middle">Steady Stride</text>
-                </svg>
+                <img src="../assets/images/Steady_Title_1.webp" alt="Steady Stride tremor-resistant cane" loading="lazy" />
               </a>
             </div>
             <div class="project-item__body">
@@ -344,20 +295,17 @@
             </div>
           </article>
 
+          <!-- CACOM -->
           <article class="project-item" data-category="medical" data-search="cacom carotid artery cardiac output monitor cardiovascular wearable pcb kicad ultrasound fea blood flow">
             <div class="project-item__img">
               <a href="cacom.html">
-                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="400" height="300" fill="#1A0A0A"/>
-                  <text x="200" y="140" font-family="Inter,sans-serif" font-size="48" font-weight="700" fill="#C0402A" text-anchor="middle">CACOM</text>
-                  <text x="200" y="180" font-family="Inter,sans-serif" font-size="14" fill="#90A0B0" text-anchor="middle">Cardiac Output Monitor</text>
-                </svg>
+                <img src="../assets/images/CACOM_Title_1.webp" alt="CACOM cardiac output monitor" loading="lazy" />
               </a>
             </div>
             <div class="project-item__body">
               <p class="project-item__eyebrow">Cardiovascular · Wearable Device · PCB Design</p>
               <h2>Carotid Artery Cardiac Output Monitor <em>(CACOM)</em></h2>
-              <p class="project-summary">A non-invasive carotid wearable estimating continuous blood flow via custom 2-layer PCB and applanation tonometry FEA, achieving <strong>under 5% error</strong> with applanation tonometry method.</p>
+              <p class="project-summary">A non-invasive carotid wearable estimating continuous blood flow via custom 2-layer PCB and applanation tonometry FEA, achieving <strong>under 5% error</strong> on arterial deformation.</p>
               <div class="project-tags">
                 <span class="tag">PCB Design (KiCAD)</span>
                 <span class="tag">Ultrasound</span>
@@ -371,14 +319,11 @@
             </div>
           </article>
 
+          <!-- Vascular Graft -->
           <article class="project-item" data-category="medical" data-search="petg anti-kink coil synthetic vascular graft biomedical manufacturing startup anova biofoundry iso standards electromechanical design">
             <div class="project-item__img">
               <a href="vascular-graft.html">
-                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="400" height="300" fill="#1A2A2A"/>
-                  <text x="200" y="140" font-family="Inter,sans-serif" font-size="64" font-weight="700" fill="#C0402A" text-anchor="middle">VG</text>
-                  <text x="200" y="180" font-family="Inter,sans-serif" font-size="14" fill="#90A0B0" text-anchor="middle">Vascular Graft</text>
-                </svg>
+                <img src="../assets/images/Coil_Title_1.webp" alt="PETG Anti-Kink Coil for synthetic vascular grafts" loading="lazy" />
               </a>
             </div>
             <div class="project-item__body">
@@ -406,7 +351,8 @@
         <div class="project-category__label"><span>Simulations</span></div>
         <div class="project-list">
 
-          <article class="project-item" data-category="simulation" data-search="nozzle chocolate 3d printing comsol multiphysics cfd computational fluid dynamics non-newtonian heat transfer cocoa press">
+          <!-- Chocolate FEA -->
+          <article class="project-item" data-category="simulation" data-search="nozzle chocolate 3d printing comsol multiphysics cfd computational fluid dynamics non-newtonian heat transfer cocoa press cross-wlf">
             <div class="project-item__img">
               <a href="chocolate-fea.html">
                 <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
@@ -433,14 +379,11 @@
             </div>
           </article>
 
-          <article class="project-item" data-category="simulation" data-search="blade weight optimization airfoil structural fea ansys mesh convergence aerospace airplane">
+          <!-- Blade FEA -->
+          <article class="project-item" data-category="simulation" data-search="blade weight optimization airfoil structural fea ansys mesh convergence aerospace airplane von mises">
             <div class="project-item__img">
               <a href="blade-fea.html">
-                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="400" height="300" fill="#0A1A2A"/>
-                  <text x="200" y="140" font-family="Inter,sans-serif" font-size="64" font-weight="700" fill="#C0402A" text-anchor="middle">FEA</text>
-                  <text x="200" y="180" font-family="Inter,sans-serif" font-size="14" fill="#90A0B0" text-anchor="middle">Blade Optimization</text>
-                </svg>
+                <img src="../assets/images/Blade_Title_1.webp" alt="Blade optimization FEA ANSYS" loading="lazy" />
               </a>
             </div>
             <div class="project-item__body">
@@ -490,10 +433,8 @@
       const noResults = document.getElementById('noResults');
       const resultCount = document.getElementById('resultCount');
       const allTags = document.querySelectorAll('.tag');
-
       let activeCategory = 'all';
       let activeSearch = '';
-
       function applyFilters() {
         let visibleCount = 0;
         allItems.forEach(item => {
@@ -517,7 +458,6 @@
           } else { resultCount.textContent = ''; }
         }
       }
-
       filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
           filterBtns.forEach(b => b.classList.remove('active'));
@@ -526,12 +466,10 @@
           applyFilters();
         });
       });
-
       searchInput.addEventListener('input', e => {
         activeSearch = e.target.value.trim().toLowerCase();
         applyFilters();
       });
-
       allTags.forEach(tag => {
         tag.addEventListener('click', () => {
           searchInput.value = tag.textContent.trim();
