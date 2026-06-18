@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     /* ── Two-column CV layout ── */
     .cv-layout {
@@ -52,14 +52,29 @@
       padding-top: var(--space-4);
     }
     .cv-sidebar__nav a {
+      position: relative;
+      display: inline-block;
       font-size: var(--text-xs);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--clr-ink-muted);
+      font-weight: 300;
+      letter-spacing: 0.01em;
+      color: rgba(26,32,51,0.6);
       padding: var(--space-1) 0;
       transition: color 0.2s;
     }
-    .cv-sidebar__nav a:hover { color: var(--clr-accent); }
+    .cv-sidebar__nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: var(--clr-accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.25s ease;
+    }
+    .cv-sidebar__nav a:hover { color: var(--clr-ink); }
+    .cv-sidebar__nav a:hover::after { transform: scaleX(1); }
 
     /* Main content */
     .cv-main { display: flex; flex-direction: column; }
