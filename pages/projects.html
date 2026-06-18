@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     .filter-bar {
       position: sticky;
@@ -50,14 +50,15 @@
     }
     .filter-btn {
       font-family: var(--font-sans);
-      font-size: var(--text-sm);
+      font-size: var(--text-xs);
       font-weight: 500;
-      letter-spacing: 0.02em;
-      padding: 5px 14px;
-      border: 1.5px solid var(--clr-rule);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border: 1px solid var(--clr-rule);
       background: transparent;
       color: var(--clr-ink-muted);
-      border-radius: 100px;
+      border-radius: 0;
       cursor: pointer;
       transition: all 0.2s;
     }
@@ -159,7 +160,13 @@
 
       <!-- HARDWARE & ROBOTICS -->
       <div class="project-category" data-category="hardware">
-        <div class="project-category__label"><span>Hardware &amp; Robotics</span></div>
+        <div class="project-category__label">
+          <span class="project-category__num">01</span>
+          <div class="project-category__label-text">
+            <p class="project-category__eyebrow">Engineering</p>
+            <span>Hardware &amp; Robotics</span>
+          </div>
+        </div>
         <div class="project-list">
 
           <!-- Fast Robots -->
@@ -243,7 +250,13 @@
 
       <!-- MEDICAL DEVICE -->
       <div class="project-category" data-category="medical">
-        <div class="project-category__label"><span>Medical Device</span></div>
+        <div class="project-category__label">
+          <span class="project-category__num">02</span>
+          <div class="project-category__label-text">
+            <p class="project-category__eyebrow">Medicine</p>
+            <span>Medical Device</span>
+          </div>
+        </div>
         <div class="project-list">
 
           <!-- Axio Recovery -->
@@ -348,7 +361,13 @@
 
       <!-- SIMULATIONS -->
       <div class="project-category" data-category="simulation">
-        <div class="project-category__label"><span>Simulations</span></div>
+        <div class="project-category__label">
+          <span class="project-category__num">03</span>
+          <div class="project-category__label-text">
+            <p class="project-category__eyebrow">Computation</p>
+            <span>Simulations</span>
+          </div>
+        </div>
         <div class="project-list">
 
           <!-- Chocolate FEA -->
