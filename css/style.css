@@ -171,16 +171,55 @@ a  { color: inherit; text-decoration: none; }
    HERO
    ============================================================ */
 .hero {
+  position: relative;
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: minmax(0, 640px) minmax(0, 560px);
+  justify-content: space-between;
   align-items: center;
   min-height: calc(100vh - var(--nav-h));
+  max-width: 1440px;
+  margin-inline: auto;
   padding-inline: var(--page-gutter);
   padding-block: var(--space-16);
-  gap: clamp(1rem, 2vw, var(--space-8));
+  gap: clamp(1rem, 3vw, var(--space-12));
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: clamp(420px, 38vw, 560px);
+  width: 240px;
+  height: 240px;
+  transform: translateY(-50%);
+  background-image: radial-gradient(var(--clr-ink) 1.5px, transparent 1.5px);
+  background-size: 22px 22px;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: var(--space-16);
+  right: clamp(420px, 38vw, 560px);
+  width: 140px;
+  height: 140px;
+  transform: translate(40%, 0);
+  border: 1px solid var(--clr-accent);
+  opacity: 0.15;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+.hero__text,
+.hero__photo {
+  position: relative;
+  z-index: 1;
 }
 .hero__text {
-  max-width: 600px;
+  max-width: 640px;
+  width: 100%;
 }
 .hero__eyebrow {
   font-size: var(--text-xs);
@@ -237,8 +276,8 @@ a  { color: inherit; text-decoration: none; }
 .hero__photo-inner {
   position: relative;
   width: 100%;
-  max-width: 420px;
-  aspect-ratio: 3 / 4;
+  max-width: 480px;
+  aspect-ratio: 4 / 5;
 }
 .hero__photo-frame {
   position: absolute;
@@ -262,7 +301,7 @@ a  { color: inherit; text-decoration: none; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;
+  object-position: center 20%;
   display: block;
   filter: grayscale(15%);
   transition: filter 0.7s ease;
@@ -670,6 +709,8 @@ a  { color: inherit; text-decoration: none; }
     padding-block: var(--space-12);
     gap: var(--space-12);
   }
+  .hero::before,
+  .hero::after { display: none; }
   .hero__photo {
     order: -1;
     justify-content: center;
