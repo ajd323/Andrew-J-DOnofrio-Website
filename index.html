@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
 </head>
-<body class="home">
+<body>
   <nav class="nav" id="nav">
     <a class="nav__logo" href="index.html">Andrew J. D'Onofrio</a>
     <button class="nav__toggle" aria-label="Toggle menu" onclick="toggleMenu()">&#9776;</button>
@@ -23,6 +23,12 @@
   </nav>
 
   <header class="hero">
+    <span class="hero__bg-hex-accent" aria-hidden="true">
+      <svg viewBox="0 0 34 40"><polygon points="17,2 32,11 32,29 17,38 2,29 2,11" fill="none" stroke="#C0402A" stroke-width="1.5" opacity="0.35"/></svg>
+    </span>
+    <span class="hero__bg-hex-accent hero__bg-hex-accent--2" aria-hidden="true">
+      <svg viewBox="0 0 34 40"><polygon points="17,2 32,11 32,29 17,38 2,29 2,11" fill="#C0402A" opacity="0.12"/></svg>
+    </span>
     <div class="hero__text">
       <p class="hero__eyebrow">Mechanical Engineer &middot; MedTech</p>
       <h1 class="hero__name">
