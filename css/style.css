@@ -53,16 +53,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Homepage-only: soft diagonal light-streak backdrop */
+/* Homepage-only: thin translucent diagonal line backdrop */
 body.home {
   background-color: var(--clr-bg);
   background-image:
-    linear-gradient(125deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 52%),
     repeating-linear-gradient(125deg,
-      rgba(255,255,255,0) 0px,
-      rgba(255,255,255,0) 70px,
-      rgba(255,255,255,0.55) 105px,
-      rgba(255,255,255,0) 150px);
+      transparent 0px,
+      transparent 26px,
+      rgba(26,32,51,0.05) 26px,
+      rgba(26,32,51,0.05) 28px);
   background-attachment: fixed;
 }
 img, svg { display: block; max-width: 100%; }
