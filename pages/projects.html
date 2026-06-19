@@ -21,7 +21,7 @@
     .filter-bar__inner {
       max-width: var(--max-w);
       margin-inline: auto;
-      padding-inline: var(--space-8);
+      padding-inline: var(--page-gutter);
       display: flex;
       flex-wrap: wrap;
       gap: var(--space-6);
@@ -67,7 +67,7 @@
     .filter-search { position: relative; display: flex; align-items: center; }
     .filter-search input {
       font-family: var(--font-sans);
-      font-size: var(--text-sm);
+      font-size: 16px;
       padding: 7px 14px 7px 36px;
       border: 1.5px solid var(--clr-rule);
       background: var(--clr-surface);
@@ -86,11 +86,11 @@
     .result-count {
       font-family: var(--font-sans); font-size: var(--text-sm);
       color: var(--clr-ink-muted); padding-top: var(--space-4);
-      padding-inline: var(--space-8); max-width: var(--max-w); margin-inline: auto;
+      padding-inline: var(--page-gutter); max-width: var(--max-w); margin-inline: auto;
     }
     .result-count strong { color: var(--clr-ink); font-weight: 600; }
     .no-results {
-      display: none; text-align: center; padding: var(--space-16) var(--space-8);
+      display: none; text-align: center; padding: var(--space-16) var(--page-gutter);
       font-family: var(--font-sans); font-size: var(--text-base); color: var(--clr-ink-muted);
     }
     .no-results.show { display: block; }
@@ -112,10 +112,16 @@
       width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 4px;
     }
     @media (max-width: 700px) {
-      .filter-bar__inner { gap: var(--space-3); padding-inline: var(--space-4); }
+      .filter-bar__inner { gap: var(--space-3); padding-inline: var(--page-gutter); }
       .filter-search input { width: 100%; }
       .filter-search { flex: 1; min-width: 200px; }
       .filter-label { display: none; }
+    }
+    @media (max-width: 480px) {
+      .filter-group { gap: var(--space-2); width: 100%; }
+      .filter-btn { padding: 8px 12px; flex: 1 1 auto; text-align: center; }
+      .filter-search { width: 100%; min-width: 0; }
+      .filter-search input:focus { width: 100%; }
     }
   </style>
 </head>
@@ -177,7 +183,7 @@
             </div>
             <div class="project-item__body">
               <p class="project-item__eyebrow">Robotics · Embedded C++ · PID Control · Kalman Filter · BLE</p>
-              <h2>Autonomous High-Speed Robot <em>(Fast Robots, MAE 4190)</em></h2>
+              <h2>Autonomous High-Speed Stunt Car</h2>
               <p class="project-summary">A full-semester embedded systems sequence building a <strong>BLE-controlled autonomous stunt car</strong>; implemented linear and orientation <strong>PID controllers</strong>, <strong>Kalman filtering</strong> for ToF state estimation, and a localization pipeline, all communicated wirelessly via Python notebooks over Bluetooth.</p>
               <div class="project-tags">
                 <span class="tag">C++ / Artemis Nano</span>
@@ -185,7 +191,7 @@
                 <span class="tag">Kalman Filter</span>
                 <span class="tag">BLE / Python</span>
                 <span class="tag">ToF Sensing</span>
-                <span class="tag">Localization</span>
+                <span class="tag">Room-Mapping Localization</span>
               </div>
               <a class="project-item__link" href="https://ajd323.github.io/Fast-Robots-MAE4190/" target="_blank" rel="noopener">
                 <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
@@ -206,11 +212,12 @@
               <h2>Red Newt Racing GPS Baton Tracker</h2>
               <p class="project-summary">A single reusable LoRaWAN GPS baton transmitting position every <strong>30 seconds</strong> to a live Streamlit dashboard; piloted with one team at the Seneca 7 (<strong>77.7-mile race</strong>) and refined through a <strong>45-runner user study</strong>.</p>
               <div class="project-tags">
+                <span class="tag">Embedded Hardware</span>
                 <span class="tag">LoRaWAN / TTN</span>
                 <span class="tag">GPS (NEO-M8)</span>
                 <span class="tag">Arduino Feather M0</span>
-                <span class="tag">3D Printing (PLA)</span>
-                <span class="tag">Python / Streamlit</span>
+                <span class="tag">3D-Printed Enclosure</span>
+                <span class="tag">User Research</span>
               </div>
               <a class="project-item__link" href="iot-baton.html">
                 <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -231,11 +238,12 @@
               <h2>Custom Clothes Fan for College Students <em>(AeroDry)</em></h2>
               <p class="project-summary">A closet-mounted air-distribution tube achieving a <strong>~20x reduction in drying time</strong> for damp laundry, validated through iterative prototyping, MATLAB flow modeling, and ANSYS Fluent FEA matching hand calculations to <strong>>90% accuracy</strong>.</p>
               <div class="project-tags">
-                <span class="tag">Fusion360</span>
+                <span class="tag">Fusion360 / SolidWorks</span>
                 <span class="tag">ANSYS Fluent</span>
                 <span class="tag">DFM</span>
-                <span class="tag">Financial Modeling</span>
-                <span class="tag">Prototyping</span>
+                <span class="tag">Air-Distribution Tube</span>
+                <span class="tag">User Research</span>
+                <span class="tag">Pitching</span>
               </div>
               <a class="project-item__link" href="aerodry.html">
                 <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -272,9 +280,10 @@
               <div class="project-tags">
                 <span class="tag">sEMG / IMU</span>
                 <span class="tag">Hill's Musculoskeletal Model</span>
-                <span class="tag">Python</span>
-                <span class="tag">FDA 510(k)</span>
-                <span class="tag">VentureWell / DEBUT</span>
+                <span class="tag">Wearable Diagnostic Device</span>
+                <span class="tag">FDA 510(k) / ISO 60601</span>
+                <span class="tag">DFX</span>
+                <span class="tag">Technical Documentation</span>
               </div>
               <a class="project-item__link" href="elbow-torque-tracker.html">
                 <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -295,8 +304,10 @@
               <h2>Tremor-Resistant Cane for Parkinson's Patients <em>(Steady Stride)</em></h2>
               <p class="project-summary">A tuned mass damper cane that reduced Parkinson's hand tremors by <strong>12.25%</strong> across IRB-approved trials at SUNY Cortland, with <strong>75% positive user feedback</strong>; winner of the Medtronic BMES 2024 Student Design Competition.</p>
               <div class="project-tags">
-                <span class="tag">Rapid Prototyping</span>
-                <span class="tag">MATLAB</span>
+                <span class="tag">Tuned Mass Damper</span>
+                <span class="tag">Iterative Design</span>
+                <span class="tag">MATLAB Simulations</span>
+                <span class="tag">Sleek, Modernist Form</span>
                 <span class="tag">IRB Clinical Trials</span>
                 <span class="tag">Medtronic BMES Winner</span>
               </div>
@@ -320,9 +331,11 @@
               <p class="project-summary">A non-invasive carotid wearable estimating continuous blood flow via custom 2-layer PCB and applanation tonometry FEA, achieving <strong>under 5% error</strong> on arterial deformation.</p>
               <div class="project-tags">
                 <span class="tag">PCB Design (KiCAD)</span>
-                <span class="tag">Ultrasound</span>
-                <span class="tag">FEA</span>
-                <span class="tag">Wearable</span>
+                <span class="tag">Ultrasound Sensing</span>
+                <span class="tag">Arduino Development</span>
+                <span class="tag">Applanation Tonometry</span>
+                <span class="tag">Finite-Element Analysis</span>
+                <span class="tag">Lab Presentations</span>
               </div>
               <a class="project-item__link" href="cardiac-monitor.html">
                 <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -343,10 +356,11 @@
               <h2>PETG Anti-Kink Coil for Synthetic Vascular Grafts</h2>
               <p class="project-summary">Proprietary manufacturing process for synthetic vascular grafts at the Cornell Biofoundry with <strong>Anova Biomedical Inc.</strong>, including <strong>ISO 7198-compliant anti-kink testing</strong> and a custom syringe pump for graft formulation.</p>
               <div class="project-tags">
-                <span class="tag">ISO Standards</span>
+                <span class="tag">PETG Coil Manufacturing</span>
+                <span class="tag">Custom Syringe Pump</span>
+                <span class="tag">ISO 7198 Compliance</span>
                 <span class="tag">Electromechanical Design</span>
                 <span class="tag">Startup Collaboration</span>
-                <span class="tag">Cornell Biofoundry</span>
               </div>
               <a class="project-item__link" href="anti-kink-coil.html">
                 <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -385,6 +399,7 @@
                 <span class="tag">CFD</span>
                 <span class="tag">Non-Newtonian Fluids</span>
                 <span class="tag">Heat Transfer</span>
+                <span class="tag">Technical Presentation</span>
               </div>
               <a class="project-item__link" href="chocolate-fea.html">
                 <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -408,6 +423,9 @@
                 <span class="tag">ANSYS Static Structural</span>
                 <span class="tag">Mesh Convergence</span>
                 <span class="tag">Airfoil Design</span>
+                <span class="tag">Parametric Optimization</span>
+                <span class="tag">Von Mises Stress Analysis</span>
+                <span class="tag">Tip Deflection Constraints</span>
               </div>
               <a class="project-item__link" href="blade-optimization.html">
                 <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
