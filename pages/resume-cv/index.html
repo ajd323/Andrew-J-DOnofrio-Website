@@ -77,7 +77,7 @@
     .cv-sidebar__nav a:hover::after { transform: scaleX(1); }
 
     /* Main content */
-    .cv-main { display: flex; flex-direction: column; }
+    .cv-main { display: flex; flex-direction: column; margin-top: calc(-1 * var(--space-4)); }
 
     /* Section */
     .cv-section {
@@ -151,6 +151,83 @@
       line-height: 1.65;
     }
 
+    /* Grouped organization entry (multiple roles, one company) */
+    .cv-org-group {
+      position: relative;
+      padding-left: var(--space-6);
+      margin-bottom: var(--space-6);
+      border-left: 2px solid var(--clr-rule);
+      transition: border-color 0.2s;
+    }
+    .cv-org-group:hover { border-left-color: var(--clr-accent); }
+    .cv-org-group:last-child { margin-bottom: 0; }
+    .cv-org-group__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-bottom: var(--space-6);
+    }
+    .cv-org-group__org {
+      font-weight: 600;
+      font-size: var(--text-base);
+      color: var(--clr-ink);
+    }
+    .cv-org-group__date {
+      font-size: var(--text-xs);
+      color: var(--clr-ink-muted);
+      white-space: nowrap;
+      background: var(--clr-surface);
+      padding: 2px 8px;
+      border-radius: 100px;
+    }
+    .cv-subentry {
+      position: relative;
+      padding-left: var(--space-6);
+      margin-bottom: var(--space-6);
+      border-left: 1px solid var(--clr-rule);
+    }
+    .cv-subentry:last-child { margin-bottom: 0; }
+    .cv-subentry::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 8px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--clr-accent);
+    }
+    .cv-subentry__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-bottom: var(--space-1);
+    }
+    .cv-subentry__role {
+      color: var(--clr-accent);
+      font-weight: 500;
+      font-size: var(--text-sm);
+    }
+    .cv-subentry__date {
+      font-size: var(--text-xs);
+      color: var(--clr-ink-muted);
+      white-space: nowrap;
+    }
+    .cv-subentry ul {
+      padding-left: var(--space-4);
+      color: var(--clr-ink-muted);
+      margin-top: var(--space-2);
+    }
+    .cv-subentry ul li {
+      margin-bottom: var(--space-2);
+      font-size: var(--text-sm);
+      line-height: 1.65;
+    }
+
     /* Objective callout */
     .cv-objective {
       background: var(--clr-surface);
@@ -160,7 +237,7 @@
       font-size: 1.05rem;
       color: var(--clr-ink-muted);
       line-height: 1.8;
-      max-width: 72ch;
+      max-width: 100%;
     }
 
     /* Skills grid */
@@ -209,13 +286,19 @@
 
     @media (max-width: 760px) {
       .cv-layout { grid-template-columns: 1fr; }
-      .cv-sidebar { position: static; }
+      .cv-sidebar { display: none; }
       .skills-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 480px) {
       .cv-entry { padding-left: var(--space-4); }
       .cv-entry__header { flex-direction: column; align-items: flex-start; gap: 4px; }
       .cv-entry__date { white-space: normal; }
+      .cv-org-group { padding-left: var(--space-4); }
+      .cv-org-group__header { flex-direction: column; align-items: flex-start; gap: 4px; }
+      .cv-org-group__date { white-space: normal; }
+      .cv-subentry { padding-left: var(--space-4); }
+      .cv-subentry__header { flex-direction: column; align-items: flex-start; gap: 4px; }
+      .cv-subentry__date { white-space: normal; }
       .cv-objective { padding: var(--space-4); font-size: 1rem; }
       .extracurricular-list li { font-size: var(--text-xs); padding: var(--space-2) var(--space-3); }
     }
@@ -235,8 +318,8 @@
 
   <div class="page-header">
     <h1>Curriculum Vitae</h1>
-    <div style="margin-top:1rem; display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
-      <a href="https://www.andrewjdonofrio.com/s/Andrew_DOnofrio_Resume_Website.pdf" class="btn btn--solid" target="_blank" rel="noopener">Download PDF</a>
+    <div style="margin-top:2rem; display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+      <a href="../../assets/docs/Andrew_DOnofrio_Resume.pdf" class="btn btn--solid" target="_blank" rel="noopener">Download Resume</a>
       <span style="font-size:0.85rem; color:var(--clr-ink-muted)">ajd323@cornell.edu &nbsp;&middot;&nbsp; +1 631 636 1530</span>
     </div>
   </div>
@@ -258,8 +341,9 @@
           <nav class="cv-sidebar__nav">
             <a href="#objective">Objective</a>
             <a href="#education">Education</a>
-            <a href="#work">Work Experience</a>
+            <a href="#work">Industry</a>
             <a href="#research">Research</a>
+            <a href="#general">Work</a>
             <a href="#extracurricular">Extracurricular</a>
             <a href="#skills">Skills</a>
           </nav>
@@ -285,7 +369,7 @@
           </div>
 
           <div class="cv-section" id="work">
-            <p class="cv-section__title">Work Experience</p>
+            <p class="cv-section__title">Industry</p>
 
             <div class="cv-entry">
               <div class="cv-entry__header">
@@ -342,36 +426,41 @@
               </ul>
             </div>
 
-            <div class="cv-entry">
-              <div class="cv-entry__header">
-                <span class="cv-entry__org">Cornell DEBUT</span>
-                <span class="cv-entry__date">August 2024 – June 2026</span>
+            <div class="cv-org-group">
+              <div class="cv-org-group__header">
+                <span class="cv-org-group__org">Cornell DEBUT</span>
+                <span class="cv-org-group__date">October 2023 – June 2026</span>
               </div>
-              <div class="cv-entry__role">Project Manager</div>
-              <ul>
-                <li>Led project management and regulatory approach of a novel Class II diagnostic device quantifying excess sports-related loading of the UCL.</li>
-                <li>Translated pre-existing literature on the Hills-Musculoskeletal model into a full-scale Python-based processing UI for synthesizing serial muscle firing signals; validated outputs with OptiTrack Motion Capture data.</li>
-              </ul>
-            </div>
 
-            <div class="cv-entry">
-              <div class="cv-entry__header">
-                <span class="cv-entry__org">Cornell DEBUT</span>
-                <span class="cv-entry__date">October 2023 – August 2024</span>
+              <div class="cv-subentry">
+                <div class="cv-subentry__header">
+                  <span class="cv-subentry__role">Project Manager</span>
+                  <span class="cv-subentry__date">August 2024 – June 2026</span>
+                </div>
+                <ul>
+                  <li>Led project management and regulatory approach of a novel Class II diagnostic device quantifying excess sports-related loading of the UCL.</li>
+                  <li>Translated pre-existing literature on the Hills-Musculoskeletal model into a full-scale Python-based processing UI for synthesizing serial muscle firing signals; validated outputs with OptiTrack Motion Capture data.</li>
+                </ul>
               </div>
-              <div class="cv-entry__role">R&amp;D Analyst</div>
-              <ul>
-                <li>Winner of the Medtronic BMES 2024 Student Design Competition (Mechanical Track) and $2,500 for commercialization.</li>
-                <li>Led 10+ student engineers in rapid prototyping and MATLAB simulations for the tremor-resistant cane SteadyStride.</li>
-                <li>Managed IRB-approved experimental trials with Parkinson's patients at the SUNY Cortland Biomechanics Laboratory.</li>
-                <li>Analyzed 1M+ data points with MATLAB and Python to yield a ~12% reduction in experimental tremor amplitude.</li>
-              </ul>
+
+              <div class="cv-subentry">
+                <div class="cv-subentry__header">
+                  <span class="cv-subentry__role">R&amp;D Analyst</span>
+                  <span class="cv-subentry__date">October 2023 – August 2024</span>
+                </div>
+                <ul>
+                  <li>Winner of the Medtronic BMES 2024 Student Design Competition (Mechanical Track) and $2,500 for commercialization.</li>
+                  <li>Led 10+ student engineers in rapid prototyping and MATLAB simulations for the tremor-resistant cane SteadyStride.</li>
+                  <li>Managed IRB-approved experimental trials with Parkinson's patients at the SUNY Cortland Biomechanics Laboratory.</li>
+                  <li>Analyzed 1M+ data points with MATLAB and Python to yield a ~12% reduction in experimental tremor amplitude.</li>
+                </ul>
+              </div>
             </div>
 
             <div class="cv-entry">
               <div class="cv-entry__header">
                 <span class="cv-entry__org">Rapid Prototyping Laboratory, Cornell University</span>
-                <span class="cv-entry__date">October 2023 – Present</span>
+                <span class="cv-entry__date">October 2023 – June 2026</span>
               </div>
               <div class="cv-entry__role">Machine Technician</div>
               <ul>
@@ -391,6 +480,45 @@
                 <li>Synthesized a wearable device for fixturing ultrasound transducers, manufacturing 50+ PLA parts with modular sizing.</li>
                 <li>Designed a custom 2-layer PCB to interface with pressure and ultrasonic sensors for an electrically operational board.</li>
                 <li>Formulated carotid artery FEA for applanation tonometry to estimate arterial deformation and pressure with less than 5% error.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="cv-section" id="general">
+            <p class="cv-section__title">Work</p>
+
+            <div class="cv-entry">
+              <div class="cv-entry__header">
+                <span class="cv-entry__org">Lake Grove Diner</span>
+                <span class="cv-entry__date">June 2023 – August 2023</span>
+              </div>
+              <div class="cv-entry__role">Server &middot; Part-time</div>
+              <ul>
+                <li>Established a positive customer service experience by managing requests and serving meals for up to 6 tables at once.</li>
+                <li>Cooperated with fellow servers, busboys, and management to ensure quality, efficiency, and cleanliness in the restaurant experience.</li>
+              </ul>
+            </div>
+
+            <div class="cv-entry">
+              <div class="cv-entry__header">
+                <span class="cv-entry__org">Ace Hardware Corporation</span>
+                <span class="cv-entry__date">March 2021 – November 2021</span>
+              </div>
+              <div class="cv-entry__role">Store Cashier &middot; Part-time</div>
+              <ul>
+                <li>Managed cash register and worked with a team to accomplish routine store responsibilities including stocking shelves and assisting customers with pick-ups and loading.</li>
+              </ul>
+            </div>
+
+            <div class="cv-entry">
+              <div class="cv-entry__header">
+                <span class="cv-entry__org">Gentleman Electric</span>
+                <span class="cv-entry__date">July 2019 – January 2023</span>
+              </div>
+              <div class="cv-entry__role">Apprentice Electrician &middot; Part-time</div>
+              <ul>
+                <li>Applied in-field electrical expertise to assist contracting experts on equipment installation, lighting design, and wiring.</li>
+                <li>Employed on over 50 job sites ranging from small-scale (&lt;1 acre) to large-scale (10+ acres) residential homes.</li>
               </ul>
             </div>
           </div>
