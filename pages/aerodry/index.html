@@ -3,11 +3,439 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>iot-baton Andrew J. D'Onofrio</title>
+  <title>AeroDry: Andrew J. D'Onofrio</title>
+  <meta name="description" content="AeroDry: a closet-mounted clothes dryer designed through TRIZ-driven iteration and validated with ANSYS Fluent simulation. Led by Andrew D'Onofrio, MAE 4341, ApolloTech Team." />
   <link rel="stylesheet" href="../../css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Project hero (matches page-header pattern, adds photo) ── */
+    .proj-hero {
+      position: relative;
+      padding: var(--space-16) var(--page-gutter) var(--space-12);
+      border-bottom: 1px solid rgba(26,32,51,0.06);
+      overflow: hidden;
+    }
+    .proj-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='56' viewBox='0 0 96 56'%3E%3Cpolygon points='24,3 48,15.5 48,40.5 24,53 0,40.5 0,15.5' fill='none' stroke='%231A2033' stroke-width='1' opacity='0.05'/%3E%3Cpolygon points='72,3 96,15.5 96,40.5 72,53 48,40.5 48,15.5' fill='none' stroke='%231A2033' stroke-width='1' opacity='0.05'/%3E%3Cpolygon points='48,-12.5 72,0 72,25 48,37.5 24,25 24,0' fill='none' stroke='%231A2033' stroke-width='1' opacity='0.05'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-position: center;
+      -webkit-mask-image: linear-gradient(to right, transparent, black 30%, black 100%);
+      mask-image: linear-gradient(to right, transparent, black 30%, black 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .proj-hero__inner { position: relative; z-index: 1; max-width: var(--max-w); margin-inline: auto; }
+    .proj-hero__eyebrow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-4);
+      font-size: var(--text-xs);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      margin-bottom: var(--space-6);
+      font-weight: 600;
+      opacity: 0.8;
+    }
+    .proj-hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 5.5vw, 5rem);
+      font-weight: 500;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--clr-ink);
+      margin-bottom: var(--space-6);
+    }
+    .proj-hero__lead {
+      font-size: var(--text-lg);
+      font-weight: 300;
+      color: var(--clr-ink);
+      opacity: 0.78;
+      max-width: 64ch;
+      line-height: 1.8;
+      margin-bottom: var(--space-8);
+    }
+    .proj-hero__lead strong { font-weight: 600; opacity: 1; }
+
+    /* ── Hero photo gallery ── */
+    .hero-gallery { position: relative; z-index: 1; margin-top: var(--space-8); }
+    .hero-gallery__frame {
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--clr-surface);
+      aspect-ratio: 16/8;
+      box-shadow: 0 20px 60px rgba(26,32,51,0.12);
+    }
+    .hero-gallery__track {
+      display: flex;
+      height: 100%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .hero-gallery__track::-webkit-scrollbar { display: none; }
+    .hero-gallery__slide { flex: 0 0 100%; scroll-snap-align: start; position: relative; height: 100%; overflow: hidden; }
+    .hero-gallery__slide-bg {
+      position: absolute;
+      inset: -20px;
+      width: calc(100% + 40px);
+      height: calc(100% + 40px);
+      object-fit: cover;
+      filter: blur(24px) brightness(0.85) saturate(1.1);
+      transform: scale(1.15);
+      z-index: 0;
+    }
+    .hero-gallery__slide img:not(.hero-gallery__slide-bg) {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      z-index: 1;
+    }
+    .hero-gallery__caption {
+      position: absolute;
+      left: 20px;
+      bottom: 18px;
+      font-size: 0.78rem;
+      letter-spacing: 0.02em;
+      color: #fff;
+      background: rgba(26,32,51,0.55);
+      backdrop-filter: blur(4px);
+      padding: 6px 12px;
+      border-radius: 3px;
+      z-index: 2;
+    }
+    .hero-gallery__arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(245,240,232,0.92);
+      border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      z-index: 2;
+      transition: background 0.15s;
+    }
+    .hero-gallery__arrow:hover { background: #fff; }
+    .hero-gallery__arrow svg { width: 16px; height: 16px; stroke: var(--clr-ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .hero-gallery__arrow--prev { left: 16px; }
+    .hero-gallery__arrow--next { right: 16px; }
+    .hero-gallery__dots { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
+    .hero-gallery__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--clr-rule); border: none; padding: 0; cursor: pointer; transition: all 0.15s; }
+    .hero-gallery__dot.active { background: var(--clr-accent); transform: scale(1.3); }
+
+    /* ── Tag row (reuses site .tag exactly) ── */
+    .tag-row { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-8); }
+
+    /* ── Situation / Outcomes panel (matches original site pattern) ── */
+    .so-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-6);
+      margin-top: var(--space-8);
+    }
+    .so-panel__col {
+      background: var(--clr-surface);
+      border-radius: 12px;
+      padding: var(--space-6);
+    }
+    .so-panel__col p.label {
+      font-size: var(--text-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      font-weight: 600;
+      margin-bottom: var(--space-3);
+    }
+    .so-panel__col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .so-panel__col ul li {
+      font-size: var(--text-sm);
+      color: var(--clr-ink-muted);
+      line-height: 1.6;
+      padding-left: var(--space-4);
+      position: relative;
+    }
+    .so-panel__col ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.6em;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--clr-accent);
+    }
+    .so-panel__col ul li strong { color: var(--clr-ink); font-weight: 600; }
+
+    /* ── Section scaffolding (reuses project-category__num pattern) ── */
+    .proj-section { max-width: var(--max-w); margin-inline: auto; padding-block: var(--space-8); }
+    .proj-section__label {
+      display: flex;
+      align-items: baseline;
+      gap: 2rem;
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid rgba(26,32,51,0.1);
+    }
+    .proj-section__num {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 5vw, 4.5rem);
+      font-weight: 400;
+      color: var(--clr-accent);
+      opacity: 0.5;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .proj-section__title-wrap { display: flex; flex-direction: column; justify-content: center; }
+    .proj-section__eyebrow {
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      font-weight: 600;
+      opacity: 0.9;
+      margin-bottom: 0.3rem;
+    }
+    .proj-section__title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--clr-ink);
+      line-height: 1.1;
+    }
+
+    .prose { max-width: none; }
+    .prose p { font-size: var(--text-base); line-height: 1.8; color: var(--clr-ink-muted); margin-bottom: 1.25rem; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose strong { color: var(--clr-ink); font-weight: 600; }
+    .prose em { font-style: italic; color: var(--clr-ink); }
+
+    /* ── Two column split ── */
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); align-items: start; }
+    .split--reverse .split__text { order: 2; }
+    .split--reverse .split__media { order: 1; }
+    .split__media img { border-radius: 4px; width: 100%; object-fit: cover; box-shadow: 0 12px 32px rgba(26,32,51,0.1); }
+    .split--match { align-items: stretch; }
+    .split--match .split__media { display: flex; flex-direction: column; }
+    .split--match .split__media img { flex: 1; min-height: 280px; max-height: 560px; height: 100%; }
+    .split__media--portrait img { aspect-ratio: 4/5; max-height: 460px; }
+    .split__media--wide img { aspect-ratio: 16/10; }
+    .split__caption { font-size: var(--text-xs); color: var(--clr-ink-muted); margin-top: var(--space-3); }
+    .split__eyebrow {
+      font-size: var(--text-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      font-weight: 600;
+      margin-bottom: var(--space-3);
+    }
+
+    /* ── Build timeline ── */
+    .timeline { position: relative; margin-top: var(--space-3); }
+    .timeline__rail { position: absolute; top: 13.5px; left: 0; right: 0; height: 1px; background: var(--clr-rule); z-index: 0; }
+    .timeline__row { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-8); position: relative; z-index: 1; }
+    .timeline__item { position: relative; padding-top: 44px; }
+    .timeline__dot {
+      position: absolute; top: 0; left: 0;
+      width: 27px; height: 27px;
+      border-radius: 50%;
+      background: var(--clr-bg);
+      border: 1.5px solid var(--clr-accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.62rem;
+      font-weight: 600;
+      color: var(--clr-accent);
+      z-index: 2;
+    }
+    .timeline__ver { font-family: var(--font-serif); font-size: 1.3rem; font-weight: 500; margin: 0 0 var(--space-2); color: var(--clr-ink); }
+    .timeline__desc { font-size: 0.92rem; color: var(--clr-ink-muted); line-height: 1.65; margin: 0; }
+    .timeline__desc strong { color: var(--clr-ink); font-weight: 600; }
+
+    /* ── Section gallery (reusable, smaller than hero gallery) ── */
+    .gallery { position: relative; }
+    .gallery__frame {
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--clr-surface);
+      aspect-ratio: 4/3;
+    }
+    .gallery__track {
+      display: flex;
+      height: 100%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .gallery__track::-webkit-scrollbar { display: none; }
+    .gallery__slide { flex: 0 0 100%; scroll-snap-align: start; position: relative; height: 100%; overflow: hidden; }
+    .gallery__slide-bg {
+      position: absolute;
+      inset: -20px;
+      width: calc(100% + 40px);
+      height: calc(100% + 40px);
+      object-fit: cover;
+      filter: blur(20px) brightness(0.85) saturate(1.1);
+      transform: scale(1.15);
+      z-index: 0;
+    }
+    .gallery__slide img:not(.gallery__slide-bg) {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      z-index: 1;
+    }
+    .gallery__caption {
+      position: absolute;
+      left: 16px;
+      bottom: 14px;
+      font-size: 0.74rem;
+      letter-spacing: 0.02em;
+      color: #fff;
+      background: rgba(26,32,51,0.55);
+      backdrop-filter: blur(4px);
+      padding: 5px 10px;
+      border-radius: 3px;
+      z-index: 2;
+    }
+    .gallery__arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(245,240,232,0.92);
+      border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      z-index: 2;
+      transition: background 0.15s;
+    }
+    .gallery__arrow:hover { background: #fff; }
+    .gallery__arrow svg { width: 14px; height: 14px; stroke: var(--clr-ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .gallery__arrow--prev { left: 12px; }
+    .gallery__arrow--next { right: 12px; }
+    .gallery__dots { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
+    .gallery__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--clr-rule); border: none; padding: 0; cursor: pointer; transition: all 0.15s; }
+    .gallery__dot.active { background: var(--clr-accent); transform: scale(1.3); }
+
+    /* ── Hardware section: gallery beside specs ── */
+    .hw-layout { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); align-items: start; margin-top: var(--space-8); }
+    .hw-layout .spec-grid { grid-template-columns: 1fr; gap: var(--space-6) 0; margin-top: 0; }
+
+    /* ── Software callout box (darker surface) ── */
+    .software-box {
+      background: var(--clr-surface);
+      border-radius: 10px;
+      padding: var(--space-8);
+      box-shadow: inset 0 0 0 1px rgba(26,32,51,0.04);
+    }
+    .software-box .split { gap: var(--space-8); }
+
+    /* ── Result stats (light, sits beside the validation figure) ── */
+    .result-stats { display: flex; flex-direction: column; gap: var(--space-4); }
+    .result-stats__item { padding-bottom: var(--space-4); border-bottom: 1px solid var(--clr-rule); }
+    .result-stats__item:last-child { border-bottom: none; padding-bottom: 0; }
+    .result-stats__num { font-family: var(--font-serif); font-size: clamp(1.8rem, 3vw, 2.3rem); font-weight: 500; line-height: 1; color: var(--clr-ink); }
+    .result-stats__num--accent { color: var(--clr-accent); }
+    .result-stats__label { font-size: var(--text-xs); letter-spacing: 0.04em; text-transform: uppercase; color: var(--clr-ink-muted); margin-top: var(--space-2); }
+    .result-stats--row {
+      flex-direction: row;
+      justify-content: center;
+      text-align: center;
+      margin-top: var(--space-8);
+      padding-top: var(--space-8);
+      border-top: 1px solid var(--clr-rule);
+      gap: var(--space-8);
+    }
+    .result-stats--row .result-stats__item {
+      padding-bottom: 0;
+      border-bottom: none;
+      padding-right: var(--space-8);
+      border-right: 1px solid var(--clr-rule);
+    }
+    .result-stats--row .result-stats__item:last-child { border-right: none; padding-right: 0; }
+
+    /* ── Spec table ── */
+    .spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--space-12); }
+    .spec-table { width: 100%; border-collapse: collapse; }
+    .spec-table tr { border-bottom: 1px solid var(--clr-rule); }
+    .spec-table tr:last-child { border-bottom: none; }
+    .spec-table td { padding: var(--space-3) 0; vertical-align: top; font-size: 0.92rem; }
+    .spec-table td:first-child { font-size: var(--text-sm); color: var(--clr-ink-muted); width: 42%; padding-right: var(--space-4); font-weight: 500; }
+    .spec-table td:last-child { color: var(--clr-ink); font-weight: 500; }
+
+    /* ── Documents ── */
+    .doc-section { padding-top: var(--space-12); }
+    .doc-section__label {
+      font-size: var(--text-xs);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--clr-ink-muted);
+      font-weight: 600;
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--clr-rule);
+    }
+    .doc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--clr-rule); border: 1px solid var(--clr-rule); border-radius: 4px; overflow: hidden; }
+    .doc-card { background: var(--clr-bg); padding: 1.25rem var(--space-6); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); font-size: 0.9rem; font-weight: 500; color: var(--clr-ink); transition: background 0.15s, color 0.15s; }
+    .doc-card:hover { background: var(--clr-surface); color: var(--clr-accent); }
+    .doc-card svg { width: 14px; height: 14px; stroke: var(--clr-accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+    /* ── Close section ── */
+    .proj-close { background: var(--clr-surface); }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .so-panel { grid-template-columns: 1fr; gap: var(--space-4); }
+      .split { grid-template-columns: 1fr; gap: var(--space-6); }
+      .split--reverse .split__text, .split--reverse .split__media { order: unset; }
+      .timeline__row { grid-template-columns: 1fr; gap: var(--space-6); }
+      .timeline__rail { display: none; }
+      .hw-layout { grid-template-columns: 1fr; }
+      .spec-grid { grid-template-columns: 1fr; gap: 0; }
+      .doc-grid { grid-template-columns: 1fr; }
+      .result-stats--row {
+        flex-direction: column;
+        gap: var(--space-4);
+      }
+      .result-stats--row .result-stats__item {
+        padding-right: 0;
+        border-right: none;
+        padding-bottom: var(--space-4);
+        border-bottom: 1px solid var(--clr-rule);
+      }
+      .result-stats--row .result-stats__item:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+    }
+    @media (max-width: 600px) {
+      .proj-hero { padding: var(--space-12) var(--page-gutter) var(--space-8); }
+      .proj-hero h1 { font-size: clamp(2.2rem, 9vw, 3rem); }
+      .proj-section { padding-block: var(--space-8); }
+      .proj-section__num { font-size: clamp(2.2rem, 9vw, 3rem); }
+    }
+  </style>
 </head>
 <body>
   <nav class="nav" id="nav">
@@ -20,11 +448,300 @@
       <li><a href="../resume-cv/">Resume / CV</a></li>
     </ul>
   </nav>
-  <div class="page-header">
-    <p class="page-header__eyebrow"><a href="../projects/" style="color:var(--clr-accent)">&larr; Back to Projects</a></p>
-    <h1>Full case study coming soon</h1>
-    <p style="margin-top:1rem;color:var(--clr-ink-muted);font-size:1.1rem;">This page is in progress. Check back shortly.</p>
+
+  <!-- ── PROJECT HERO ── -->
+  <header class="proj-hero">
+    <div class="proj-hero__inner">
+      <p class="proj-hero__eyebrow">
+        <a href="../projects/" style="color:inherit; opacity:0.7;">&larr; Back to Projects</a>
+      </p>
+      <h1>AeroDry</h1>
+      <p class="proj-hero__lead">I led design, manufacturing, and simulation across three prototype generations of a closet-mounted clothes dryer, from cardboard form-factor testing to an ANSYS Fluent-validated final design, presented to an investor panel for MAE 4341.</p>
+
+      <div class="hero-gallery">
+        <button class="hero-gallery__arrow hero-gallery__arrow--prev" id="heroPrev" aria-label="Previous image">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="hero-gallery__arrow hero-gallery__arrow--next" id="heroNext" aria-label="Next image">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <div class="hero-gallery__frame">
+          <div class="hero-gallery__track" id="heroTrack">
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/AeroDry_Title_1.webp" alt="" aria-hidden="true" />
+              <img src="../../assets/images/AeroDry_Title_1.webp" alt="AeroDry final prototype" />
+              <span class="hero-gallery__caption">Final prototype, V2.0</span>
+            </div>
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/AeroDry_Render_1.webp" alt="" aria-hidden="true" />
+              <img src="../../assets/images/AeroDry_Render_1.webp" alt="AeroDry high-quality rendering" />
+              <span class="hero-gallery__caption">Final design rendering</span>
+            </div>
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/AeroDry_In_Use_1.webp" alt="" aria-hidden="true" />
+              <img src="../../assets/images/AeroDry_In_Use_1.webp" alt="AeroDry mounted and in use in a closet" />
+              <span class="hero-gallery__caption">Mounted in a standard closet</span>
+            </div>
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/AeroDry_FEA_1.webp" alt="" aria-hidden="true" />
+              <img src="../../assets/images/AeroDry_FEA_1.webp" alt="ANSYS Fluent simulation of outlet airflow" />
+              <span class="hero-gallery__caption">ANSYS Fluent: outlet velocity streamlines</span>
+            </div>
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/AeroDry_Team.webp" alt="" aria-hidden="true" />
+              <img src="../../assets/images/AeroDry_Team.webp" alt="ApolloTech team presenting AeroDry" />
+              <span class="hero-gallery__caption">ApolloTech, MAE 4341 final presentation</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-gallery__dots" id="heroDots"></div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag">TRIZ Problem Solving</span>
+        <span class="tag">Rapid Prototyping</span>
+        <span class="tag">ANSYS Fluent</span>
+        <span class="tag">Fusion360</span>
+        <span class="tag">Customer Discovery</span>
+        <span class="tag">Digital Manufacturing</span>
+        <span class="tag">Engineering Presentation</span>
+        <span class="tag">Technical Leadership</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- ── SITUATION / OUTCOMES ── -->
+    <div class="so-panel">
+      <div class="so-panel__col">
+        <p class="label">Situation</p>
+        <ul>
+          <li>Identify and contextualize a core need in the Cornell college-student experience, as required by MAE 4341 course staff.</li>
+          <li>Propose an electromechanical solution realistic for a typical student to purchase and use day to day, including verification and validation testing, functional prototypes, and in-depth market analysis.</li>
+          <li>Present to a panel of industry specialists for feedback on start-up potential.</li>
+        </ul>
+      </div>
+      <div class="so-panel__col">
+        <p class="label">Outcomes</p>
+        <ul>
+          <li>Conducted 10+ customer discovery interviews with Cornell students to survey and evaluate needs within the community.</li>
+          <li>Led TRIZ analysis translating 8 major product requirements and 10 engineering constraints into electromechanical prototype designs across 3 iterations.</li>
+          <li>Rapid-prototyped 5 different configurations of the final prototype (V2.0) to experimentally test outlet airflow efficiency and drying time.</li>
+          <li>Ran ANSYS Fluent on the final prototype to validate hand-calculated outlet velocity, confirming &gt;90% accuracy against the simulation.</li>
+          <li>Assembled the research poster and high-quality renderings presented to potential investors.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ── BACKGROUND ── -->
+    <section class="proj-section">
+      <div class="split split--match">
+        <div class="split__text">
+          <p class="split__eyebrow">The Problem</p>
+          <div class="prose">
+            <p>MAE 4341, Innovative Product Design via Digital Manufacturing, tasked our team with innovating a new physical product for Cornell college students to improve some part of their day-to-day experience. We collected 150+ empathy fieldwork data points through customer interviews and immersion programs to learn about students' daily routines before settling on a direction.</p>
+            <p>Laundry drying came up consistently as a friction point, students without in-unit dryers were stuck waiting on shared laundry room equipment, often for an hour or more, just to get clothes dry. We set out to build a device that would improve the clothes-drying experience independent of college or apartment drying equipment entirely, something that could mount directly in a closet.</p>
+            <p>The constraint that shaped everything downstream: it had to be realistic for an actual student to buy and use, not a lab demo. That meant real verification and validation testing, a functional prototype, and a market case that would hold up in front of an investor panel, not just course staff.</p>
+          </div>
+        </div>
+        <div class="split__media">
+          <img src="../../assets/images/AeroDry_Customer_1.webp" alt="Customer discovery interview session with Cornell students" loading="lazy" />
+          <p class="split__caption">Customer discovery: 150+ empathy fieldwork data points collected before settling on laundry drying as the problem space</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TRIZ PROCESS ── -->
+    <section class="proj-section">
+      <div class="proj-section__label">
+        <span class="proj-section__num">01</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Background</span>
+          <span class="proj-section__title">TRIZ Design Process</span>
+        </div>
+      </div>
+      <div class="prose">
+        <p>I led design and manufacturing of components across every prototype iteration, plus the simulation and testing work behind them. Beyond building, I integrated TRIZ (Theory of Inventive Problem Solving) at each design stage: a systematic method for identifying contradictions between competing engineering requirements and resolving them deliberately, rather than guessing at a redesign.</p>
+        <p>Each prototype generation had its own dominant contradiction. V0 needed to be lightweight and minimally sized, which favored a flimsy material; V1 needed enough structural length and airflow volume to actually dry clothes, which fought against portability; V2 needed higher fan output without sacrificing the durability or simplicity we'd already locked in. TRIZ gave the team a shared vocabulary for naming those tradeoffs instead of re-litigating them from scratch at every meeting.</p>
+      </div>
+    </section>
+
+    <!-- ── PROTOTYPE ITERATIONS ── -->
+    <section class="proj-section">
+      <div class="proj-section__label">
+        <span class="proj-section__num">02</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Prototyping</span>
+          <span class="proj-section__title">Design Iterations</span>
+        </div>
+      </div>
+      <div class="software-box">
+        <div class="timeline">
+          <div class="timeline__rail"></div>
+          <div class="timeline__row">
+            <div class="timeline__item">
+              <div class="timeline__dot">V0</div>
+              <h3 class="timeline__ver">Form Factor</h3>
+              <p class="timeline__desc">Cardboard, telescoping, minimally sized. Tested fit and aesthetics against the TRIZ form parameters: weight, length, and volume of a stationary object. Lightweight, but the team flagged early that cardboard would directly contradict the manufacturability and durability requirements coming next.</p>
+            </div>
+            <div class="timeline__item">
+              <div class="timeline__dot">V1</div>
+              <h3 class="timeline__ver">Functional</h3>
+              <p class="timeline__desc">A low-speed centrifugal fan into a schedule-40 PVC tube body with 8 open 1/4-inch holes. Proved airflow was possible, but balancing tube length and volume against fan power and durability was the dominant contradiction, and the open-hole design wasted velocity.</p>
+            </div>
+            <div class="timeline__item">
+              <div class="timeline__dot">V2</div>
+              <h3 class="timeline__ver">Final Prototype</h3>
+              <p class="timeline__desc">Boosted fan CFM, added directional nozzles in place of open holes, kept the core tube geometry. Five rapid-prototyped configurations tested experimentally for outlet airflow efficiency and drying time before settling on the final design.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prose" style="margin-top: var(--space-6);">
+        <p>The biggest design failure to fix between V1 and V2 was the open-hole outlet. Eight bare 1/4-inch holes drilled into PVC pipe let air escape, but with no control over direction or velocity, most of that airflow never reached the clothes it needed to dry. Replacing the holes with directional nozzles, combined with a higher-output fan, was the single change that took the device from "moves air" to "dries clothes in a useful amount of time."</p>
+        <p>Each of the five V2 configurations varied nozzle count, spacing, and fan placement. I rapid-prototyped and tested all five experimentally for outlet airflow efficiency and drying time before the team converged on the final geometry, the one later validated in ANSYS Fluent.</p>
+      </div>
+
+      <div class="hw-layout">
+        <div class="gallery">
+          <button class="gallery__arrow gallery__arrow--prev" id="hwPrev" aria-label="Previous image">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button class="gallery__arrow gallery__arrow--next" id="hwNext" aria-label="Next image">
+            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <div class="gallery__frame">
+            <div class="gallery__track" id="hwTrack">
+              <div class="gallery__slide">
+                <img class="gallery__slide-bg" src="../../assets/images/AeroDry_V1.webp" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/AeroDry_V1.webp" alt="V1 functional prototype: PVC tube with open-hole outlets" loading="lazy" />
+                <span class="gallery__caption">V1: PVC tube body, open-hole outlets</span>
+              </div>
+              <div class="gallery__slide">
+                <img class="gallery__slide-bg" src="../../assets/images/AeroDry_In_Use_2.webp" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/AeroDry_In_Use_2.webp" alt="AeroDry final prototype mounted and running" loading="lazy" />
+                <span class="gallery__caption">V2: final prototype, mounted and running</span>
+              </div>
+              <div class="gallery__slide">
+                <img class="gallery__slide-bg" src="../../assets/images/AeroDry_Title_1.webp" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/AeroDry_Title_1.webp" alt="AeroDry final assembled prototype" loading="lazy" />
+                <span class="gallery__caption">V2: final assembled prototype</span>
+              </div>
+              <div class="gallery__slide">
+                <img class="gallery__slide-bg" src="../../assets/images/AeroDry_Render_1.webp" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/AeroDry_Render_1.webp" alt="AeroDry final design rendering" loading="lazy" />
+                <span class="gallery__caption">Final design rendering, used in investor materials</span>
+              </div>
+            </div>
+          </div>
+          <div class="gallery__dots" id="hwDots"></div>
+        </div>
+
+        <div class="spec-grid">
+          <table class="spec-table">
+            <tr><td>Fan</td><td>DC centrifugal, boosted CFM (V2)</td></tr>
+            <tr><td>Body</td><td>Schedule-40 PVC, 3/4&Prime; profile</td></tr>
+            <tr><td>Outlets</td><td>Directional nozzles (V2), 8 ports</td></tr>
+            <tr><td>Mounting</td><td>Closet rod clamps, universal fit</td></tr>
+            <tr><td>CAD</td><td>Fusion360</td></tr>
+            <tr><td>Simulation</td><td>ANSYS Fluent, internal flow</td></tr>
+            <tr><td>Prototype iterations</td><td>3 generations, 5 V2 configurations tested</td></tr>
+            <tr><td>Validation</td><td>&gt;90% accuracy vs. hand-calculated outlet velocity</td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ANSYS FLUENT ANALYSIS ── -->
+    <section class="proj-section">
+      <div class="software-box">
+        <div class="split split--reverse">
+          <div class="split__media split__media--wide">
+            <img src="../../assets/images/AeroDry_FEA_2.webp" alt="ANSYS Fluent simulation, full velocity streamlines" loading="lazy" />
+            <p class="split__caption">Full velocity streamlines through the air chamber, ANSYS Fluent</p>
+          </div>
+          <div class="split__text">
+            <p class="split__eyebrow">Simulation</p>
+            <div class="prose">
+              <p>I built a rudimentary CFD fluid model to visualize airflow through the device's internal chamber, both to confirm preliminary efficacy and to catch design issues before committing to a final geometry. Internal fluid geometry was modeled in Fusion360 from the V2 prototype, and boundary conditions were pulled from the actual fan datasheet on DigiKey rather than assumed values.</p>
+              <p>ANSYS Fluent computed exit velocities across each outlet, plus full and inlet velocity streamlines through the chamber. Comparing that output against hand-calculated outlet velocity gave us a validation check: the simulation confirmed our hand calculations to within 90% accuracy, which was enough confidence to treat the V2 geometry as final rather than running another prototyping pass.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CUSTOMER DISCOVERY ── -->
+    <section class="proj-section">
+      <div class="proj-section__label">
+        <span class="proj-section__num">03</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Background</span>
+          <span class="proj-section__title">Customer Discovery</span>
+        </div>
+      </div>
+      <div class="prose">
+        <p>Before any prototype existed, the team ran customer discovery across the Cornell student body: 150+ empathy fieldwork data points collected through interviews and immersion sessions about daily routines, not just laundry specifically. I personally conducted more than 10 of those interviews, surveying students directly about pain points in their day-to-day campus experience.</p>
+        <p>That fieldwork is what surfaced laundry drying as the problem worth solving, and it's also what grounded the 8 major product requirements and 10 engineering constraints I later translated into TRIZ-driven design decisions. A device built without that grounding might have solved an interesting engineering problem; this one had to solve a problem students actually said they had.</p>
+      </div>
+    </section>
+
+    <!-- ── RESULTS ── -->
+    <section class="proj-section">
+      <div class="proj-section__label">
+        <span class="proj-section__num">04</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Testing</span>
+          <span class="proj-section__title">Validation</span>
+        </div>
+      </div>
+      <div class="prose" style="margin-bottom: var(--space-6);">
+        <p>Validation ran on two tracks. Experimentally, five rapid-prototyped V2 configurations were tested for outlet airflow efficiency and drying time to converge on a final nozzle and fan layout. Computationally, that final geometry was modeled in ANSYS Fluent and checked against hand-calculated outlet velocity using boundary conditions pulled from the real fan's datasheet, not assumed values.</p>
+      </div>
+
+      <div class="result-stats result-stats--row">
+        <div class="result-stats__item">
+          <div class="result-stats__num result-stats__num--accent">&gt;90%</div>
+          <div class="result-stats__label">ANSYS Fluent accuracy vs. hand calculations</div>
+        </div>
+        <div class="result-stats__item">
+          <div class="result-stats__num">5</div>
+          <div class="result-stats__label">V2 configurations tested experimentally</div>
+        </div>
+        <div class="result-stats__item">
+          <div class="result-stats__num">150+</div>
+          <div class="result-stats__label">Customer discovery data points collected</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CLOSE ── -->
+    <section class="proj-section proj-close" style="border-radius: 12px; padding: var(--space-12) var(--space-8);">
+      <div class="proj-section__label" style="border-bottom-color: rgba(26,32,51,0.08);">
+        <span class="proj-section__num">05</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Impact</span>
+          <span class="proj-section__title">Beyond the Prototype</span>
+        </div>
+      </div>
+      <div class="prose">
+        <p>The course's final deliverable was a presentation to a panel of industry specialists evaluating start-up potential, not just a grade from course staff. That meant the engineering work had to be packaged into something investors could actually evaluate: a working device, a validated simulation, and a clear case for why the problem mattered.</p>
+        <p>I assembled the research poster and the high-quality renderings used in that presentation and in every later investor-facing material. The renderings weren't just for show, they were built from the same Fusion360 geometry used in the ANSYS Fluent model, so what investors saw matched what had actually been simulated and tested, not a separate concept piece.</p>
+        <p>The full case, customer discovery, TRIZ-driven iteration, simulation validation, and presentation materials, is documented in the team's final report and research poster below.</p>
+      </div>
+    </section>
+
+    <!-- ── DOCUMENTS (unnumbered, bottom of page) ── -->
+    <section class="proj-section doc-section">
+      <p class="doc-section__label">Project Documents</p>
+      <div class="doc-grid">
+        <a class="doc-card" href="../../assets/docs/AeroDry_Final_Poster.pdf" target="_blank" rel="noopener">Research Presentation <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <a class="doc-card" href="../../assets/docs/AeroDry_Final_Report.pdf" target="_blank" rel="noopener">AeroDry Report <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      </div>
+    </section>
   </div>
+
   <footer class="footer">
     <div class="container footer__inner">
       <span>&copy; 2026 Andrew J. D'Onofrio</span>
@@ -34,6 +751,49 @@
       </div>
     </div>
   </footer>
+
   <script src="../../js/main.js"></script>
+  <script>
+    function initSlider(trackId, dotsId, prevId, nextId, slideSel, dotClass) {
+      const track = document.getElementById(trackId);
+      const dotsWrap = document.getElementById(dotsId);
+      const prevBtn = document.getElementById(prevId);
+      const nextBtn = document.getElementById(nextId);
+      if (!track || !dotsWrap) return;
+      const slides = track.querySelectorAll(slideSel);
+      const count = slides.length;
+
+      slides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = dotClass + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', 'Go to image ' + (i + 1));
+        dot.addEventListener('click', () => goTo(i));
+        dotsWrap.appendChild(dot);
+      });
+
+      const dots = dotsWrap.querySelectorAll('.' + dotClass);
+
+      function currentIndex() {
+        return Math.round(track.scrollLeft / track.clientWidth);
+      }
+      function goTo(i) {
+        const clamped = ((i % count) + count) % count;
+        track.scrollTo({ left: track.clientWidth * clamped, behavior: 'smooth' });
+      }
+      track.addEventListener('scroll', () => {
+        const index = currentIndex();
+        dots.forEach((d, i) => d.classList.toggle('active', i === index));
+      });
+      if (prevBtn) prevBtn.addEventListener('click', () => goTo(currentIndex() - 1));
+      if (nextBtn) nextBtn.addEventListener('click', () => goTo(currentIndex() + 1));
+    }
+
+    initSlider('heroTrack', 'heroDots', 'heroPrev', 'heroNext', '.hero-gallery__slide', 'hero-gallery__dot');
+    initSlider('hwTrack', 'hwDots', 'hwPrev', 'hwNext', '.gallery__slide', 'gallery__dot');
+
+    function toggleMenu() {
+      document.getElementById('navLinks').classList.toggle('open');
+    }
+  </script>
 </body>
 </html>
