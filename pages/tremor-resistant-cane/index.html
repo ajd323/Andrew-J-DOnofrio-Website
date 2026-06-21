@@ -3,11 +3,439 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>iot-baton Andrew J. D'Onofrio</title>
+  <title>Steady Stride: Andrew J. D'Onofrio</title>
+  <meta name="description" content="Steady Stride: a tuned-mass-damper cane that reduces hand tremor for Parkinson's patients. Led by Andrew D'Onofrio, Cornell DEBUT. 1st Place, Medtronic BMES 2024 Student Design Competition." />
   <link rel="stylesheet" href="../../css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Project hero (matches page-header pattern, adds photo) ── */
+    .proj-hero {
+      position: relative;
+      padding: var(--space-16) var(--page-gutter) var(--space-12);
+      border-bottom: 1px solid rgba(26,32,51,0.06);
+      overflow: hidden;
+    }
+    .proj-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='56' viewBox='0 0 96 56'%3E%3Cpolygon points='24,3 48,15.5 48,40.5 24,53 0,40.5 0,15.5' fill='none' stroke='%231A2033' stroke-width='1' opacity='0.05'/%3E%3Cpolygon points='72,3 96,15.5 96,40.5 72,53 48,40.5 48,15.5' fill='none' stroke='%231A2033' stroke-width='1' opacity='0.05'/%3E%3Cpolygon points='48,-12.5 72,0 72,25 48,37.5 24,25 24,0' fill='none' stroke='%231A2033' stroke-width='1' opacity='0.05'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-position: center;
+      -webkit-mask-image: linear-gradient(to right, transparent, black 30%, black 100%);
+      mask-image: linear-gradient(to right, transparent, black 30%, black 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .proj-hero__inner { position: relative; z-index: 1; max-width: var(--max-w); margin-inline: auto; }
+    .proj-hero__eyebrow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-4);
+      font-size: var(--text-xs);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      margin-bottom: var(--space-6);
+      font-weight: 600;
+      opacity: 0.8;
+    }
+    .proj-hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 5.5vw, 5rem);
+      font-weight: 500;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--clr-ink);
+      margin-bottom: var(--space-6);
+    }
+    .proj-hero__lead {
+      font-size: var(--text-lg);
+      font-weight: 300;
+      color: var(--clr-ink);
+      opacity: 0.78;
+      max-width: 64ch;
+      line-height: 1.8;
+      margin-bottom: var(--space-8);
+    }
+    .proj-hero__lead strong { font-weight: 600; opacity: 1; }
+
+    /* ── Hero photo gallery ── */
+    .hero-gallery { position: relative; z-index: 1; margin-top: var(--space-8); }
+    .hero-gallery__frame {
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--clr-surface);
+      aspect-ratio: 16/8;
+      box-shadow: 0 20px 60px rgba(26,32,51,0.12);
+    }
+    .hero-gallery__track {
+      display: flex;
+      height: 100%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .hero-gallery__track::-webkit-scrollbar { display: none; }
+    .hero-gallery__slide { flex: 0 0 100%; scroll-snap-align: start; position: relative; height: 100%; overflow: hidden; }
+    .hero-gallery__slide-bg {
+      position: absolute;
+      inset: -20px;
+      width: calc(100% + 40px);
+      height: calc(100% + 40px);
+      object-fit: cover;
+      filter: blur(24px) brightness(0.85) saturate(1.1);
+      transform: scale(1.15);
+      z-index: 0;
+    }
+    .hero-gallery__slide img:not(.hero-gallery__slide-bg) {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      z-index: 1;
+    }
+    .hero-gallery__caption {
+      position: absolute;
+      left: 20px;
+      bottom: 18px;
+      font-size: 0.78rem;
+      letter-spacing: 0.02em;
+      color: #fff;
+      background: rgba(26,32,51,0.55);
+      backdrop-filter: blur(4px);
+      padding: 6px 12px;
+      border-radius: 3px;
+      z-index: 2;
+    }
+    .hero-gallery__arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(245,240,232,0.92);
+      border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      z-index: 2;
+      transition: background 0.15s;
+    }
+    .hero-gallery__arrow:hover { background: #fff; }
+    .hero-gallery__arrow svg { width: 16px; height: 16px; stroke: var(--clr-ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .hero-gallery__arrow--prev { left: 16px; }
+    .hero-gallery__arrow--next { right: 16px; }
+    .hero-gallery__dots { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
+    .hero-gallery__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--clr-rule); border: none; padding: 0; cursor: pointer; transition: all 0.15s; }
+    .hero-gallery__dot.active { background: var(--clr-accent); transform: scale(1.3); }
+
+    /* ── Tag row (reuses site .tag exactly) ── */
+    .tag-row { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-8); }
+
+    /* ── Situation / Outcomes panel (matches original site pattern) ── */
+    .so-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-6);
+      margin-top: var(--space-8);
+    }
+    .so-panel__col {
+      background: var(--clr-surface);
+      border-radius: 12px;
+      padding: var(--space-6);
+    }
+    .so-panel__col p.label {
+      font-size: var(--text-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      font-weight: 600;
+      margin-bottom: var(--space-3);
+    }
+    .so-panel__col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .so-panel__col ul li {
+      font-size: var(--text-sm);
+      color: var(--clr-ink-muted);
+      line-height: 1.6;
+      padding-left: var(--space-4);
+      position: relative;
+    }
+    .so-panel__col ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.6em;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--clr-accent);
+    }
+    .so-panel__col ul li strong { color: var(--clr-ink); font-weight: 600; }
+
+    /* ── Section scaffolding (reuses project-category__num pattern) ── */
+    .proj-section { max-width: var(--max-w); margin-inline: auto; padding-block: var(--space-8); }
+    .proj-section__label {
+      display: flex;
+      align-items: baseline;
+      gap: 2rem;
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid rgba(26,32,51,0.1);
+    }
+    .proj-section__num {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 5vw, 4.5rem);
+      font-weight: 400;
+      color: var(--clr-accent);
+      opacity: 0.5;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .proj-section__title-wrap { display: flex; flex-direction: column; justify-content: center; }
+    .proj-section__eyebrow {
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      font-weight: 600;
+      opacity: 0.9;
+      margin-bottom: 0.3rem;
+    }
+    .proj-section__title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--clr-ink);
+      line-height: 1.1;
+    }
+
+    .prose { max-width: none; }
+    .prose p { font-size: var(--text-base); line-height: 1.8; color: var(--clr-ink-muted); margin-bottom: 1.25rem; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose strong { color: var(--clr-ink); font-weight: 600; }
+    .prose em { font-style: italic; color: var(--clr-ink); }
+
+    /* ── Two column split ── */
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); align-items: start; }
+    .split--reverse .split__text { order: 2; }
+    .split--reverse .split__media { order: 1; }
+    .split__media img { border-radius: 4px; width: 100%; object-fit: cover; box-shadow: 0 12px 32px rgba(26,32,51,0.1); }
+    .split--match { align-items: stretch; }
+    .split--match .split__media { display: flex; flex-direction: column; }
+    .split--match .split__media img { flex: 1; min-height: 280px; max-height: 560px; height: 100%; }
+    .split__media--portrait img { aspect-ratio: 4/5; max-height: 460px; }
+    .split__media--wide img { aspect-ratio: 16/10; }
+    .split__media--stack { display: flex; flex-direction: column; gap: var(--space-6); }
+    .split__media--stack .split__media { margin: 0; }
+    .split__caption { font-size: var(--text-xs); color: var(--clr-ink-muted); margin-top: var(--space-3); }
+    .split__eyebrow {
+      font-size: var(--text-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      font-weight: 600;
+      margin-bottom: var(--space-3);
+    }
+
+    /* ── Equation ── */
+    .eq {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      text-align: center;
+      padding: var(--space-6);
+      background: var(--clr-surface);
+      border-radius: 6px;
+      margin: var(--space-6) 0;
+      color: var(--clr-ink);
+    }
+
+    /* ── Build timeline ── */
+    .timeline { position: relative; margin-top: var(--space-3); }
+    .timeline__rail { position: absolute; top: 13.5px; left: 0; right: 0; height: 1px; background: var(--clr-rule); z-index: 0; }
+    .timeline__row { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-8); position: relative; z-index: 1; }
+    .timeline__item { position: relative; padding-top: 44px; }
+    .timeline__dot {
+      position: absolute; top: 0; left: 0;
+      width: 27px; height: 27px;
+      border-radius: 50%;
+      background: var(--clr-bg);
+      border: 1.5px solid var(--clr-accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.58rem;
+      font-weight: 600;
+      color: var(--clr-accent);
+      z-index: 2;
+    }
+    .timeline__ver { font-family: var(--font-serif); font-size: 1.3rem; font-weight: 500; margin: 0 0 var(--space-2); color: var(--clr-ink); }
+    .timeline__desc { font-size: 0.92rem; color: var(--clr-ink-muted); line-height: 1.65; margin: 0; }
+    .timeline__desc strong { color: var(--clr-ink); font-weight: 600; }
+
+    /* ── Section gallery (reusable, smaller than hero gallery) ── */
+    .gallery { position: relative; }
+    .gallery__frame {
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--clr-surface);
+      aspect-ratio: 4/3;
+    }
+    .gallery__track {
+      display: flex;
+      height: 100%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .gallery__track::-webkit-scrollbar { display: none; }
+    .gallery__slide { flex: 0 0 100%; scroll-snap-align: start; position: relative; height: 100%; }
+    .gallery__slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gallery__caption {
+      position: absolute;
+      left: 16px;
+      bottom: 14px;
+      font-size: 0.74rem;
+      letter-spacing: 0.02em;
+      color: #fff;
+      background: rgba(26,32,51,0.55);
+      backdrop-filter: blur(4px);
+      padding: 5px 10px;
+      border-radius: 3px;
+      z-index: 2;
+    }
+    .gallery__arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(245,240,232,0.92);
+      border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      z-index: 2;
+      transition: background 0.15s;
+    }
+    .gallery__arrow:hover { background: #fff; }
+    .gallery__arrow svg { width: 14px; height: 14px; stroke: var(--clr-ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .gallery__arrow--prev { left: 12px; }
+    .gallery__arrow--next { right: 12px; }
+    .gallery__dots { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
+    .gallery__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--clr-rule); border: none; padding: 0; cursor: pointer; transition: all 0.15s; }
+    .gallery__dot.active { background: var(--clr-accent); transform: scale(1.3); }
+    .gallery--wide .gallery__frame { aspect-ratio: 21/9; }
+    .gallery__frame--portrait { aspect-ratio: 4/5; }
+
+    /* ── Hardware section: gallery beside specs ── */
+    .hw-layout { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); align-items: start; margin-top: var(--space-8); }
+    .hw-layout .spec-grid { grid-template-columns: 1fr; gap: var(--space-6) 0; margin-top: 0; }
+
+    /* ── Software callout box (darker surface) ── */
+    .software-box {
+      background: var(--clr-surface);
+      border-radius: 10px;
+      padding: var(--space-8);
+      box-shadow: inset 0 0 0 1px rgba(26,32,51,0.04);
+    }
+    .software-box .split { gap: var(--space-8); }
+
+    /* ── Result stats (light, sits beside the validation figure) ── */
+    .result-stats { display: flex; flex-direction: column; gap: var(--space-4); }
+    .result-stats__item { padding-bottom: var(--space-4); border-bottom: 1px solid var(--clr-rule); }
+    .result-stats__item:last-child { border-bottom: none; padding-bottom: 0; }
+    .result-stats__num { font-family: var(--font-serif); font-size: clamp(1.8rem, 3vw, 2.3rem); font-weight: 500; line-height: 1; color: var(--clr-ink); }
+    .result-stats__num--accent { color: var(--clr-accent); }
+    .result-stats__label { font-size: var(--text-xs); letter-spacing: 0.04em; text-transform: uppercase; color: var(--clr-ink-muted); margin-top: var(--space-2); }
+    .result-stats--row {
+      flex-direction: row;
+      justify-content: center;
+      text-align: center;
+      margin-top: var(--space-8);
+      padding-top: var(--space-8);
+      border-top: 1px solid var(--clr-rule);
+      gap: var(--space-8);
+    }
+    .result-stats--row .result-stats__item {
+      padding-bottom: 0;
+      border-bottom: none;
+      padding-right: var(--space-8);
+      border-right: 1px solid var(--clr-rule);
+    }
+    .result-stats--row .result-stats__item:last-child { border-right: none; padding-right: 0; }
+
+    /* ── Spec table ── */
+    .spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--space-12); }
+    .spec-table { width: 100%; border-collapse: collapse; }
+    .spec-table tr { border-bottom: 1px solid var(--clr-rule); }
+    .spec-table tr:last-child { border-bottom: none; }
+    .spec-table td { padding: var(--space-3) 0; vertical-align: top; font-size: 0.92rem; }
+    .spec-table td:first-child { font-size: var(--text-sm); color: var(--clr-ink-muted); width: 42%; padding-right: var(--space-4); font-weight: 500; }
+    .spec-table td:last-child { color: var(--clr-ink); font-weight: 500; }
+
+    /* ── Documents ── */
+    .doc-section { padding-top: var(--space-12); }
+    .doc-section__label {
+      font-size: var(--text-xs);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--clr-ink-muted);
+      font-weight: 600;
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--clr-rule);
+    }
+    .doc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--clr-rule); border: 1px solid var(--clr-rule); border-radius: 4px; overflow: hidden; }
+    .doc-card { background: var(--clr-bg); padding: 1.25rem var(--space-6); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); font-size: 0.9rem; font-weight: 500; color: var(--clr-ink); transition: background 0.15s, color 0.15s; }
+    .doc-card:hover { background: var(--clr-surface); color: var(--clr-accent); }
+    .doc-card svg { width: 14px; height: 14px; stroke: var(--clr-accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+    /* ── Close section ── */
+    .proj-close { background: var(--clr-surface); }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .so-panel { grid-template-columns: 1fr; gap: var(--space-4); }
+      .split { grid-template-columns: 1fr; gap: var(--space-6); }
+      .split--reverse .split__text, .split--reverse .split__media { order: unset; }
+      .timeline__row { grid-template-columns: 1fr; gap: var(--space-6); }
+      .timeline__rail { display: none; }
+      .hw-layout { grid-template-columns: 1fr; }
+      .spec-grid { grid-template-columns: 1fr; gap: 0; }
+      .doc-grid { grid-template-columns: 1fr; }
+      .gallery--wide .gallery__frame { aspect-ratio: 4/3; }
+      .result-stats--row {
+        flex-direction: column;
+        gap: var(--space-4);
+      }
+      .result-stats--row .result-stats__item {
+        padding-right: 0;
+        border-right: none;
+        padding-bottom: var(--space-4);
+        border-bottom: 1px solid var(--clr-rule);
+      }
+      .result-stats--row .result-stats__item:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+    }
+    @media (max-width: 600px) {
+      .proj-hero { padding: var(--space-12) var(--page-gutter) var(--space-8); }
+      .proj-hero h1 { font-size: clamp(2.2rem, 9vw, 3rem); }
+      .proj-section { padding-block: var(--space-8); }
+      .proj-section__num { font-size: clamp(2.2rem, 9vw, 3rem); }
+    }
+  </style>
 </head>
 <body>
   <nav class="nav" id="nav">
@@ -20,11 +448,326 @@
       <li><a href="../resume-cv/">Resume / CV</a></li>
     </ul>
   </nav>
-  <div class="page-header">
-    <p class="page-header__eyebrow"><a href="../projects/" style="color:var(--clr-accent)">&larr; Back to Projects</a></p>
-    <h1>Full case study coming soon</h1>
-    <p style="margin-top:1rem;color:var(--clr-ink-muted);font-size:1.1rem;">This page is in progress. Check back shortly.</p>
+
+  <!-- ── PROJECT HERO ── -->
+  <header class="proj-hero">
+    <div class="proj-hero__inner">
+      <p class="proj-hero__eyebrow">
+        <a href="../projects/" style="color:inherit; opacity:0.7;">&larr; Back to Projects</a>
+      </p>
+      <h1>Steady Stride</h1>
+      <p class="proj-hero__lead">I led the alpha-prototype design of a tuned-mass-damper cane for Parkinson's patients, from a 350-line MATLAB simulation through IRB-approved clinical trials, to a <strong>1st place finish</strong> at the Medtronic BMES 2024 Student Design Competition.</p>
+
+      <div class="hero-gallery">
+        <button class="hero-gallery__arrow hero-gallery__arrow--prev" id="heroPrev" aria-label="Previous image">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="hero-gallery__arrow hero-gallery__arrow--next" id="heroNext" aria-label="Next image">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <div class="hero-gallery__frame">
+          <div class="hero-gallery__track" id="heroTrack">
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/Steady_Title_1.png" alt="" aria-hidden="true" />
+              <img src="../../assets/images/Steady_Title_1.png" alt="Steady Stride final prototype cane" />
+              <span class="hero-gallery__caption">Final prototype, beta design</span>
+            </div>
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/Steady_Side_1.webp" alt="" aria-hidden="true" />
+              <img src="../../assets/images/Steady_Side_1.webp" alt="Steady Stride side profile, alpha prototype" />
+              <span class="hero-gallery__caption">Alpha prototype: integrated tuned-mass damper</span>
+            </div>
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/Steady_TMD.webp" alt="" aria-hidden="true" />
+              <img src="../../assets/images/Steady_TMD.webp" alt="Tuned-mass damper mechanism detail" />
+              <span class="hero-gallery__caption">Tuned-mass damper mechanism</span>
+            </div>
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/Steady_Award.webp" alt="" aria-hidden="true" />
+              <img src="../../assets/images/Steady_Award.webp" alt="Medtronic BMES 2024 Student Design Competition, 1st place" />
+              <span class="hero-gallery__caption">1st Place, Medtronic BMES 2024 Student Design Competition</span>
+            </div>
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/Steady_Conf.webp" alt="" aria-hidden="true" />
+              <img src="../../assets/images/Steady_Conf.webp" alt="Presenting Steady Stride at the BMES conference" />
+              <span class="hero-gallery__caption">Presenting at BMES, Cornell DEBUT</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-gallery__dots" id="heroDots"></div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag">Mechanical Simulation (MATLAB)</span>
+        <span class="tag">Tuned-Mass Damper Design</span>
+        <span class="tag">Fusion360</span>
+        <span class="tag">FDM Prototyping</span>
+        <span class="tag">IRB Clinical Trials</span>
+        <span class="tag">Embedded Sensing (Python)</span>
+        <span class="tag">Human Factors Design</span>
+        <span class="tag">Investor Pitch &amp; Strategy</span>
+        <span class="tag">Technical Leadership</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- ── SITUATION / OUTCOMES ── -->
+    <div class="so-panel">
+      <div class="so-panel__col">
+        <p class="label">Situation</p>
+        <ul>
+          <li>Evolve the concept for a novel tremor-resistant cane into a feasible design testable with Parkinson's patients.</li>
+          <li>Assemble the testing methodology and equipment to prove the efficacy of the product.</li>
+          <li>Present product specifications for investors and grant-providers at NIH and other MedTech organizations.</li>
+        </ul>
+      </div>
+      <div class="so-panel__col">
+        <p class="label">Outcomes</p>
+        <ul>
+          <li>Defined the relevant mechanical response with a 300+ line MATLAB simulation to optimize hand tremor dampening.</li>
+          <li>Built a successful alpha prototype and ran IRB-approved clinical trials with Parkinson's patients at the SUNY Cortland Biomechanics Lab, proving a ~12% reduction in experimental tremor amplitude.</li>
+          <li>Designed a successful minimum viable product and received quotes from low-volume manufacturers for 5+ urethane-cast components.</li>
+          <li>Led creation of the investor pitch presentation and script for the Medtronic BMES 2024 Student Design Competition, and won 1st Place ($2,500).</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ── BACKGROUND ── -->
+    <section class="proj-section">
+      <div class="split split--match">
+        <div class="split__text">
+          <p class="split__eyebrow">The Problem</p>
+          <div class="prose">
+            <p>Cornell DEBUT is an undergraduate biomedical engineering entrepreneurial product development group affiliated with Cornell University. The team spends two years on market discovery, early-stage ideation, and basic clinical testing before submitting novel products for the DEBUT VentureWell grant, part of the National Institute of Health.</p>
+            <p>I was recruited following the market discovery phase, which had isolated a distinct need: a device to stabilize gait for stage II and III Parkinson's patients. My background in mechanical design put me in the lead role for the alpha prototype process. The team had already defined the basic concept: a cane with an integrated hand-tremor dampener to reduce instability, paired with more robust treading for better ground contact.</p>
+            <p>The open question wasn't whether a cane could help, it was whether a passive mechanical system could meaningfully reduce tremor amplitude without adding bulk, cost, or complexity a patient wouldn't tolerate in daily use.</p>
+          </div>
+        </div>
+        <div class="split__media">
+          <div class="gallery">
+            <button class="gallery__arrow gallery__arrow--prev" id="probPrev" aria-label="Previous image">
+              <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="gallery__arrow gallery__arrow--next" id="probNext" aria-label="Next image">
+              <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+            <div class="gallery__frame">
+              <div class="gallery__track" id="probTrack">
+                <div class="gallery__slide">
+                  <img src="../../assets/images/Steady_Back.webp" alt="Steady Stride cane, rear view" loading="lazy" />
+                  <span class="gallery__caption">Rear view: stabilizing base and treading</span>
+                </div>
+                <div class="gallery__slide">
+                  <img src="../../assets/images/Steady_Concept.png" alt="Steady Stride early concept sketch" loading="lazy" />
+                  <span class="gallery__caption">Early concept, before the alpha prototype</span>
+                </div>
+              </div>
+            </div>
+            <div class="gallery__dots" id="probDots"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── MECHANISM ── -->
+    <section class="proj-section">
+      <div class="proj-section__label">
+        <span class="proj-section__num">01</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Background</span>
+          <span class="proj-section__title">Damping Mechanism</span>
+        </div>
+      </div>
+      <div class="split">
+        <div class="split__text">
+          <div class="prose">
+            <p>Tremor resistance comes from adapting tuned-mass damper (TMD) technology, the same principle used to stabilize tall buildings against wind sway, to the much smaller mechanical problem of a Parkinson's hand tremor. A tuned mass on a spring is set to oscillate out of phase with the tremor frequency, canceling a portion of the motion at the point of contact rather than just absorbing it passively.</p>
+            <p>I optimized the damper by solving the ordinary differential equations governing the mechanical response of a Parkinson's hand tremor, in about 350 lines of MATLAB. The simulation sweeps preset mass and spring values, stores displacement over time in one array and the average residual in another, then renders two outputs: a 2D plot of cane displacement versus time for a chosen spring-mass pair, and a 3D surface across every discrete mass-spring combination tested, plotting average residual as a function of both.</p>
+            <p>That residual surface is what actually drove the design decision: it let me pick a spring-mass combination near the simulated minimum instead of guessing at a damper configuration and testing it physically one prototype at a time.</p>
+          </div>
+        </div>
+        <div class="split__media">
+          <img src="../../assets/images/Steady_Graph_1.webp" alt="MATLAB simulation output: mass-spring residual surface for tuned-mass damper optimization" loading="lazy" />
+          <p class="split__caption">3D residual surface across mass and spring-constant combinations, used to select the damper configuration</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PROTOTYPE ITERATIONS ── -->
+    <section class="proj-section">
+      <div class="proj-section__label">
+        <span class="proj-section__num">02</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Prototyping</span>
+          <span class="proj-section__title">Design Iterations</span>
+        </div>
+      </div>
+      <div class="software-box">
+        <div class="timeline">
+          <div class="timeline__rail"></div>
+          <div class="timeline__row">
+            <div class="timeline__item">
+              <div class="timeline__dot">Alpha</div>
+              <h3 class="timeline__ver">Works Like</h3>
+              <p class="timeline__desc">Integrated the simulated tuned-mass damper into a cane design in Fusion360, with a flexible TPU stabilizing base for in-field testing. Parts sourced from McMaster-Carr, FDM-printed on a Stratasys F170, assembled onto a stock cane.</p>
+            </div>
+            <div class="timeline__item">
+              <div class="timeline__dot">Clinical</div>
+              <h3 class="timeline__ver">Patient-Ready</h3>
+              <p class="timeline__desc">Refined for IRB-approved patient use. Built an accelerometer-based sensor on a TPU arm strap to record hand tremor independent of the cane itself, for testing at SUNY Cortland.</p>
+            </div>
+            <div class="timeline__item">
+              <div class="timeline__dot">Beta</div>
+              <h3 class="timeline__ver">Looks Like, Works Like</h3>
+              <p class="timeline__desc">Rebuilt from 4 individual PLA components into an articulated, DFM-optimized design, sleeker and easier to manufacture, for the BMES/Medtronic competition and investor conversations.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prose" style="margin-top: var(--space-6);">
+        <p>The alpha prototype proved the mechanism worked. It was never meant to be manufacturable: four separate PLA components, hand-assembled onto a stock cane, built to validate the simulation against a real hand tremor, not to ship. Once clinical results confirmed the approach, the work shifted to a real industrial design problem: the same damper, but built from parts that could actually be cast and assembled at volume.</p>
+        <p>I led that transition. The beta design replaced the four-piece PLA assembly with articulated components designed around urethane casting and supply-chain logistics from the start, not retrofitted onto a research prototype. The result is sleeker, less obstructive, and closer to something a patient would actually want to be seen using.</p>
+      </div>
+
+      <div class="hw-layout">
+        <div class="gallery">
+          <button class="gallery__arrow gallery__arrow--prev" id="hwPrev" aria-label="Previous image">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button class="gallery__arrow gallery__arrow--next" id="hwNext" aria-label="Next image">
+            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <div class="gallery__frame">
+            <div class="gallery__track" id="hwTrack">
+              <div class="gallery__slide">
+                <img src="../../assets/images/Steady_Side_1.webp" alt="Alpha prototype, side profile" loading="lazy" />
+                <span class="gallery__caption">Alpha prototype: FDM-printed, assembled on a stock cane</span>
+              </div>
+              <div class="gallery__slide">
+                <img src="../../assets/images/Steady_Side_2.webp" alt="Alpha prototype, alternate side profile" loading="lazy" />
+                <span class="gallery__caption">Alpha prototype: side profile, tremor-dampening arm extended</span>
+              </div>
+              <div class="gallery__slide">
+                <img src="../../assets/images/Steady_Ball.png" alt="Alpha prototype, TPU stabilizing base" loading="lazy" />
+                <span class="gallery__caption">Alpha prototype: TPU stabilizing base</span>
+              </div>
+              <div class="gallery__slide">
+                <img src="../../assets/images/Steady_Graph_1.webp" alt="MATLAB optimization graph 1" loading="lazy" />
+                <span class="gallery__caption">Optimization graph: displacement vs. time</span>
+              </div>
+              <div class="gallery__slide">
+                <img src="../../assets/images/Steady_Graph_2.png" alt="MATLAB optimization graph 2" loading="lazy" />
+                <span class="gallery__caption">Optimization graph: mass-spring residual surface</span>
+              </div>
+            </div>
+          </div>
+          <div class="gallery__dots" id="hwDots"></div>
+        </div>
+
+        <div class="spec-grid">
+          <table class="spec-table">
+            <tr><td>Mechanism</td><td>Tuned-mass damper (spring-mass)</td></tr>
+            <tr><td>Optimization</td><td>300+ line MATLAB ODE simulation</td></tr>
+            <tr><td>Stabilizing base</td><td>Flexible TPU</td></tr>
+            <tr><td>Alpha fabrication</td><td>FDM, Stratasys F170</td></tr>
+            <tr><td>Beta fabrication</td><td>Low-volume urethane casting</td></tr>
+            <tr><td>CAD</td><td>Fusion360</td></tr>
+            <tr><td>Clinical result</td><td>~12% tremor amplitude reduction</td></tr>
+            <tr><td>Recognition</td><td>1st Place, Medtronic BMES 2024</td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TESTING EQUIPMENT / ANALYSIS ── -->
+    <section class="proj-section">
+      <div class="software-box">
+        <div class="split split--reverse">
+          <div class="split__media split__media--wide">
+            <img src="../../assets/images/Steady_Band_1.png" alt="Accelerometer sensor on TPU arm strap" loading="lazy" />
+            <p class="split__caption">Accelerometer-based sensor on TPU arm strap, used to record hand tremor independent of the cane</p>
+          </div>
+          <div class="split__text">
+            <p class="split__eyebrow">Testing &amp; Analysis</p>
+            <div class="prose">
+              <p>I built the accelerometer-based sensor used in clinical testing myself: a small board on a TPU arm strap, sampled with Python on a microcontroller, recording relative hand tremor independent of the cane so we had a clean signal to compare before and after. On the analysis side, I wrote the MATLAB pipeline that filtered the raw accelerometer data and computed tremor amplitude in the direction of propagation for each patient session.</p>
+              <p>The same 300+ line simulation environment used to design the damper was reused here as the analysis backbone, the design tool and the validation tool share code, so results from clinical testing could be compared directly against the original simulated predictions rather than against a separate, disconnected analysis script.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CLINICAL TESTING ── -->
+    <section class="proj-section">
+      <div class="proj-section__label">
+        <span class="proj-section__num">03</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Background</span>
+          <span class="proj-section__title">Clinical Testing</span>
+        </div>
+      </div>
+      <div class="split">
+        <div class="split__text">
+          <div class="prose">
+            <p>We filed for IRB approval at the start of 2024 and began building the final prototype for patient use alongside the experimental testing equipment. Testing ran at SUNY Cortland's Kinesiology Lab with Parkinson's patients using the alpha prototype, captured on video and demonstrated by me throughout the sessions.</p>
+            <p>I filtered and analyzed the resulting accelerometer data in MATLAB and found a 12 to 15% decrease in relative hand tremor amplitude, in the direction of tremor propagation, for 3 of the 4 patients tested. Individual graphs and per-patient data points aren't published here to avoid any health data confidentiality issues, the result above is the aggregate finding, not raw patient data.</p>
+          </div>
+        </div>
+        <div class="split__media">
+          <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/msNxEViNob4?si=_snVyfLXJqNh6lq8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <p class="split__caption">Final prototype in use, demonstrated during patient testing at SUNY Cortland</p>
+        </div>
+      </div>
+
+      <div class="result-stats result-stats--row">
+        <div class="result-stats__item">
+          <div class="result-stats__num result-stats__num--accent">~12%</div>
+          <div class="result-stats__label">Average tremor amplitude reduction</div>
+        </div>
+        <div class="result-stats__item">
+          <div class="result-stats__num">12&ndash;15%</div>
+          <div class="result-stats__label">Reduction range, in direction of propagation</div>
+        </div>
+        <div class="result-stats__item">
+          <div class="result-stats__num">3 of 4</div>
+          <div class="result-stats__label">Patients showing measurable reduction</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CLOSE ── -->
+    <section class="proj-section proj-close" style="border-radius: 12px; padding: var(--space-12) var(--space-8);">
+      <div class="proj-section__label" style="border-bottom-color: rgba(26,32,51,0.08);">
+        <span class="proj-section__num">04</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Impact</span>
+          <span class="proj-section__title">Beyond the Prototype</span>
+        </div>
+      </div>
+      <div class="prose">
+        <p>After clinical trials wrapped, the team compiled findings into a DEBUT VentureWell report and a submission for the BMES/Medtronic Student Design Competition. Being selected as a finalist meant turning SteadyStride from a research project into something that looked and worked like a real minimum viable product, not just a proof of concept that happened to work on four patients.</p>
+        <p>The pitch deck and investor-facing strategy were my work. I led development of the deck used at the conference and in every later investor conversation: branding, economic projections, and full-design renderings, alongside the redesign of the physical prototype itself. Spreading the four-part alpha design into an articulated, DFM-optimized assembly wasn't just an engineering decision, it was driven by what the cost model and supply chain would need to look like if this device were ever actually manufactured.</p>
+        <p>That work won 1st Place at the Medtronic BMES 2024 Student Design Competition, $2,500 toward commercialization, and it's the same pitch deck and report that now form the basis for any future incubator or grant conversation about the device.</p>
+      </div>
+    </section>
+
+    <!-- ── DOCUMENTS (unnumbered, bottom of page) ── -->
+    <section class="proj-section doc-section">
+      <p class="doc-section__label">Project Documents</p>
+      <div class="doc-grid">
+        <a class="doc-card" href="../../assets/docs/Steady_Final_Presentation.pdf" target="_blank" rel="noopener">Pitch Deck <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <a class="doc-card" href="../../assets/docs/Steady_Final_Report.pdf" target="_blank" rel="noopener">VentureWell Report <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <a class="doc-card" href="../../assets/docs/Steady_Final_Poster.pdf" target="_blank" rel="noopener">Research Poster <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <a class="doc-card" href="../../assets/docs/Steady_MATLAB_Doc.pdf" target="_blank" rel="noopener">Simulation Documentation <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      </div>
+    </section>
   </div>
+
   <footer class="footer">
     <div class="container footer__inner">
       <span>&copy; 2026 Andrew J. D'Onofrio</span>
@@ -34,6 +777,50 @@
       </div>
     </div>
   </footer>
+
   <script src="../../js/main.js"></script>
+  <script>
+    function initSlider(trackId, dotsId, prevId, nextId, slideSel, dotClass) {
+      const track = document.getElementById(trackId);
+      const dotsWrap = document.getElementById(dotsId);
+      const prevBtn = document.getElementById(prevId);
+      const nextBtn = document.getElementById(nextId);
+      if (!track || !dotsWrap) return;
+      const slides = track.querySelectorAll(slideSel);
+      const count = slides.length;
+
+      slides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = dotClass + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', 'Go to image ' + (i + 1));
+        dot.addEventListener('click', () => goTo(i));
+        dotsWrap.appendChild(dot);
+      });
+
+      const dots = dotsWrap.querySelectorAll('.' + dotClass);
+
+      function currentIndex() {
+        return Math.round(track.scrollLeft / track.clientWidth);
+      }
+      function goTo(i) {
+        const clamped = ((i % count) + count) % count;
+        track.scrollTo({ left: track.clientWidth * clamped, behavior: 'smooth' });
+      }
+      track.addEventListener('scroll', () => {
+        const index = currentIndex();
+        dots.forEach((d, i) => d.classList.toggle('active', i === index));
+      });
+      if (prevBtn) prevBtn.addEventListener('click', () => goTo(currentIndex() - 1));
+      if (nextBtn) nextBtn.addEventListener('click', () => goTo(currentIndex() + 1));
+    }
+
+    initSlider('heroTrack', 'heroDots', 'heroPrev', 'heroNext', '.hero-gallery__slide', 'hero-gallery__dot');
+    initSlider('probTrack', 'probDots', 'probPrev', 'probNext', '.gallery__slide', 'gallery__dot');
+    initSlider('hwTrack', 'hwDots', 'hwPrev', 'hwNext', '.gallery__slide', 'gallery__dot');
+
+    function toggleMenu() {
+      document.getElementById('navLinks').classList.toggle('open');
+    }
+  </script>
 </body>
 </html>

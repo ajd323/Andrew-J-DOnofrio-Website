@@ -81,8 +81,24 @@
       scrollbar-width: none;
     }
     .hero-gallery__track::-webkit-scrollbar { display: none; }
-    .hero-gallery__slide { flex: 0 0 100%; scroll-snap-align: start; position: relative; height: 100%; }
-    .hero-gallery__slide img { width: 100%; height: 100%; object-fit: cover; }
+    .hero-gallery__slide { flex: 0 0 100%; scroll-snap-align: start; position: relative; height: 100%; overflow: hidden; }
+    .hero-gallery__slide-bg {
+      position: absolute;
+      inset: -20px;
+      width: calc(100% + 40px);
+      height: calc(100% + 40px);
+      object-fit: cover;
+      filter: blur(24px) brightness(0.85) saturate(1.1);
+      transform: scale(1.15);
+      z-index: 0;
+    }
+    .hero-gallery__slide img:not(.hero-gallery__slide-bg) {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      z-index: 1;
+    }
     .hero-gallery__caption {
       position: absolute;
       left: 20px;
@@ -94,6 +110,7 @@
       backdrop-filter: blur(4px);
       padding: 6px 12px;
       border-radius: 3px;
+      z-index: 2;
     }
     .hero-gallery__arrow {
       position: absolute;
@@ -295,6 +312,7 @@
       backdrop-filter: blur(4px);
       padding: 5px 10px;
       border-radius: 3px;
+      z-index: 2;
     }
     .gallery__arrow {
       position: absolute;
@@ -464,22 +482,27 @@
         <div class="hero-gallery__frame">
           <div class="hero-gallery__track" id="heroTrack">
             <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/ETT_Title_1.png" alt="" aria-hidden="true" />
               <img src="../../assets/images/ETT_Title_1.png" alt="Axio Recovery final prototype: sensor band, datalogger, and case" />
               <span class="hero-gallery__caption">Final system, V2.0</span>
             </div>
             <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/ETT_Website_Axio.png" alt="" aria-hidden="true" />
               <img src="../../assets/images/ETT_Website_Axio.png" alt="Physician dashboard showing torque and sEMG traces" />
               <span class="hero-gallery__caption">Clinician dashboard: axiorecoverytracker.com</span>
             </div>
             <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/ETT_MCS_Output.png" alt="" aria-hidden="true" />
               <img src="../../assets/images/ETT_MCS_Output.png" alt="Torque estimate comparison: OptiTrack vs Axio Recovery" />
               <span class="hero-gallery__caption">Validation: OptiTrack vs. Axio Recovery</span>
             </div>
             <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/ETT_Immerse_3.webp" alt="" aria-hidden="true" />
               <img src="../../assets/images/ETT_Immerse_3.webp" alt="Athletic immersion testing session" />
               <span class="hero-gallery__caption">Field testing: throwing motion capture</span>
             </div>
             <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/ETT_Comp_Matrix.webp" alt="" aria-hidden="true" />
               <img src="../../assets/images/ETT_Comp_Matrix.webp" alt="Competitive matrix vs. Driveline Pulse and motion capture" />
               <span class="hero-gallery__caption">Competitive matrix: accuracy and cost targets vs. Pulse and lab motion capture</span>
             </div>
@@ -607,7 +630,8 @@
       </div>
 
       <div class="prose" style="margin-top: var(--space-6);">
-        <p>I designed the 2-layer PCB for both boards in KiCAD: analog filtering, USB-C charging, and I2C multiplexing across 10+ chips and 8 connectors. Housings were modeled in Fusion360 against a sleeve-fit chart built from forearm and bicep circumference data, so the band doesn't shift mid-throw. Firmware on the ESP32 samples at ~10 kHz, filters and smooths the signal, and logs to microSD. Post-session, a Python pipeline I built and host on GitLab runs the Hill's Model calculation and pushes results to the dashboard.</p>
+        <p>I designed the 2-layer PCB for both boards in KiCAD: analog filtering, USB-C charging, and I2C multiplexing across 10+ chips and 8 connectors. Housings were modeled in Fusion360 against a sleeve-fit chart built from forearm and bicep circumference data, X-small through X-large, so the band doesn't shift mid-throw.</p>
+        <p>Firmware on the ESP32 samples at ~10 kHz, filters and smooths the signal, and logs to microSD. Post-session, a Python pipeline I built and host on GitLab runs the Hill's Model calculation and pushes results to the dashboard.</p>
         <p>Beyond the electronics, I designed the Axio Recovery logo and product mark used across the casing, packaging, and the IFU, then wrote the Instructions for Use itself: setup steps, sensor placement diagrams, calibration sequence, and warnings, the kind of document that has to be unambiguous for someone who has never seen the device before. I shot and edited the product photography used in the final report and competition materials, building a small lightbox setup to get clean, consistent shots of each prototype generation against a plain background. I also handled the physical assembly and packaging of the final V2.0 units for testing and demo days: laser-cutting and fitting the housings, routing internal wiring, and packaging each unit so it survived being handed off between team members and reviewers intact.</p>
       </div>
 
@@ -622,19 +646,19 @@
           <div class="gallery__frame">
             <div class="gallery__track" id="hwTrack">
               <div class="gallery__slide">
-                <img src="../../assets/images/ETT_PCB.png" alt="V1.1 Main PCB" loading="lazy" />
+                  <img src="../../assets/images/ETT_PCB.png" alt="V1.1 Main PCB" loading="lazy" />
                 <span class="gallery__caption">V1.1 PCB</span>
               </div>
               <div class="gallery__slide">
-                <img src="../../assets/images/ETT_Datalogger_V1.webp" alt="V1.1 main board: ESP32, charging circuit, microSD reader" loading="lazy" />
+                  <img src="../../assets/images/ETT_Datalogger_V1.webp" alt="V1.1 main board: ESP32, charging circuit, microSD reader" loading="lazy" />
                 <span class="gallery__caption">V1.1 Casing in Fusion360</span>
               </div>
               <div class="gallery__slide">
-                <img src="../../assets/images/ETT_Build_1.webp" alt="Benchtop assembly on the mock arm verification apparatus" loading="lazy" />
+                  <img src="../../assets/images/ETT_Build_1.webp" alt="Benchtop assembly on the mock arm verification apparatus" loading="lazy" />
                 <span class="gallery__caption"> Custom-Built Benchtop for Isolated Sensor Verification</span>
               </div>
               <div class="gallery__slide">
-                <img src="../../assets/images/ETT_System_V1.webp" alt="V1.0 mock arm verification rig" loading="lazy" />
+                  <img src="../../assets/images/ETT_System_V1.webp" alt="V1.0 mock arm verification rig" loading="lazy" />
                 <span class="gallery__caption">V1.0: mock arm verification rig</span>
               </div>
             </div>
@@ -668,7 +692,7 @@
           <div class="split__text">
             <p class="split__eyebrow">Software</p>
             <div class="prose">
-              <p>I built and host the clinician-facing dashboard through www.axiorecoverytracker.com. A clincian would upload a session's sensor data, and the Hill's Model pipeline runs server-side, returning torque estimates, muscle activation traces, and session metrics through the browser. This provided a streamlined biomechanics user interface for physicians to use in diangosis process for post-recovery.</p>
+              <p>I built and host the clinician-facing dashboard. Upload a session's sensor data, and the Hill's Model pipeline runs server-side, returning torque estimates, muscle activation traces, and session metrics through the browser. No local install, no specialized biomechanics software required.</p>
             </div>
           </div>
         </div>
@@ -788,14 +812,14 @@
     <section class="proj-section doc-section">
       <p class="doc-section__label">Project Documents</p>
       <div class="doc-grid">
-        <a class="doc-card" href="../../assets/pdfs/ETT_Statement.pdf" target="_blank" rel="noopener">Statement of Intent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-        <a class="doc-card" href="../../assets/pdfs/ETT_EFS.pdf" target="_blank" rel="noopener">Engineering Functional Spec <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-        <a class="doc-card" href="../../assets/pdfs/ETT_Immersion.pdf" target="_blank" rel="noopener">Immersion Program Report <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-        <a class="doc-card" href="../../assets/pdfs/ETT_PD_Timeline.pdf" target="_blank" rel="noopener">PD Timeline <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-        <a class="doc-card" href="../../assets/pdfs/ETT_Model_Workshop.pdf" target="_blank" rel="noopener">Hill's Model Workshop <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-        <a class="doc-card" href="../../assets/pdfs/ETT_Doc_Workshop.pdf" target="_blank" rel="noopener">Documentation Workshop <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-        <a class="doc-card" href="../../assets/pdfs/CACOM_Schem_V2.2.pdf" target="_blank" rel="noopener">PCB Schematic V2.2 <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-        <a class="doc-card" href="../../assets/pdfs/ETT_Final_Report.pdf" target="_blank" rel="noopener">Final Report <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <a class="doc-card" href="../../assets/docs/ETT_Statement.pdf" target="_blank" rel="noopener">Statement of Intent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <a class="doc-card" href="../../assets/docs/ETT_EFS.pdf" target="_blank" rel="noopener">Engineering Functional Spec <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <a class="doc-card" href="../../assets/docs/ETT_Immersion.pdf" target="_blank" rel="noopener">Immersion Program Report <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <a class="doc-card" href="../../assets/docs/ETT_PD_Timeline.pdf" target="_blank" rel="noopener">PD Timeline <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <a class="doc-card" href="../../assets/docs/ETT_Model_Workshop.pdf" target="_blank" rel="noopener">Hill's Model Workshop <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <a class="doc-card" href="../../assets/docs/ETT_Doc_Workshop.pdf" target="_blank" rel="noopener">Documentation Workshop <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <a class="doc-card" href="../../assets/docs/CACOM_Schem_V2.2.pdf" target="_blank" rel="noopener">PCB Schematic V2.2 <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <a class="doc-card" href="../../assets/docs/ETT_Final_Report.pdf" target="_blank" rel="noopener">Final Report <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
       </div>
     </section>
   </div>
