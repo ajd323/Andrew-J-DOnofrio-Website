@@ -13,18 +13,18 @@
     /* ── Hero ── */
     .detail-hero {
       display: grid;
-      grid-template-columns: 1fr 1.1fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
       grid-template-areas:
         "text-top    gallery"
         "text-bottom gallery";
-      column-gap: var(--space-6);
+      column-gap: var(--space-10);
       row-gap: 0;
       align-items: start;
       padding-block: var(--space-24) var(--space-10);
     }
-    .detail-hero__text-top { grid-area: text-top; padding-left: 18px; }
-    .detail-hero__text-bottom { grid-area: text-bottom; padding-left: 18px; }
-    .hero-gallery { grid-area: gallery; }
+    .detail-hero__text-top { grid-area: text-top; padding-left: 18px; display: flex; flex-direction: column; }
+    .detail-hero__text-bottom { grid-area: text-bottom; padding-left: 18px; align-self: end; }
+    .hero-gallery { grid-area: gallery; position: relative; z-index: 1; }
     .detail-hero__eyebrow {
       font-size: var(--text-xs);
       letter-spacing: 0.1em;
@@ -43,7 +43,7 @@
       color: var(--clr-ink-muted);
       line-height: 1.75;
       margin-bottom: var(--space-6);
-      max-width: 46ch;
+      max-width: 56ch;
     }
 
     .mini-stats {
@@ -70,21 +70,25 @@
       margin-top: 4px;
     }
 
-    .tag-row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .spec-tiles {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-3);
+      margin-top: var(--space-8);
+    }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: var(--space-2); position: relative; z-index: 0; }
     .tag {
       font-size: var(--text-xs);
       letter-spacing: 0.05em;
-      padding: 4px 10px;
+      padding: 5px 12px;
       border: 1px solid var(--clr-accent);
       border-radius: 3px;
       color: var(--clr-accent);
-      background: var(--clr-bg);
-      font-weight: 500;
+      background: color-mix(in srgb, var(--clr-accent) 8%, var(--clr-bg));
+      font-weight: 600;
     }
 
-    .hero-gallery {
-      position: relative;
-    }
     .hero-gallery__arrow {
       position: absolute;
       top: 50%;
@@ -393,7 +397,7 @@
     .video-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
 
     /* ── Doc links ── */
-    .doc-link-row { display: flex; flex-wrap: wrap; gap: var(--space-6); margin-top: var(--space-4); }
+    .doc-link-row { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-6); margin-top: var(--space-4); }
     .doc-link { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); color: var(--clr-accent); font-weight: 500; transition: color 0.2s, gap 0.2s; }
     .doc-link:hover { color: var(--clr-ink); gap: var(--space-3); }
     .doc-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
@@ -423,6 +427,7 @@
       }
       .detail-hero__text-top,
       .detail-hero__text-bottom { padding-left: 0; }
+      .detail-hero__text-bottom { margin-top: var(--space-6); align-self: start; }
       .hero-gallery { margin-top: var(--space-6); }
       .so-panel { grid-template-columns: 1fr; gap: var(--space-4); }
       .figure-pair { grid-template-columns: 1fr; }
@@ -461,7 +466,7 @@
       <div class="detail-hero__text-top">
         <h1>Axio Recovery</h1>
         <p class="detail-hero__eyebrow">Sports Medicine &middot; Diagnostic Device &middot; Cornell DEBUT</p>
-        <p class="detail-hero__lead">A wearable sEMG and IMU platform that estimates elbow torque continuously during UCL rehabilitation, bringing motion-capture-lab accuracy onto the field.</p>
+        <p class="detail-hero__lead">A wearable sEMG/IMU system that estimates elbow torque in real time during UCL rehab. I led hardware, firmware, and the validation study that got it to 2.58% error against motion-capture ground truth.</p>
       </div>
 
       <div class="hero-gallery">
@@ -495,57 +500,70 @@
       <div class="detail-hero__text-bottom">
         <div class="tag-row">
           <span class="tag">Systems Engineering</span>
-          <span class="tag">Project Management</span>
           <span class="tag">sEMG / IMU Sensing</span>
           <span class="tag">Hill's Musculoskeletal Model</span>
           <span class="tag">PCB Design (KiCAD)</span>
-          <span class="tag">Python</span>
-          <span class="tag">C++ / Embedded Firmware</span>
+          <span class="tag">Embedded C++</span>
+          <span class="tag">Python Signal Pipeline</span>
           <span class="tag">Fusion360</span>
-          <span class="tag">21 CFR 890.1375</span>
-          <span class="tag">IEC 60601-1-11</span>
-          <span class="tag">ISO 80601-2-78</span>
-          <span class="tag">FDA 510(k) Pathway</span>
-          <span class="tag">Design History File</span>
           <span class="tag">V&amp;V Testing</span>
           <span class="tag">OptiTrack Motion Capture</span>
-          <span class="tag">IRB Protocol Development</span>
-          <span class="tag">GitLab / ISO-Compliant Dev</span>
-          <span class="tag">Technical Onboarding</span>
+          <span class="tag">GitLab CI</span>
+          <span class="tag">Technical Leadership</span>
         </div>
       </div>
     </div>
 
-    <div class="mini-stats">
-      <div class="mini-stats__item"><div class="mini-stats__num">2.58%</div><div class="mini-stats__label">Torque error vs. OptiTrack</div></div>
-      <div class="mini-stats__item"><div class="mini-stats__num">8</div><div class="mini-stats__label">Person team</div></div>
-      <div class="mini-stats__item"><div class="mini-stats__num">510(k)</div><div class="mini-stats__label">Regulatory pathway</div></div>
-      <div class="mini-stats__item"><div class="mini-stats__num">$7.2M</div><div class="mini-stats__label">Projected SOM</div></div>
+    <div class="spec-tiles">
+      <div class="mini-stats__item"><div class="mini-stats__num">ESP32</div><div class="mini-stats__label">Sparkfun ESP32-WROOM, ~10 kHz sampling</div></div>
+      <div class="mini-stats__item"><div class="mini-stats__num">sEMG + IMU</div><div class="mini-stats__label">MyoWare 2.0 &middot; LGD320 9DOF</div></div>
+      <div class="mini-stats__item"><div class="mini-stats__num">3 muscles</div><div class="mini-stats__label">Biceps, triceps, pronator teres</div></div>
+      <div class="mini-stats__item"><div class="mini-stats__num">2-layer</div><div class="mini-stats__label">Custom KiCAD PCB, 10+ chips</div></div>
     </div>
 
-    <!-- ── SITUATION / OUTCOMES PANEL ── -->
-    <div class="so-panel">
-      <div class="so-panel__col">
-        <p class="label">Situation</p>
-        <ul>
-          <li>UCL reconstruction surgeries in MLB pitchers rose <strong>40%</strong> from 2010&ndash;2019; recovery takes ~20.5 months on average.</li>
-          <li>In New York State alone, UCL reconstruction procedures increased <strong>343%</strong> between 2003 and 2014, with 88.5% occurring in athletes aged 15&ndash;24.</li>
-          <li>Lab-grade motion capture costs <strong>&gt;$1M</strong> to install; consumer wearables like Driveline's Pulse carry <strong>38.7% error</strong>.</li>
-          <li>KinaTrax's Hawkeye system is popular for pitching environments but requires an estimated <strong>~$1,000,000</strong> installation fee and intensive training data.</li>
-          <li>Our own surveys of 10+ clinical staff and D1 athletes confirmed an underdeveloped market for managing UCL-based physical therapy.</li>
-          <li>No device delivers accurate, non-invasive, low-cost UCL stress monitoring <strong>in the field</strong>.</li>
-        </ul>
-      </div>
-      <div class="so-panel__col">
-        <p class="label">Outcomes</p>
-        <ul>
-          <li>Led an <strong>8-person team</strong> through V1.0&ndash;V2.0 prototyping, hitting <strong>2.58% torque error</strong> against OptiTrack ground truth.</li>
-          <li>Authored <strong>100+ pages</strong> of FDA Design History File documentation and <strong>200+ onboarding slides</strong> for the team.</li>
-          <li>Designed the 2-layer PCB, Fusion360 hardware, and the Python/GitLab processing pipeline.</li>
-          <li>Verified an 8-hour continuous wear trial with zero electrical dropouts, a sub-75g sensor band, and surface temperature under 40&deg;C.</li>
-          <li>Built out the regulatory, reimbursement, and manufacturing case: 510(k) pathway, RTM billing codes, and a $549.99 retail / ~$353.73 COGS model.</li>
-          <li>Submitted the full project as a Phase 2B entry to VentureWell's DEBUT competition, including a recorded product demonstration.</li>
-        </ul>
+    <div class="mini-stats">
+      <div class="mini-stats__item"><div class="mini-stats__num">2.58%</div><div class="mini-stats__label">Torque error vs. OptiTrack</div></div>
+      <div class="mini-stats__item"><div class="mini-stats__num">8 hr</div><div class="mini-stats__label">Continuous wear, zero dropouts</div></div>
+      <div class="mini-stats__item"><div class="mini-stats__num">&lt;75g</div><div class="mini-stats__label">Sensor band mass</div></div>
+      <div class="mini-stats__item"><div class="mini-stats__num">8</div><div class="mini-stats__label">Engineers led</div></div>
+    </div>
+
+    <!-- ── DOCUMENTS (moved to top) ── -->
+    <div class="detail-section" style="margin-top: var(--space-2);">
+      <div class="section-label"><span>Project Documents</span></div>
+      <div class="doc-link-row">
+        <a class="doc-link" href="../../assets/pdfs/ETT_Statement.pdf" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          Statement of Intent (PDF)
+        </a>
+        <a class="doc-link" href="../../assets/pdfs/ETT_EFS.pdf" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          Engineering Functional Spec (PDF)
+        </a>
+        <a class="doc-link" href="../../assets/pdfs/ETT_Immersion.pdf" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          Immersion Program Report (PDF)
+        </a>
+        <a class="doc-link" href="../../assets/pdfs/ETT_PD_Timeline.pdf" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          Product Development Timeline (PDF)
+        </a>
+        <a class="doc-link" href="../../assets/pdfs/ETT_Model_Workshop.pdf" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          Hill's Model Workshop Notes (PDF)
+        </a>
+        <a class="doc-link" href="../../assets/pdfs/ETT_Doc_Workshop.pdf" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          Documentation Workshop (PDF)
+        </a>
+        <a class="doc-link" href="../../assets/pdfs/CACOM_Schem_V2.2.pdf" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          PCB Schematic V2.2 (PDF)
+        </a>
+        <a class="doc-link" href="../../assets/pdfs/ETT_Final_Report.pdf" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          Final Report (PDF)
+        </a>
       </div>
     </div>
   </section>
@@ -558,24 +576,59 @@
         <!-- Overview -->
         <div class="detail-section">
           <div class="section-label"><span>Background</span></div>
-          <p>The elbow's ulnar collateral ligament (UCL) is the structure pitchers tear most often. The surgery that fixes it, Tommy John surgery, comes with a recovery clock measured in months, not weeks. Today the only way to actually measure how much torque an athlete's elbow is taking during that recovery is a motion capture lab. Infrared cameras, reflective markers, a six or seven figure installation. Outside that room, coaches and physical therapists are mostly guessing.</p>
-          <p>Axio Recovery is a wearable alternative built to close that gap. Following the end of SteadyStride, my previous Cornell DEBUT project, I took over as Project Manager for a new team of eight. The goal was a device that estimates valgus elbow torque continuously, non-invasively, and in the field, during real practices and rehab sessions, not just inside a lab.</p>
-          <p>Early customer discovery shaped the direction more than any internal brainstorm. One of our team members interviewed Cornell Baseball players directly, including one athlete recovering from a UCL procedure using a synthetic ligament graft instead of a traditional tendon harvest. The conversations surfaced a consistent preference. Players wanted something closer to a minimal sleeve or small strapped sensors, not a full rigid brace. Most were already comparing anything we proposed against Driveline's Pulse, the incumbent product they actually wear.</p>
+          <p>UCL reconstruction ("Tommy John" surgery) recovery is long, and there's no good way to measure how much stress the elbow is actually taking during rehab outside a motion-capture lab. I picked this problem up as Project Manager for a new 8-person Cornell DEBUT team, with the goal of building something that estimates elbow torque continuously, outside the lab, during real throwing sessions.</p>
+          <p>We started with athlete interviews instead of a spec sheet. One conversation, with a Cornell Baseball player recovering on a synthetic ligament graft, set the form-factor constraint for the whole project: nothing rigid, nothing that changes how the elbow moves under a sleeve. Every comparison point athletes brought up was Driveline's Pulse, so that became our accuracy baseline to beat.</p>
 
-          <h3>Hills-Musculoskeletal Model</h3>
-          <p>Rather than relying on cameras, Axio Recovery estimates torque from two wearable sensor types. Surface EMG (sEMG) sensors read muscle activation as a voltage, and IMUs track limb orientation. Those two signals feed a patient-specific Hill's Musculoskeletal Model, calibrated to each athlete with a one-time setup.</p>
+          <div class="figure-with-text">
+            <div class="figure-with-text__img">
+              <img src="../../assets/images/ETT_Immerse_2.webp" alt="Athletic immersion testing session, second round, evaluating throwing motion constraints" />
+            </div>
+            <div class="figure-with-text__copy">
+              <p class="figure-with-text__label">Customer discovery</p>
+              <p>Before any hardware, we ran structured interviews and field observation with Cornell Baseball, including athletes mid-rehab. Their feedback set the hard constraint that shaped every later design decision: <strong>nothing rigid, nothing that alters throwing mechanics.</strong></p>
+            </div>
+          </div>
+
+          <h3>Sensor fusion approach</h3>
+          <p>Cameras weren't an option in the field, so we estimated torque from two on-body signals instead: surface EMG (sEMG) for muscle activation, and IMUs for limb orientation. Both feed a patient-specific Hill's Musculoskeletal Model, calibrated per athlete in a one-time setup.</p>
           <div class="equation-block">&tau;(&theta;, t) = &Sigma; r(&theta;, t) &middot; F(&theta;, t)</div>
-          <p>Here <em>r</em> is the distance from each muscle head to the elbow joint, taken from the IMUs. <em>F</em> is the contraction force of that muscle, taken from the sEMGs. We target the three muscle groups our team identified as the dominant contributors to UCL stress: the biceps brachii long head, the triceps brachii long head, and the pronator teres.</p>
+          <p><em>r</em> is the moment arm from each muscle head to the elbow joint, derived from IMU orientation. <em>F</em> is muscle force, derived from sEMG. We modeled three muscle groups identified as the dominant contributors to UCL loading: biceps brachii long head, triceps brachii long head, and pronator teres. Narrowing to three kept the sensor count, and the calibration burden, low enough to be practical outside a lab.</p>
+
+          <div class="figure figure--narrow">
+            <img src="../../assets/images/ETT_Flow_Chart.webp" alt="System architecture flow chart: sEMG and IMU sensor input through signal processing to Hill's model output" />
+            <p class="figure__caption"><strong>Signal flow.</strong> Raw sEMG and IMU streams pass through onboard filtering, get logged to microSD, then run through the offline Hill's Model pipeline to produce a torque estimate per muscle channel.</p>
+          </div>
         </div>
 
         <!-- Components -->
         <div class="detail-section">
-          <div class="section-label"><span>Production</span></div>
-          <p>The hardware went through three real checkpoints, not one clean build. <strong>V1.0</strong> was the integration milestone. Getting sEMGs and IMUs talking to an MCU at all, with basic breakout boards soldered onto a protoboard and simple mechanical casings that just held the form factor. <strong>V1.1</strong> is where I split the electronics into a proper two-board architecture. A "main" board carrying the ESP32-WROOM, battery charging (MCP73871), and a microSD reader, and a separate "peripheral" board consolidating the individual sEMG and IMU connections through a TCA9548 I2C multiplexer. <strong>V2.0</strong> is the version that went through full verification and validation. Slimmer housings, a 3.7V LiPo battery, and the wired Molex/JST connector scheme that's now the target for a wireless redesign.</p>
+          <div class="section-label"><span>Build</span></div>
+          <p>Three hardware revisions, each solving a different problem. <strong>V1.0</strong> was about getting sEMG and IMU data onto an MCU at all — breakout boards on protoboard, casings that just held the form factor together. <strong>V1.1</strong> is where I moved to a real two-board architecture: a main board with the ESP32-WROOM, battery charging (MCP73871), and a microSD reader, and a peripheral board that consolidates the sEMG/IMU connections through a TCA9548 I2C multiplexer — needed because every sensor shares the same default I2C address. <strong>V2.0</strong> is the version we validated: slimmer housings, a 3.7V LiPo, and a wired Molex/JST connector scheme that's the known limitation going into the next revision.</p>
 
-          <p>I designed the 2-layer PCB for both boards in KiCAD. It handles analog filtering, USB-C charging, and I2C multiplexing across 10+ chips and 8 Molex/JST connectors. I modeled the wearable housings in Fusion360, sized against a sleeve fitting chart we built from forearm and bicep circumference measurements, X-small through X-large. Early bill-of-materials testing priced a six-sensor set at six MyoWare sEMGs (about $43.50 each), six IMUs (about $2.68 each), and a compression brace, landing around $287 per test unit before we moved to the integrated PCB design.</p>
+          <div class="figure-pair">
+            <div class="figure">
+              <img src="../../assets/images/ETT_Datalogger_V1.webp" alt="V1 datalogger board with ESP32, battery charging circuit, and microSD reader" />
+              <p class="figure__caption"><strong>Main board, V1.1.</strong> ESP32-WROOM, MCP73871 charge controller, microSD reader.</p>
+            </div>
+            <div class="figure">
+              <img src="../../assets/images/ETT_OptiTracks.webp" alt="Reflective IMU tracker markers mounted for OptiTrack motion capture comparison" />
+              <p class="figure__caption"><strong>Tracker placement.</strong> IMU and reflective marker mounts, positioned to overlay directly with the OptiTrack rig.</p>
+            </div>
+          </div>
 
-          <p>On the firmware side, the ESP32 (written in C++) samples at ~10 kHz, runs bandpass filtering and signal smoothing, and writes to a microSD card. After a session, that .CSV gets uploaded to a Python pipeline I built and hosted in an ISO-compliant GitLab repo. It runs the Hill's Model calculation and surfaces the result on the physician-facing dashboard shown below.</p>
+          <p>I designed the 2-layer PCB for both boards in KiCAD — analog filtering, USB-C charging, and I2C multiplexing across 10+ chips and 8 connectors. Housings were modeled in Fusion360 against a sleeve-fit chart we built from forearm/bicep circumference data, X-small through X-large, so the band fits without shifting during a throwing motion. Early bench testing with discrete components (six MyoWare sEMGs, six IMUs, ~$287/unit) confirmed the sensing approach before we committed to the integrated PCB.</p>
+
+          <div class="figure-with-text">
+            <div class="figure-with-text__img">
+              <img src="../../assets/images/ETT_Doc_Example.webp" alt="Sample page from the PCB schematic documentation" />
+            </div>
+            <div class="figure-with-text__copy">
+              <p class="figure-with-text__label">Schematic V2.2</p>
+              <p>Full 2-layer board: analog front end, I2C multiplexer, USB-C charge path, 10+ chips across two boards. <a class="doc-link" style="display:inline" href="../../assets/pdfs/CACOM_Schem_V2.2.pdf" target="_blank" rel="noopener">Open full schematic (PDF) →</a></p>
+            </div>
+          </div>
+
+          <p>Firmware on the ESP32 (C++) samples at ~10 kHz, runs bandpass filtering and smoothing, and logs to microSD. Post-session, the .CSV feeds a Python pipeline I built and host in a GitLab repo, which runs the Hill's Model calculation and pushes results to a browser-based dashboard.</p>
 
           <div class="figure-with-text">
             <div class="figure-with-text__img">
@@ -583,13 +636,46 @@
             </div>
             <div class="figure-with-text__copy">
               <p class="figure-with-text__label">Live product</p>
-              <p>I built and shipped the physician dashboard at <strong>axiorecoverytracker.com</strong>. A clinician uploads a session .CSV, the Hill's Model pipeline runs in the browser, and the dashboard returns elbow torque estimates alongside raw sEMG traces for each of the four targeted muscle channels. No local software install required on the clinic side.</p>
+              <p>I built and host the clinician-facing dashboard at <strong>axiorecoverytracker.com</strong>. Upload a session .CSV, the Hill's Model pipeline runs server-side, and the dashboard returns elbow torque estimates alongside raw sEMG traces for each of the four target channels. No local install required.</p>
             </div>
           </div>
 
-          <p>Before any design work, we ran an athletic immersion program. We tested TRIZ design principles, things like estimated moving-object length, stationary-object weight, and applied force or pressure, against real baseball, tennis, and lacrosse throwing motions. That work defined 18 concrete design constraints before we wrote a single line of firmware.</p>
+          <p>Before writing firmware, we ran an athletic immersion program to test TRIZ design parameters (moving-object length, stationary-object weight, applied force) against real baseball, tennis, and lacrosse throwing motions. That work produced 18 concrete design constraints — fit envelope, mass budget, attachment points — that shaped the V1.0 architecture before we touched hardware.</p>
 
-          <p>Once we had a working V1.0, I co-authored a formal Statement of Intent for access to Cornell's motion capture studio. It specified the exact experimental protocol. One designated pitcher, one catcher, one data collector, five infrared trackers placed at the shoulder, upper arm, elbow, wrist, and hand, and pitches capped under 20 MPH for safety. That protocol is what eventually produced the OptiTrack validation data below.</p>
+          <div class="figure-pair">
+            <div class="figure">
+              <img src="../../assets/images/ETT_Immerse_3.webp" alt="Athletic immersion testing, third round, lacrosse throwing motion" />
+              <p class="figure__caption">Immersion testing across baseball, tennis, and lacrosse throwing motions.</p>
+            </div>
+            <div class="figure">
+              <img src="../../assets/images/ETT_Comp_Matrix.webp" alt="Competitive comparison matrix evaluating Axio Recovery against Driveline Pulse and motion capture systems" />
+              <p class="figure__caption">Competitive matrix used to set our accuracy and cost targets against Pulse and lab motion capture.</p>
+            </div>
+          </div>
+
+          <p>Once V1.0 was working, I co-authored the experimental protocol for access to Cornell's motion capture studio: one pitcher, one catcher, one data collector, five infrared trackers (shoulder, upper arm, elbow, wrist, hand), pitches capped under 20 mph for safety.</p>
+        </div>
+
+        <!-- Spec table (moved up) -->
+        <div class="detail-section">
+          <div class="section-label"><span>Device Specifications</span></div>
+          <div class="two-col">
+            <table class="spec-table">
+              <tr><td>Sensors</td><td>MyoWare 2.0 sEMG &middot; LGD320 9DOF IMU</td></tr>
+              <tr><td>Microcontroller</td><td>Sparkfun ESP32-WROOM</td></tr>
+              <tr><td>Data Rate</td><td>~10 kHz sampling</td></tr>
+              <tr><td>Battery Life</td><td>3+ hours continuous logging</td></tr>
+              <tr><td>Band Mass</td><td>&lt; 75 g per band</td></tr>
+              <tr><td>Surface Temp</td><td>&lt; 40&deg;C</td></tr>
+            </table>
+            <table class="spec-table">
+              <tr><td>Software Stack</td><td>Python &middot; GitLab CI &middot; Cloud-hosted dashboard</td></tr>
+              <tr><td>Target Muscles</td><td>Biceps brachii long head &middot; Triceps brachii long head &middot; Pronator teres</td></tr>
+              <tr><td>Validation</td><td>2.58% torque error vs. OptiTrack/OpenSim ground truth</td></tr>
+              <tr><td>Regulatory Pathway</td><td>FDA 510(k), 21 CFR 890.1375 (predicate: CMAP Pro&trade;)</td></tr>
+              <tr><td>Next Revision</td><td>BLE/LoRa wireless link, replacing wired connectors</td></tr>
+            </table>
+          </div>
         </div>
 
         <!-- Photo gallery -->
@@ -619,10 +705,10 @@
 
         <!-- Outcomes / Testing -->
         <div class="detail-section">
-          <div class="section-label"><span>Outcomes &amp; Testing</span></div>
-          <p>Verification testing with six participants confirmed the V2.0 prototype met every user-defined design requirement. Full pitching regimens with no observable restriction in range of motion, zero electrical dropouts or sensor migration across an 8-hour continuous wear trial, and a sensor band under 75g staying below 40&deg;C at the skin.</p>
+          <div class="section-label"><span>Results</span></div>
+          <p>Six-participant verification testing confirmed V2.0 held up under real use: full pitching regimens with no observable restriction in range of motion, zero electrical dropouts or sensor migration across an 8-hour continuous wear trial, and a sub-75g band staying under 40&deg;C at the skin.</p>
 
-          <p>The real test was validation against the gold standard. We ran low-intensity overhand throws (~20 mph) simultaneously through Axio Recovery and Cornell's OptiTrack motion capture studio. OptiTrack's result was computed via the Upper Extremity Dynamic Model in OpenSim as ground truth.</p>
+          <p>The result that mattered most was accuracy against ground truth. We ran low-intensity overhand throws (~20 mph) simultaneously through Axio Recovery and Cornell's OptiTrack motion capture studio, with OptiTrack output computed via the Upper Extremity Dynamic Model in OpenSim.</p>
 
           <div class="result-strip result-strip--center">
             <div class="result-strip__item"><div class="result-strip__num">55.6 N&middot;m</div><div class="result-strip__label">Axio Recovery estimate</div></div>
@@ -635,51 +721,15 @@
             <p class="figure__caption">Elbow torque during a single overhand throw. OptiTrack inverse kinematics on the left, Axio Recovery's Hill-Musculoskeletal Model on the right.</p>
           </div>
 
-          <p>That result is the headline of our DEBUT VentureWell competition submission. The submission also lays out the full commercialization path. A 510(k) pathway under 21 CFR 890.1375 against the CMAP Pro&trade; predicate device, Remote Therapeutic Monitoring reimbursement codes, and a manufacturing cost model targeting $549.99 retail against ~$353.73 COGS.</p>
+          <p>That result, plus the commercialization writeup (510(k) pathway, predicate device comparison, cost model), made up our DEBUT VentureWell competition submission.</p>
 
-          <p class="video-label" style="margin-top:var(--space-8);">DEBUT VentureWell Competition Submission</p>
+          <p class="video-label">DEBUT VentureWell Competition Submission</p>
           <div class="video-wrapper">
             <iframe src="https://www.youtube.com/embed/kjjIC4S8IDw" title="Axio Recovery DEBUT Competition Submission" allowfullscreen loading="lazy"></iframe>
           </div>
 
-          <p style="margin-top:var(--space-8);">Next up is wireless data streaming, LoRa or BLE, to replace the current wired Molex connectors, and a digitized, touchscreen-guided calibration workflow for physicians. A Comparative Effectiveness Research study comparing Axio Recovery directly against motion capture is currently in process for Cornell IRB approval.</p>
-
-          <div class="doc-link-row">
-            <a class="doc-link" href="#">
-              <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              Problem Definition Report (PDF)
-            </a>
-            <a class="doc-link" href="#">
-              <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              Immersion Program Report (PDF)
-            </a>
-            <a class="doc-link" href="#">
-              <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              DEBUT External Presentation (PDF)
-            </a>
-          </div>
-        </div>
-
-        <!-- Spec table -->
-        <div class="detail-section">
-          <div class="section-label"><span>Device Specifications</span></div>
-          <div class="two-col">
-            <table class="spec-table">
-              <tr><td>Sensors</td><td>MyoWare 2.0 sEMG &middot; LGD320 9DOF IMU</td></tr>
-              <tr><td>Microcontroller</td><td>Sparkfun ESP32-WROOM</td></tr>
-              <tr><td>Data Rate</td><td>~10 kHz sampling</td></tr>
-              <tr><td>Battery Life</td><td>3+ hours continuous logging</td></tr>
-              <tr><td>Band Mass</td><td>&lt; 75 g per band</td></tr>
-              <tr><td>Surface Temp</td><td>&lt; 40&deg;C</td></tr>
-            </table>
-            <table class="spec-table">
-              <tr><td>Software Stack</td><td>Python &middot; ISO-compliant GitLab &middot; Cloud-hosted</td></tr>
-              <tr><td>Target Muscles</td><td>Biceps brachii long head &middot; Triceps brachii long head &middot; Pronator teres</td></tr>
-              <tr><td>Regulatory Class</td><td>FDA Class II 21 CFR 890.1375</td></tr>
-              <tr><td>Predicate Device</td><td>CMAP Pro&trade; (K113074)</td></tr>
-              <tr><td>Retail / COGS</td><td>$549.99 retail &middot; ~$353.73 COGS</td></tr>
-            </table>
-          </div>
+          <h3>What's next</h3>
+          <p>The known gap is the wired connector scheme — next revision moves to BLE or LoRa to drop the Molex/JST links entirely. We're also working Cornell IRB approval for a follow-up study comparing Axio Recovery directly against motion capture across a larger cohort.</p>
         </div>
 
       </div>
