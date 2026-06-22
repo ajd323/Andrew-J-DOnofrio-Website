@@ -214,8 +214,8 @@
       <p class="proj-hero__eyebrow">
         <a href="../projects/" style="color:inherit; opacity:0.7;">&larr; Back to Projects</a>
       </p>
-      <p class="proj-hero__affil">MAE 4700 &nbsp;·&nbsp; Cornell University &nbsp;·&nbsp; with Chris Sawicki</p>
       <h1>Wing Blade Weight Optimization via FEA</h1>
+      <p class="proj-hero__affil">MAE 4700 &nbsp;·&nbsp; Cornell University &nbsp;·&nbsp; 2-person Team</p>
       <p class="proj-hero__lead">I led the problem framing, mathematical modeling, mesh refinement strategy, and design comparison computations for an FEA-based parametric optimization of a NACA 0012 wing blade in ANSYS, achieving a 41.8% weight reduction while satisfying all stress and deflection constraints.</p>
 
       <div class="hero-gallery">
@@ -384,30 +384,25 @@
         <p>Four structural configurations were evaluated, each with multiple sub-variants produced through ANSYS parametric sweeps on skin, spar, and rib thickness. Each variant was assessed against the three constraints (Von Mises stress, tip deflection, factor of safety) and the best feasible point within each configuration was identified. The parameter sweep for each design included approximately four to five candidate points, for a total of roughly 25 ANSYS simulations across the full study.</p>
       </div>
 
-      <div class="design-grid">
-        <div class="design-card">
-          <p class="design-card__label">Design 1 &nbsp;·&nbsp; 1 Rib, 2 Spars</p>
-          <p class="design-card__title">Baseline</p>
-          <p>Starting geometry provided by course staff. Establishes the weight and structural performance reference point. All subsequent designs are evaluated relative to this baseline.</p>
-          <p class="design-card__weight">11,039 kg</p>
+      <div class="split split--match" style="margin-top: var(--space-6);">
+        <div class="split__text">
+          <div class="prose">
+            <p>Four structural configurations were evaluated, each with multiple sub-variants produced through ANSYS parametric sweeps on skin, spar, and rib thickness. Each variant was assessed against the three constraints (Von Mises stress, tip deflection, factor of safety) and the best feasible point within each configuration was identified. The parameter sweep for each design included approximately four to five candidate points, for a total of roughly 25 ANSYS simulations across the full study.</p>
+            <p><strong>Design 1 (1 rib, 2 spars)</strong> is the baseline at 11,039 kg. <strong>Design 2 (2 ribs, 1 spar)</strong> removed a spar to reduce material, however the resulting stress concentration required compensating thickness increases elsewhere, producing a heavier result at 12,345 kg. <strong>Design 3 (2 ribs, 2 spars)</strong> demonstrated that adding ribs distributes the aerodynamic load more evenly, enabling modest thickness reductions and dropping total weight to 10,797 kg. <strong>Design 4 (15 ribs, 2 spars)</strong> extended this logic fully: spacing ribs approximately every 1 m along the span reduced the structural demand on the skin and spars enough that their thicknesses could be cut substantially, reaching 7,955 kg and a 41.8% weight reduction from the baseline.</p>
+          </div>
         </div>
-        <div class="design-card">
-          <p class="design-card__label">Design 2 &nbsp;·&nbsp; 2 Ribs, 1 Spar</p>
-          <p class="design-card__title">Spar Reduction</p>
-          <p>Removing one spar reduced material, however the resulting stress concentration required thicker skin and ribs to compensate, producing a heavier overall assembly than the baseline.</p>
-          <p class="design-card__weight">12,345 kg</p>
-        </div>
-        <div class="design-card">
-          <p class="design-card__label">Design 3 &nbsp;·&nbsp; 2 Ribs, 2 Spars</p>
-          <p class="design-card__title">Rib Addition</p>
-          <p>Adding a second rib distributed aerodynamic load more evenly, enabling modest thickness reductions across all components. Demonstrated that more ribs enable thinner walls.</p>
-          <p class="design-card__weight">10,797 kg</p>
-        </div>
-        <div class="design-card design-card--best">
-          <p class="design-card__label">Design 4 &nbsp;·&nbsp; 15 Ribs, 2 Spars &nbsp;·&nbsp; Selected</p>
-          <p class="design-card__title">Optimized Configuration</p>
-          <p>Scaling to 15 ribs, spaced approximately every 1 m along the span, allowed significant thickness reductions throughout. Spar thickness dropped to 5.85 mm and rib thickness to 1.03 mm, approaching the structural floor for commercial aluminum sheet.</p>
-          <p class="design-card__weight">7,955 kg</p>
+        <div class="split__media">
+          <div class="gallery">
+            <div class="gallery__frame">
+              <div class="gallery__track" id="itsTrack">
+                <div class="gallery__slide">
+                  <img class="gallery__slide-bg" src="../../assets/images/Blade_Its.png" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/Blade_Its.png" alt="Four design iterations of the wing blade showing rib and spar configurations" loading="lazy" />
+                  <span class="gallery__caption">Design iterations 1 through 4, showing rib and spar configurations</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
