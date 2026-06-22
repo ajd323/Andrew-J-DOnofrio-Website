@@ -3,11 +3,438 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>iot-baton Andrew J. D'Onofrio</title>
+  <title>IoT Baton: Andrew J. D'Onofrio</title>
+  <meta name="description" content="IoT Baton: a real-time GPS relay baton tracker built for the Seneca 7, a 77.7-mile relay race with no cellular coverage along most of the course. LoRaWAN communication, custom electromechanical design, and a live Streamlit tracking interface." />
   <link rel="stylesheet" href="../../css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Project hero (matches page-header pattern, adds photo) ── */
+    .proj-hero {
+      position: relative;
+      padding: var(--space-16) var(--page-gutter) var(--space-12);
+      border-bottom: 1px solid rgba(26,32,51,0.06);
+      overflow: hidden;
+    }
+    .proj-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='56' viewBox='0 0 96 56'%3E%3Cpolygon points='24,3 48,15.5 48,40.5 24,53 0,40.5 0,15.5' fill='none' stroke='%231A2033' stroke-width='1' opacity='0.05'/%3E%3Cpolygon points='72,3 96,15.5 96,40.5 72,53 48,40.5 48,15.5' fill='none' stroke='%231A2033' stroke-width='1' opacity='0.05'/%3E%3Cpolygon points='48,-12.5 72,0 72,25 48,37.5 24,25 24,0' fill='none' stroke='%231A2033' stroke-width='1' opacity='0.05'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-position: center;
+      -webkit-mask-image: linear-gradient(to right, transparent, black 30%, black 100%);
+      mask-image: linear-gradient(to right, transparent, black 30%, black 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .proj-hero__inner { position: relative; z-index: 1; max-width: var(--max-w); margin-inline: auto; }
+    .proj-hero__eyebrow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-4);
+      font-size: var(--text-xs);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      margin-bottom: var(--space-6);
+      font-weight: 600;
+      opacity: 0.8;
+    }
+    .proj-hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 5.5vw, 5rem);
+      font-weight: 500;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--clr-ink);
+      margin-bottom: var(--space-6);
+    }
+    .proj-hero__lead {
+      font-size: var(--text-lg);
+      font-weight: 300;
+      color: var(--clr-ink);
+      opacity: 0.78;
+      max-width: 64ch;
+      line-height: 1.8;
+      margin-bottom: var(--space-8);
+    }
+    .proj-hero__lead strong { font-weight: 600; opacity: 1; }
+
+    /* ── Hero photo gallery ── */
+    .hero-gallery { position: relative; z-index: 1; margin-top: var(--space-8); }
+    .hero-gallery__frame {
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--clr-surface);
+      aspect-ratio: 16/8;
+      box-shadow: 0 20px 60px rgba(26,32,51,0.12);
+    }
+    .hero-gallery__track {
+      display: flex;
+      height: 100%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .hero-gallery__track::-webkit-scrollbar { display: none; }
+    .hero-gallery__slide { flex: 0 0 100%; scroll-snap-align: start; position: relative; height: 100%; overflow: hidden; }
+    .hero-gallery__slide-bg {
+      position: absolute;
+      inset: -20px;
+      width: calc(100% + 40px);
+      height: calc(100% + 40px);
+      object-fit: cover;
+      filter: blur(24px) brightness(0.85) saturate(1.1);
+      transform: scale(1.15);
+      z-index: 0;
+    }
+    .hero-gallery__slide img:not(.hero-gallery__slide-bg) {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      z-index: 1;
+    }
+    .hero-gallery__caption {
+      position: absolute;
+      left: 20px;
+      bottom: 18px;
+      font-size: 0.78rem;
+      letter-spacing: 0.02em;
+      color: #fff;
+      background: rgba(26,32,51,0.55);
+      backdrop-filter: blur(4px);
+      padding: 6px 12px;
+      border-radius: 3px;
+      z-index: 2;
+    }
+    .hero-gallery__arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(245,240,232,0.92);
+      border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      z-index: 2;
+      transition: background 0.15s;
+    }
+    .hero-gallery__arrow:hover { background: #fff; }
+    .hero-gallery__arrow svg { width: 16px; height: 16px; stroke: var(--clr-ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .hero-gallery__arrow--prev { left: 16px; }
+    .hero-gallery__arrow--next { right: 16px; }
+    .hero-gallery__dots { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
+    .hero-gallery__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--clr-rule); border: none; padding: 0; cursor: pointer; transition: all 0.15s; }
+    .hero-gallery__dot.active { background: var(--clr-accent); transform: scale(1.3); }
+
+    /* ── Tag row (reuses site .tag exactly) ── */
+    .tag-row { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-8); }
+
+    /* ── Situation / Outcomes panel (matches original site pattern) ── */
+    .so-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-6);
+      margin-top: var(--space-8);
+    }
+    .so-panel__col {
+      background: var(--clr-surface);
+      border-radius: 12px;
+      padding: var(--space-6);
+    }
+    .so-panel__col p.label {
+      font-size: var(--text-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      font-weight: 600;
+      margin-bottom: var(--space-3);
+    }
+    .so-panel__col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .so-panel__col ul li {
+      font-size: var(--text-sm);
+      color: var(--clr-ink-muted);
+      line-height: 1.6;
+      padding-left: var(--space-4);
+      position: relative;
+    }
+    .so-panel__col ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.6em;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--clr-accent);
+    }
+    .so-panel__col ul li strong { color: var(--clr-ink); font-weight: 600; }
+
+    /* ── Section scaffolding (reuses project-category__num pattern) ── */
+    .proj-section { max-width: var(--max-w); margin-inline: auto; padding-block: var(--space-8); }
+    .proj-section__label {
+      display: flex;
+      align-items: baseline;
+      gap: 2rem;
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid rgba(26,32,51,0.1);
+    }
+    .proj-section__num {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 5vw, 4.5rem);
+      font-weight: 400;
+      color: var(--clr-accent);
+      opacity: 0.5;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .proj-section__title-wrap { display: flex; flex-direction: column; justify-content: center; }
+    .proj-section__eyebrow {
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      font-weight: 600;
+      opacity: 0.9;
+      margin-bottom: 0.3rem;
+    }
+    .proj-section__title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--clr-ink);
+      line-height: 1.1;
+    }
+
+    .prose { max-width: none; }
+    .prose p { font-size: var(--text-base); line-height: 1.8; color: var(--clr-ink-muted); margin-bottom: 1.25rem; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose strong { color: var(--clr-ink); font-weight: 600; }
+    .prose em { font-style: italic; color: var(--clr-ink); }
+
+    /* ── Two column split ── */
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); align-items: start; }
+    .split--reverse .split__text { order: 2; }
+    .split--reverse .split__media { order: 1; }
+    .split__media img { border-radius: 4px; width: 100%; object-fit: cover; box-shadow: 0 12px 32px rgba(26,32,51,0.1); }
+    .split--match { align-items: stretch; }
+    .split--match .split__media { display: flex; flex-direction: column; }
+    .split--match .split__media img { flex: 1; min-height: 280px; max-height: 560px; height: 100%; }
+    .split__media--wide img { aspect-ratio: 16/10; }
+    .split__caption { font-size: var(--text-xs); color: var(--clr-ink-muted); margin-top: var(--space-3); }
+    .split__eyebrow {
+      font-size: var(--text-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      font-weight: 600;
+      margin-bottom: var(--space-3);
+    }
+
+    /* ── Build timeline ── */
+    .timeline { position: relative; margin-top: var(--space-3); }
+    .timeline__rail { position: absolute; top: 13.5px; left: 0; right: 0; height: 1px; background: var(--clr-rule); z-index: 0; }
+    .timeline__row { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-8); position: relative; z-index: 1; }
+    .timeline__item { position: relative; padding-top: 44px; }
+    .timeline__dot {
+      position: absolute; top: 0; left: 0;
+      width: 27px; height: 27px;
+      border-radius: 50%;
+      background: var(--clr-bg);
+      border: 1.5px solid var(--clr-accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.52rem;
+      font-weight: 600;
+      color: var(--clr-accent);
+      z-index: 2;
+    }
+    .timeline__ver { font-family: var(--font-serif); font-size: 1.3rem; font-weight: 500; margin: 0 0 var(--space-2); color: var(--clr-ink); }
+    .timeline__desc { font-size: 0.92rem; color: var(--clr-ink-muted); line-height: 1.65; margin: 0; }
+    .timeline__desc strong { color: var(--clr-ink); font-weight: 600; }
+
+    /* ── Section gallery (reusable, smaller than hero gallery, with blur-letterbox) ── */
+    .gallery { position: relative; }
+    .gallery__frame {
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--clr-surface);
+      aspect-ratio: 4/3;
+    }
+    .gallery__track {
+      display: flex;
+      height: 100%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .gallery__track::-webkit-scrollbar { display: none; }
+    .gallery__slide { flex: 0 0 100%; scroll-snap-align: start; position: relative; height: 100%; overflow: hidden; }
+    .gallery__slide-bg {
+      position: absolute;
+      inset: -20px;
+      width: calc(100% + 40px);
+      height: calc(100% + 40px);
+      object-fit: cover;
+      filter: blur(20px) brightness(0.85) saturate(1.1);
+      transform: scale(1.15);
+      z-index: 0;
+    }
+    .gallery__slide img:not(.gallery__slide-bg) {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      z-index: 1;
+    }
+    .gallery__caption {
+      position: absolute;
+      left: 16px;
+      bottom: 14px;
+      font-size: 0.74rem;
+      letter-spacing: 0.02em;
+      color: #fff;
+      background: rgba(26,32,51,0.55);
+      backdrop-filter: blur(4px);
+      padding: 5px 10px;
+      border-radius: 3px;
+      z-index: 2;
+    }
+    .gallery__arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(245,240,232,0.92);
+      border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      z-index: 2;
+      transition: background 0.15s;
+    }
+    .gallery__arrow:hover { background: #fff; }
+    .gallery__arrow svg { width: 14px; height: 14px; stroke: var(--clr-ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .gallery__arrow--prev { left: 12px; }
+    .gallery__arrow--next { right: 12px; }
+    .gallery__dots { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
+    .gallery__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--clr-rule); border: none; padding: 0; cursor: pointer; transition: all 0.15s; }
+    .gallery__dot.active { background: var(--clr-accent); transform: scale(1.3); }
+
+    /* ── Hardware section: gallery beside specs ── */
+    .hw-layout { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); align-items: start; margin-top: var(--space-8); }
+    .hw-layout .spec-grid { grid-template-columns: 1fr; gap: var(--space-6) 0; margin-top: 0; }
+
+    /* ── Software callout box (darker surface) ── */
+    .software-box {
+      background: var(--clr-surface);
+      border-radius: 10px;
+      padding: var(--space-8);
+      box-shadow: inset 0 0 0 1px rgba(26,32,51,0.04);
+    }
+    .software-box .split { gap: var(--space-8); }
+
+    /* ── Result stats (light, sits beside the validation figure) ── */
+    .result-stats { display: flex; flex-direction: column; gap: var(--space-4); }
+    .result-stats__item { padding-bottom: var(--space-4); border-bottom: 1px solid var(--clr-rule); }
+    .result-stats__item:last-child { border-bottom: none; padding-bottom: 0; }
+    .result-stats__num { font-family: var(--font-serif); font-size: clamp(1.8rem, 3vw, 2.3rem); font-weight: 500; line-height: 1; color: var(--clr-ink); }
+    .result-stats__num--accent { color: var(--clr-accent); }
+    .result-stats__label { font-size: var(--text-xs); letter-spacing: 0.04em; text-transform: uppercase; color: var(--clr-ink-muted); margin-top: var(--space-2); }
+    .result-stats--row {
+      flex-direction: row;
+      justify-content: center;
+      text-align: center;
+      margin-top: var(--space-8);
+      padding-top: var(--space-8);
+      border-top: 1px solid var(--clr-rule);
+      gap: var(--space-8);
+    }
+    .result-stats--row .result-stats__item {
+      padding-bottom: 0;
+      border-bottom: none;
+      padding-right: var(--space-8);
+      border-right: 1px solid var(--clr-rule);
+    }
+    .result-stats--row .result-stats__item:last-child { border-right: none; padding-right: 0; }
+
+    /* ── Spec table ── */
+    .spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--space-12); }
+    .spec-table { width: 100%; border-collapse: collapse; }
+    .spec-table tr { border-bottom: 1px solid var(--clr-rule); }
+    .spec-table tr:last-child { border-bottom: none; }
+    .spec-table td { padding: var(--space-3) 0; vertical-align: top; font-size: 0.92rem; }
+    .spec-table td:first-child { font-size: var(--text-sm); color: var(--clr-ink-muted); width: 42%; padding-right: var(--space-4); font-weight: 500; }
+    .spec-table td:last-child { color: var(--clr-ink); font-weight: 500; }
+
+    /* ── Documents ── */
+    .doc-section { padding-top: var(--space-12); }
+    .doc-section__label {
+      font-size: var(--text-xs);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--clr-ink-muted);
+      font-weight: 600;
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--clr-rule);
+    }
+    .doc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--clr-rule); border: 1px solid var(--clr-rule); border-radius: 4px; overflow: hidden; }
+    .doc-card { background: var(--clr-bg); padding: 1.25rem var(--space-6); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); font-size: 0.9rem; font-weight: 500; color: var(--clr-ink); transition: background 0.15s, color 0.15s; }
+    .doc-card:hover { background: var(--clr-surface); color: var(--clr-accent); }
+    .doc-card svg { width: 14px; height: 14px; stroke: var(--clr-accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+    /* ── Close section ── */
+    .proj-close { background: var(--clr-surface); }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .so-panel { grid-template-columns: 1fr; gap: var(--space-4); }
+      .split { grid-template-columns: 1fr; gap: var(--space-6); }
+      .split--reverse .split__text, .split--reverse .split__media { order: unset; }
+      .timeline__row { grid-template-columns: 1fr; gap: var(--space-6); }
+      .timeline__rail { display: none; }
+      .hw-layout { grid-template-columns: 1fr; }
+      .spec-grid { grid-template-columns: 1fr; gap: 0; }
+      .doc-grid { grid-template-columns: 1fr; }
+      .result-stats--row {
+        flex-direction: column;
+        gap: var(--space-4);
+      }
+      .result-stats--row .result-stats__item {
+        padding-right: 0;
+        border-right: none;
+        padding-bottom: var(--space-4);
+        border-bottom: 1px solid var(--clr-rule);
+      }
+      .result-stats--row .result-stats__item:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+    }
+    @media (max-width: 600px) {
+      .proj-hero { padding: var(--space-12) var(--page-gutter) var(--space-8); }
+      .proj-hero h1 { font-size: clamp(2.2rem, 9vw, 3rem); }
+      .proj-section { padding-block: var(--space-8); }
+      .proj-section__num { font-size: clamp(2.2rem, 9vw, 3rem); }
+    }
+  </style>
 </head>
 <body>
   <nav class="nav" id="nav">
@@ -20,11 +447,310 @@
       <li><a href="../resume-cv/">Resume / CV</a></li>
     </ul>
   </nav>
-  <div class="page-header">
-    <p class="page-header__eyebrow"><a href="../projects/" style="color:var(--clr-accent)">&larr; Back to Projects</a></p>
-    <h1>Full case study coming soon</h1>
-    <p style="margin-top:1rem;color:var(--clr-ink-muted);font-size:1.1rem;">This page is in progress. Check back shortly.</p>
+
+  <!-- ── PROJECT HERO ── -->
+  <header class="proj-hero">
+    <div class="proj-hero__inner">
+      <p class="proj-hero__eyebrow">
+        <a href="../projects/" style="color:inherit; opacity:0.7;">&larr; Back to Projects</a>
+      </p>
+      <h1>Internet-of-Things (IoT) GPS Relay Baton</h1>
+      <p class="proj-hero__lead">I built the electronics, firmware, software, and electromechanical design for a real-time GPS relay baton tracker, deployed for the Seneca 7, a 77.7-mile relay race with no reliable cellular coverage along most of the course.</p>
+
+      <div class="hero-gallery">
+        <button class="hero-gallery__arrow hero-gallery__arrow--prev" id="heroPrev" aria-label="Previous image">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="hero-gallery__arrow hero-gallery__arrow--next" id="heroNext" aria-label="Next image">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <div class="hero-gallery__frame">
+          <div class="hero-gallery__track" id="heroTrack">
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/Baton_Visual_1.png" alt="" aria-hidden="true" />
+              <img src="../../assets/images/Baton_Visual_1.png" alt="IoT Baton final prototype, the Finalist" />
+              <span class="hero-gallery__caption">Final prototype: the Finalist</span>
+            </div>
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/Baton_Visual_2.png" alt="" aria-hidden="true" />
+              <img src="../../assets/images/Baton_Visual_2.png" alt="IoT Baton, alternate view" />
+              <span class="hero-gallery__caption">Ergonomic grips and carabiner loop</span>
+            </div>
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/Baton_Drawings.png" alt="" aria-hidden="true" />
+              <img src="../../assets/images/Baton_Drawings.png" alt="IoT Baton CAD drawings and form factor rendering" />
+              <span class="hero-gallery__caption">Form factor rendering, with Red Newt Racing branding</span>
+            </div>
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/Baton_Test_1.png" alt="" aria-hidden="true" />
+              <img src="../../assets/images/Baton_Test_1.png" alt="Field testing the baton near Seneca Lake" />
+              <span class="hero-gallery__caption">Field testing near Seneca Lake</span>
+            </div>
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/Baton_Workflow.png" alt="" aria-hidden="true" />
+              <img src="../../assets/images/Baton_Workflow.png" alt="System block diagram: baton to TTN to Streamlit UI" />
+              <span class="hero-gallery__caption">System architecture: baton, TTN, and live UI</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-gallery__dots" id="heroDots"></div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag">LoRaWAN</span>
+        <span class="tag">Embedded C++ (Feather M0)</span>
+        <span class="tag">GPS / GNSS</span>
+        <span class="tag">MQTT</span>
+        <span class="tag">Streamlit / Python</span>
+        <span class="tag">Fusion360</span>
+        <span class="tag">FDM Prototyping</span>
+        <span class="tag">User Research</span>
+        <span class="tag">Field Testing</span>
+        <span class="tag">Technical Leadership</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- ── SITUATION / OUTCOMES ── -->
+    <div class="so-panel">
+      <div class="so-panel__col">
+        <p class="label">Situation</p>
+        <ul>
+          <li>Seneca 7 is a 77.7-mile relay race around Seneca Lake with 300+ teams and 2,000+ runners, currently run on slap-bracelet handoffs with no real-time location data, no performance metrics, and no automated handoff detection.</li>
+          <li>Cellular coverage is inconsistent along substantial portions of the course, ruling out a standard cellular GPS uplink.</li>
+          <li>Design, fabricate, and deploy a reusable IoT baton that tracks GPS position, detects handoffs, and streams live data to race officials and runners, in direct consultation with the race director and runners.</li>
+        </ul>
+      </div>
+      <div class="so-panel__col">
+        <p class="label">Outcomes</p>
+        <ul>
+          <li>Built the electronics, firmware, and electromechanical design across three full prototype generations: the Minion, the Newt, and the Finalist.</li>
+          <li>Built the full software stack: onboard LoRaWAN transmission, TTN integration, an MQTT listener, and a live Streamlit map and stats interface with CSV export.</li>
+          <li>Ran the field testing program: campus verification runs, a mobile-gateway deployment near Seneca Lake, and live data collection at the Belle Sherman 5K.</li>
+          <li>Confirmed reliable LoRaWAN transmission and handoff detection at 30-second intervals, and characterized baton-to-gateway range limits with MATLAB signal analysis.</li>
+          <li>Ran a 45-runner user study that directly drove the final form factor and multi-configuration attachment system.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ── BACKGROUND ── -->
+    <section class="proj-section">
+      <div class="split split--match">
+        <div class="split__text">
+          <p class="split__eyebrow">The Problem</p>
+          <div class="prose">
+            <p>Seneca 7 is organized by Red Newt Racing and the Finger Lakes Running Club, an annual 77.7-mile relay around Seneca Lake that draws over 2,000 participants from 16+ states across 300+ teams, and raises roughly $20,000 per edition for 20+ local non-profits. The race currently uses a slap bracelet as the baton: no real-time location data, no per-runner performance metrics, no automated handoff detection. That puts a real operational burden on the 200+ volunteers staffing the course and leaves participants without the data modern endurance events routinely provide.</p>
+            <p>The actual engineering problem is connectivity, not tracking. Cellular coverage along the lake, especially the eastern shore through Yates and Schuyler counties and the western shore between Watkins Glen and Dresden, is inconsistent enough that a standard cellular GPS device would simply fail in those zones. RFID was explicitly ruled out by race staff after past dead-zone failures in the gorge sections. That left LoRaWAN: a low-power wide-area protocol that can transmit 10 to 16 km in rural line-of-sight conditions with no cellular infrastructure at all.</p>
+            <p>I built the tracker against that constraint: a reusable baton that logs GPS position, detects handoffs via an integrated button, and streams live data to a custom web interface, working entirely over a private LoRaWAN network the team stood up specifically for this race.</p>
+          </div>
+        </div>
+        <div class="split__media">
+          <img src="../../assets/images/Baton_Test_2.png" alt="Field testing the IoT baton tracker" loading="lazy" />
+          <p class="split__caption">Field testing near Seneca Lake, where cellular coverage drops out along significant stretches of the course</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── COMMUNICATION ARCHITECTURE ── -->
+    <section class="proj-section">
+      <div class="proj-section__label">
+        <span class="proj-section__num">01</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Background</span>
+          <span class="proj-section__title">Communication Architecture</span>
+        </div>
+      </div>
+      <div class="split">
+        <div class="split__text">
+          <div class="prose">
+            <p>I evaluated three gateway concepts before settling on the final architecture. A satellite uplink would have worked regardless of geography, but the terrain around Seneca Lake has dense tree cover that breaks satellite line-of-sight, and the cost and latency weren't justified for this timeline. A fixed high-elevation gateway, sited in Dundee for its elevation advantage over the course, was the second option, but I couldn't secure a deployment site from a property owner in time.</p>
+            <p>The architecture that actually shipped is a mobile gateway: a MultiTech MTCDT-L4N1 LoRa gateway, powered by a 99.9 Wh portable power station, riding in a support vehicle that trails the race field. That solved the elevation and siting problem at once, the gateway just stays close to whichever runner is currently carrying the baton, with a car-outlet inverter as backup power for unlimited runtime. Each baton broadcasts a unique ID, GPS coordinates, and button state to The Things Network every 30 seconds; the gateway picks it up and forwards it into the same pipeline regardless of where on the course it is.</p>
+          </div>
+        </div>
+        <div class="split__media">
+          <img src="../../assets/images/Baton_Workflow.png" alt="System block diagram: baton hardware, TTN network layer, and Streamlit backend" loading="lazy" />
+          <p class="split__caption">Three-layer system: baton hardware, TTN network transmission, and the Streamlit backend</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ELECTROMECHANICAL ITERATIONS ── -->
+    <section class="proj-section">
+      <div class="proj-section__label">
+        <span class="proj-section__num">02</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Prototyping</span>
+          <span class="proj-section__title">Electromechanical Iterations</span>
+        </div>
+      </div>
+      <div class="software-box">
+        <div class="timeline">
+          <div class="timeline__rail"></div>
+          <div class="timeline__row">
+            <div class="timeline__item">
+              <div class="timeline__dot">Minion</div>
+              <h3 class="timeline__ver">First Fixture</h3>
+              <p class="timeline__desc">The first 3D-printed alpha prototype, named for its blue-and-yellow color scheme. A larger casing with room for the battery, the Feather M0 board, antenna, and the rest of the electronics. Confirmed basic TTN connectivity and GPS acquisition before anything else was optimized.</p>
+            </div>
+            <div class="timeline__item">
+              <div class="timeline__dot">Newt</div>
+              <h3 class="timeline__ver">Reliability Pass</h3>
+              <p class="timeline__desc">Swapped the GPS module for a NEO-M8 over TX/RX, added heat shrink inside the button for reliability, and slimmed the casing. Split into two parallel designs, V2a for fixturing reliability and V2b for ergonomics, after a design contradiction between the two goals forced a real tradeoff decision.</p>
+            </div>
+            <div class="timeline__item">
+              <div class="timeline__dot">Finalist</div>
+              <h3 class="timeline__ver">Race-Ready</h3>
+              <p class="timeline__desc">The first fully usable electromechanical design: ergonomic grips, a carabiner loop, weather-protected access ports, and a woven rear strap, all printed in matte PLA. This is the version used for all verification testing, the Seneca 7 race, and the Belle Sherman 5K.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prose" style="margin-top: var(--space-6);">
+        <p>The V2a/V2b split is the real engineering story here. V2a prioritized high-reliability fixturing for the button and Feather board; V2b prioritized ergonomics and got the outer diameter down to about 1.5 inches based on direct user testing. Those two goals genuinely fought each other in CAD, which is exactly why I built both as separate models rather than trying to force a compromise blind. The Finalist is what came out of a design review across both: keep the reliable fixturing from V2a, keep the ergonomic target from V2b, and add the weatherproofing and strap mounting the user study said the device actually needed.</p>
+      </div>
+
+      <div class="hw-layout">
+        <div class="gallery">
+          <button class="gallery__arrow gallery__arrow--prev" id="hwPrev" aria-label="Previous image">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button class="gallery__arrow gallery__arrow--next" id="hwNext" aria-label="Next image">
+            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <div class="gallery__frame">
+            <div class="gallery__track" id="hwTrack">
+              <div class="gallery__slide">
+                <img class="gallery__slide-bg" src="../../assets/images/Baton_V1_Comps.png" alt="" aria-hidden="true" />
+                <img src="../../assets/images/Baton_V1_Comps.png" alt="The Minion: internal component layout, V1" loading="lazy" />
+                <span class="gallery__caption">The Minion: internal component layout</span>
+              </div>
+              <div class="gallery__slide">
+                <img class="gallery__slide-bg" src="../../assets/images/Baton_V2_Comps.png" alt="" aria-hidden="true" />
+                <img src="../../assets/images/Baton_V2_Comps.png" alt="The Newt: revised internal fixturing, V2" loading="lazy" />
+                <span class="gallery__caption">The Newt: revised internal fixturing</span>
+              </div>
+              <div class="gallery__slide">
+                <img class="gallery__slide-bg" src="../../assets/images/Baton_Drawings.png" alt="" aria-hidden="true" />
+                <img src="../../assets/images/Baton_Drawings.png" alt="CAD drawings and form factor rendering" loading="lazy" />
+                <span class="gallery__caption">Form factor CAD, with Red Newt Racing branding</span>
+              </div>
+              <div class="gallery__slide">
+                <img class="gallery__slide-bg" src="../../assets/images/Baton_Visual_1.png" alt="" aria-hidden="true" />
+                <img src="../../assets/images/Baton_Visual_1.png" alt="The Finalist: final assembled prototype" loading="lazy" />
+                <span class="gallery__caption">The Finalist: final assembled prototype</span>
+              </div>
+            </div>
+          </div>
+          <div class="gallery__dots" id="hwDots"></div>
+        </div>
+
+        <div class="spec-grid">
+          <table class="spec-table">
+            <tr><td>Microcontroller</td><td>SparkFun Feather M0</td></tr>
+            <tr><td>Radio</td><td>LoRaWAN, via TTN</td></tr>
+            <tr><td>GPS module</td><td>NEO-M8 (TX/RX)</td></tr>
+            <tr><td>Handoff detection</td><td>Integrated push-button</td></tr>
+            <tr><td>Enclosure</td><td>Matte PLA, FDM-printed</td></tr>
+            <tr><td>Mounting</td><td>Carabiner loop, woven strap, handheld grips</td></tr>
+            <tr><td>Gateway</td><td>MultiTech MTCDT-L4N1, mobile-deployed</td></tr>
+            <tr><td>Transmit interval</td><td>30 seconds</td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SOFTWARE & UI ── -->
+    <section class="proj-section">
+      <div class="software-box">
+        <div class="split split--reverse">
+          <div class="split__media split__media--wide">
+            <img src="../../assets/images/Baton_Electronics.png" alt="Baton internal electronics and Feather M0 wiring" loading="lazy" />
+            <p class="split__caption">Internal electronics: Feather M0, GPS module, and LoRaWAN radio</p>
+          </div>
+          <div class="split__text">
+            <p class="split__eyebrow">Software</p>
+            <div class="prose">
+              <p>I built both halves of the software stack. Onboard the Feather M0, firmware reads the GPS module and button state and packages a unique baton ID, latitude, longitude, and handoff status into a LoRaWAN packet sent to TTN every 30 seconds, with basic encryption on the payload given the scale of the data involved. On the backend, I built a Streamlit application with a custom MQTT listener that authenticates against the TTN console and decodes incoming packets in a standard Python script, rendering a live map and per-runner statistics in the browser, desktop or mobile, with caching so anyone with the link can see both historic and live data.</p>
+              <p>The interface has two controls at the top: Clear All, to reset the session, and Export All, to pull the full historic dataset as a CSV for post-race analysis. Keeping the architecture this minimal was deliberate, every layer between the baton and the browser is a place data can get delayed or dropped, and 30-second freshness only matters if the rest of the pipeline doesn't introduce its own lag.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── USER RESEARCH ── -->
+    <section class="proj-section">
+      <div class="proj-section__label">
+        <span class="proj-section__num">03</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Background</span>
+          <span class="proj-section__title">User Research</span>
+        </div>
+      </div>
+      <div class="prose">
+        <p>Before locking the Finalist form factor, I ran a user study with 45 runners (25 female, 20 male) targeting exactly the question that mattered for design: how do distance runners actually carry things on their body. 65% said they don't carry items in their pockets while running, which immediately ruled out a pocket-only design as the primary form factor. 47% said they hold their phone during a run, evidence that runners will tolerate gripping a handheld object, which supported keeping a grippable baton on the table instead of forcing a fully hands-free design.</p>
+        <p>The third question, how runners prefer to strap things to their body, came back split: waist packs led at 42%, followed by arm straps at 20%, back-mounted at 19%, and pocket carry at 15%. No single method dominated, which is the finding that actually drove the design decision: instead of optimizing the Finalist for one mounting style, I built it with a multi-configuration attachment system, a carabiner loop, a woven strap, and a slim enough profile to be gripped by hand, so it would work across whatever a given runner already uses. I paid particular attention to female athletes, who made up the majority of the study sample and generally have less built-in storage in standard running apparel, a constraint that's easy to miss if you only design around your own habits.</p>
+      </div>
+    </section>
+
+    <!-- ── FIELD TESTING ── -->
+    <section class="proj-section">
+      <div class="proj-section__label">
+        <span class="proj-section__num">04</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Testing</span>
+          <span class="proj-section__title">Field Testing</span>
+        </div>
+      </div>
+      <div class="prose" style="margin-bottom: var(--space-6);">
+        <p>I ran verification in three stages. First, campus runs: pressing the handoff button every few minutes while watching the Streamlit UI update live, confirming the basic data pipeline end to end before trusting it anywhere else. Second, a field deployment near Seneca Lake with the mobile gateway running from the support vehicle, which confirmed the gateway could connect to the baton but didn't yet establish a clean range curve, the signal was strong but I hadn't isolated exactly how far the baton could be from the gateway and stay connected.</p>
+        <p>The Belle Sherman 5K closed that gap. With fewer trees and less elevation change than the lake course, it was a cleaner environment to isolate the variable that mattered: distance. With a stationary gateway, only two data points were successfully received over TTN for the full run, which led directly to the key technical finding of the project, the baton and gateway only communicate reliably within about 600 feet of each other. I ran the resulting signal data through MATLAB to characterize received signal strength as a function of baton-to-gateway distance, which is now the baseline range data any future enclosure redesign needs to beat.</p>
+      </div>
+
+      <div class="result-stats result-stats--row">
+        <div class="result-stats__item">
+          <div class="result-stats__num result-stats__num--accent">30 sec</div>
+          <div class="result-stats__label">GPS and handoff transmit interval</div>
+        </div>
+        <div class="result-stats__item">
+          <div class="result-stats__num">~600 ft</div>
+          <div class="result-stats__label">Reliable baton-to-gateway range</div>
+        </div>
+        <div class="result-stats__item">
+          <div class="result-stats__num">3</div>
+          <div class="result-stats__label">Electromechanical generations built</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CLOSE ── -->
+    <section class="proj-section proj-close" style="border-radius: 12px; padding: var(--space-12) var(--space-8);">
+      <div class="proj-section__label" style="border-bottom-color: rgba(26,32,51,0.08);">
+        <span class="proj-section__num">05</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Impact</span>
+          <span class="proj-section__title">Beyond the Prototype</span>
+        </div>
+      </div>
+      <div class="prose">
+        <p>The Finalist enclosure has a real, known limitation: the compact V3 redesign measurably degraded antenna performance to get the ergonomic profile down to 1.5 inches, a tradeoff I made deliberately but flagged clearly for whoever picks this up next. The next enclosure revision needs dedicated antenna clearance, or an external stub antenna through a sealed port, before the range numbers can improve. Full-course gateway range wasn't completed in this cycle either, and the current enclosure hasn't been tested against a formal IP ingress standard, both real gaps, not oversights I'm glossing over.</p>
+        <p>Only one Finalist unit exists. Race-scale deployment means roughly 300 simultaneous transmitting batons sharing TTN gateway bandwidth, which is a fundamentally different engineering problem than the single-device testing I was able to run, packet collision rates and duty-cycle compliance at that scale are untested. I documented all of this explicitly in the final report specifically so the next team doesn't have to rediscover it: a batch of 10+ units for load testing, a systematic RSSI survey of the full 77.7-mile course, and a move from PLA to PETG or ABS for UV and impact resistance across multiple race seasons are the next priorities, in that order.</p>
+        <p>What I'm proudest of here isn't any single component, it's that the full pipeline, GPS acquisition, LoRaWAN transmission, TTN routing, MQTT decoding, and live display, worked end to end, verified across three different real-world environments, for a race that genuinely had no working alternative before this.</p>
+      </div>
+    </section>
+
+    <!-- ── DOCUMENTS (unnumbered, bottom of page) ── -->
+    <section class="proj-section doc-section">
+      <p class="doc-section__label">Project Documents</p>
+      <div class="doc-grid">
+        <a class="doc-card" href="../../assets/docs/Baton_Final_Report.pdf" target="_blank" rel="noopener">Final Report <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <a class="doc-card" href="../../assets/docs/Baton_Final_Slides.pdf" target="_blank" rel="noopener">Final Slides <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      </div>
+    </section>
   </div>
+
   <footer class="footer">
     <div class="container footer__inner">
       <span>&copy; 2026 Andrew J. D'Onofrio</span>
@@ -34,6 +760,49 @@
       </div>
     </div>
   </footer>
+
   <script src="../../js/main.js"></script>
+  <script>
+    function initSlider(trackId, dotsId, prevId, nextId, slideSel, dotClass) {
+      const track = document.getElementById(trackId);
+      const dotsWrap = document.getElementById(dotsId);
+      const prevBtn = document.getElementById(prevId);
+      const nextBtn = document.getElementById(nextId);
+      if (!track || !dotsWrap) return;
+      const slides = track.querySelectorAll(slideSel);
+      const count = slides.length;
+
+      slides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = dotClass + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', 'Go to image ' + (i + 1));
+        dot.addEventListener('click', () => goTo(i));
+        dotsWrap.appendChild(dot);
+      });
+
+      const dots = dotsWrap.querySelectorAll('.' + dotClass);
+
+      function currentIndex() {
+        return Math.round(track.scrollLeft / track.clientWidth);
+      }
+      function goTo(i) {
+        const clamped = ((i % count) + count) % count;
+        track.scrollTo({ left: track.clientWidth * clamped, behavior: 'smooth' });
+      }
+      track.addEventListener('scroll', () => {
+        const index = currentIndex();
+        dots.forEach((d, i) => d.classList.toggle('active', i === index));
+      });
+      if (prevBtn) prevBtn.addEventListener('click', () => goTo(currentIndex() - 1));
+      if (nextBtn) nextBtn.addEventListener('click', () => goTo(currentIndex() + 1));
+    }
+
+    initSlider('heroTrack', 'heroDots', 'heroPrev', 'heroNext', '.hero-gallery__slide', 'hero-gallery__dot');
+    initSlider('hwTrack', 'hwDots', 'hwPrev', 'hwNext', '.gallery__slide', 'gallery__dot');
+
+    function toggleMenu() {
+      document.getElementById('navLinks').classList.toggle('open');
+    }
+  </script>
 </body>
 </html>

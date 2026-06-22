@@ -400,6 +400,33 @@
     .doc-card:hover { background: var(--clr-surface); color: var(--clr-accent); }
     .doc-card svg { width: 14px; height: 14px; stroke: var(--clr-accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 
+    /* ── Inline doc row (compact, used inside software-box sections) ── */
+    .inline-docs { margin-top: var(--space-6); }
+    .inline-docs__label {
+      font-size: var(--text-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--clr-ink-muted);
+      font-weight: 600;
+      margin-bottom: var(--space-3);
+    }
+    .inline-docs__row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .inline-doc {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 0.6rem 1rem;
+      background: var(--clr-bg);
+      border: 1px solid var(--clr-rule);
+      border-radius: 4px;
+      font-size: 0.84rem;
+      font-weight: 500;
+      color: var(--clr-ink);
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .inline-doc:hover { background: var(--clr-bg); color: var(--clr-accent); border-color: var(--clr-accent); }
+    .inline-doc svg { width: 13px; height: 13px; stroke: var(--clr-accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
     /* ── Close section ── */
     .proj-close { background: var(--clr-surface); }
 
@@ -467,14 +494,14 @@
         <div class="hero-gallery__frame">
           <div class="hero-gallery__track" id="heroTrack">
             <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/CACOM_Render_V3.png" alt="" aria-hidden="true" />
+              <img src="../../assets/images/CACOM_Render_V3.png" alt="CACOM full design rendering" />
+              <span class="hero-gallery__caption">V3.0 Full Design Rendering</span>
+            </div>
+            <div class="hero-gallery__slide">
               <img class="hero-gallery__slide-bg" src="../../assets/images/CACOM_Title_1.webp" alt="" aria-hidden="true" />
               <img src="../../assets/images/CACOM_Title_1.webp" alt="CACOM final prototype" />
               <span class="hero-gallery__caption">Final prototype, Alpha V3.0</span>
-            </div>
-            <div class="hero-gallery__slide">
-              <img class="hero-gallery__slide-bg" src="../../assets/images/CACOM_Render_1.webp" alt="" aria-hidden="true" />
-              <img src="../../assets/images/CACOM_Render_1.webp" alt="CACOM full design rendering" />
-              <span class="hero-gallery__caption">Full design rendering</span>
             </div>
             <div class="hero-gallery__slide">
               <img class="hero-gallery__slide-bg" src="../../assets/images/CACOM_Wear.webp" alt="" aria-hidden="true" />
@@ -543,8 +570,8 @@
           </div>
         </div>
         <div class="split__media">
-          <img src="../../assets/images/CACOM_Wear.webp" alt="CACOM device worn on the neck over the carotid artery" loading="lazy" />
-          <p class="split__caption">Positioned over the carotid artery, combining Doppler ultrasound and applanation tonometry in one wearable</p>
+          <img src="../../assets/images/CACOM_Back.webp" alt="Background context for the CACOM cardiac monitoring project" loading="lazy" />
+          <p class="split__caption">At-home cardiac monitoring remains largely inaccessible despite reliable diagnostic technology existing in hospitals and emergency-care centers</p>
         </div>
       </div>
     </section>
@@ -619,9 +646,14 @@
           <div class="gallery__frame">
             <div class="gallery__track" id="hwTrack">
               <div class="gallery__slide">
-                <img class="gallery__slide-bg" src="../../assets/images/CACOM_Back.webp" alt="" aria-hidden="true" />
-                <img src="../../assets/images/CACOM_Back.webp" alt="CACOM rear view, living hinge and back support" loading="lazy" />
-                <span class="gallery__caption">Rear view: back support and hinge assembly</span>
+                <img class="gallery__slide-bg" src="../../assets/images/CACOM_Render_V2.png" alt="" aria-hidden="true" />
+                <img src="../../assets/images/CACOM_Render_V2.png" alt="CACOM design rendering, V2.0 working prototype" loading="lazy" />
+                <span class="gallery__caption">V2.0 rendering: working prototype</span>
+              </div>
+              <div class="gallery__slide">
+                <img class="gallery__slide-bg" src="../../assets/images/CACOM_Render_V3.png" alt="" aria-hidden="true" />
+                <img src="../../assets/images/CACOM_Render_V3.png" alt="CACOM design rendering, V3.0 final design" loading="lazy" />
+                <span class="gallery__caption">V3.0 rendering: final design</span>
               </div>
               <div class="gallery__slide">
                 <img class="gallery__slide-bg" src="../../assets/images/CACOM_Sensor_1.webp" alt="" aria-hidden="true" />
@@ -632,11 +664,6 @@
                 <img class="gallery__slide-bg" src="../../assets/images/CACOM_Title_2.webp" alt="" aria-hidden="true" />
                 <img src="../../assets/images/CACOM_Title_2.webp" alt="CACOM full assembled device" loading="lazy" />
                 <span class="gallery__caption">V3.0: full assembled device</span>
-              </div>
-              <div class="gallery__slide">
-                <img class="gallery__slide-bg" src="../../assets/images/CACOM_Render_1.webp" alt="" aria-hidden="true" />
-                <img src="../../assets/images/CACOM_Render_1.webp" alt="CACOM final design rendering" loading="lazy" />
-                <span class="gallery__caption">Final design rendering</span>
               </div>
             </div>
           </div>
@@ -662,15 +689,58 @@
     <section class="proj-section">
       <div class="software-box">
         <div class="split split--reverse">
-          <div class="split__media split__media--wide">
-            <img src="../../assets/images/CACOM_PCB.webp" alt="CACOM 2-layer PCB, KiCAD design" loading="lazy" />
-            <p class="split__caption">2-layer PCB, designed across V1 and V2 schematic revisions</p>
+          <div class="split__media">
+            <div class="gallery">
+              <button class="gallery__arrow gallery__arrow--prev" id="pcbPrev" aria-label="Previous image">
+                <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <button class="gallery__arrow gallery__arrow--next" id="pcbNext" aria-label="Next image">
+                <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+              <div class="gallery__frame">
+                <div class="gallery__track" id="pcbTrack">
+                  <div class="gallery__slide">
+                    <img class="gallery__slide-bg" src="../../assets/images/CACOM_PCB.webp" alt="" aria-hidden="true" />
+                    <img src="../../assets/images/CACOM_PCB.webp" alt="CACOM 2-layer PCB, full board" loading="lazy" />
+                    <span class="gallery__caption">2-layer PCB, full board</span>
+                  </div>
+                  <div class="gallery__slide">
+                    <img class="gallery__slide-bg" src="../../assets/images/CACOM_PCB_1.png" alt="" aria-hidden="true" />
+                    <img src="../../assets/images/CACOM_PCB_1.png" alt="CACOM PCB detail, revision 1" loading="lazy" />
+                    <span class="gallery__caption">PCB detail, V1 layout</span>
+                  </div>
+                  <div class="gallery__slide">
+                    <img class="gallery__slide-bg" src="../../assets/images/CACOM_PCB_2.png" alt="" aria-hidden="true" />
+                    <img src="../../assets/images/CACOM_PCB_2.png" alt="CACOM PCB detail, revision 2" loading="lazy" />
+                    <span class="gallery__caption">PCB detail, V2 analog front end rework</span>
+                  </div>
+                </div>
+              </div>
+              <div class="gallery__dots" id="pcbDots"></div>
+            </div>
           </div>
           <div class="split__text">
             <p class="split__eyebrow">Electrical</p>
             <div class="prose">
               <p>I designed the electrical control systems in KiCAD: schematics and a 2-layer PCB driving both the ultrasound and pressure sensors from a single Arduino-based board. The schematic went through two real revisions, V1 established the core signal path between the sine wave generator, the transmitter/receiver switch, and the amplification and filtering stage; V2 cleaned up the layout and reworked the analog front end as the sensor requirements firmed up.</p>
               <p>Keeping both sensor types on one board mattered for the mechanical side too: the V3.0 enclosure was designed around this PCB's actual footprint, not the other way around, which is part of why the rack-and-pinion sensor engagement could stay this compact.</p>
+            </div>
+            <div class="inline-docs">
+              <p class="inline-docs__label">Schematic Revisions</p>
+              <div class="inline-docs__row">
+                <a class="inline-doc" href="../../assets/docs/CACOM_Schem_V1.pdf" target="_blank" rel="noopener">
+                  Schematic V1
+                  <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+                <a class="inline-doc" href="../../assets/docs/CACOM_Schem_V2.1.pdf" target="_blank" rel="noopener">
+                  Schematic V2.1
+                  <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+                <a class="inline-doc" href="../../assets/docs/CACOM_Schem_V2.2.pdf" target="_blank" rel="noopener">
+                  Schematic V2.2
+                  <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -701,8 +771,16 @@
           <span class="proj-section__title">Validation</span>
         </div>
       </div>
-      <div class="prose" style="margin-bottom: var(--space-6);">
-        <p>The applanation tonometry model was validated computationally and physically. ANSYS static studies estimated arterial deformation and pressure from the sensor's spring and vinyl pipe properties, then that estimate was checked against a rotary pump and flow rate sensor rig built specifically for verification, not against the actual sensor output alone. The ultrasonic sensing path was validated by comparing the onboard Arduino FFT against an independent Python Fourier transform and a hand calculation of the transmitted wave, confirming the microcontroller's signal processing matched expected behavior before trusting it for live data collection.</p>
+      <div class="split">
+        <div class="split__text">
+          <div class="prose">
+            <p>The applanation tonometry model was validated computationally and physically. ANSYS static studies estimated arterial deformation and pressure from the sensor's spring and vinyl pipe properties, then that estimate was checked against a rotary pump and flow rate sensor rig built specifically for verification, not against the actual sensor output alone. The ultrasonic sensing path was validated by comparing the onboard Arduino FFT against an independent Python Fourier transform and a hand calculation of the transmitted wave, confirming the microcontroller's signal processing matched expected behavior before trusting it for live data collection.</p>
+          </div>
+        </div>
+        <div class="split__media">
+          <img src="../../assets/images/CACOM_Test_1.png" alt="CACOM verification test rig: rotary pump and flow rate sensor setup" loading="lazy" />
+          <p class="split__caption">Verification rig: rotary pump and flow rate sensor, used to check the applanation tonometry estimate against physical test data</p>
+        </div>
       </div>
 
       <div class="result-stats result-stats--row">
@@ -797,6 +875,7 @@
 
     initSlider('heroTrack', 'heroDots', 'heroPrev', 'heroNext', '.hero-gallery__slide', 'hero-gallery__dot');
     initSlider('hwTrack', 'hwDots', 'hwPrev', 'hwNext', '.gallery__slide', 'gallery__dot');
+    initSlider('pcbTrack', 'pcbDots', 'pcbPrev', 'pcbNext', '.gallery__slide', 'gallery__dot');
 
     function toggleMenu() {
       document.getElementById('navLinks').classList.toggle('open');
