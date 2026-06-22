@@ -51,19 +51,6 @@
       color: var(--clr-ink);
       margin-bottom: var(--space-6);
     }
-    .proj-hero__affil {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: var(--space-3);
-      font-size: var(--text-xs);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--clr-accent);
-      margin-bottom: var(--space-6);
-      font-weight: 600;
-      opacity: 0.55;
-    }
     .proj-hero__lead {
       font-size: var(--text-lg);
       font-weight: 300;
@@ -362,6 +349,9 @@
     .doc-card:hover { background: var(--clr-surface); color: var(--clr-accent); }
     .doc-card svg { width: 14px; height: 14px; stroke: var(--clr-accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 
+    .video-wrapper { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 4px; overflow: hidden; margin-top: var(--space-8); }
+    .video-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
     .proj-close { background: var(--clr-surface); }
 
     @media (max-width: 900px) {
@@ -401,7 +391,6 @@
         <a href="../projects/" style="color:inherit; opacity:0.7;">&larr; Back to Projects</a>
       </p>
       <h1>Nozzle Geometry Optimization for Chocolate 3D Printing</h1>
-      <p class="proj-hero__affil">MAE 4530 &nbsp;·&nbsp; Cornell University &nbsp;·&nbsp; 3-person Team (Member)</p>
       <p class="proj-hero__lead">I wrote the problem statement, built the physical schematics in Fusion360, determined the Cross-WLF viscosity model for non-Newtonian chocolate flow, and led the COMSOL model validation and sensitivity analysis for this finite-element study of chocolate extrusion nozzle geometry.</p>
 
       <div class="hero-gallery">
@@ -414,14 +403,14 @@
         <div class="hero-gallery__frame">
           <div class="hero-gallery__track" id="heroTrack">
             <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/Main_Title.png" alt="" aria-hidden="true" />
+              <img src="../../assets/images/Main_Title.png" alt="COMSOL temperature and velocity output for chocolate nozzle simulation" />
+              <span class="hero-gallery__caption">Coupled temperature and velocity output from COMSOL</span>
+            </div>
+            <div class="hero-gallery__slide">
               <img class="hero-gallery__slide-bg" src="../../assets/images/Nozzle_Title_1.png" alt="" aria-hidden="true" />
               <img src="../../assets/images/Nozzle_Title_1.png" alt="Nozzle geometry and COMSOL model overview" />
               <span class="hero-gallery__caption">Axisymmetric nozzle model with outlet temperature visualization</span>
-            </div>
-            <div class="hero-gallery__slide">
-              <img class="hero-gallery__slide-bg" src="../../assets/images/Nozzle_Schematic_1.png" alt="" aria-hidden="true" />
-              <img src="../../assets/images/Nozzle_Schematic_1.png" alt="PEEK validation results compared to published literature" />
-              <span class="hero-gallery__caption">Nozzle Schematic for COMSOL Model</span>
             </div>
             <div class="hero-gallery__slide">
               <img class="hero-gallery__slide-bg" src="../../assets/images/Nozzle_Validation.png" alt="" aria-hidden="true" />
@@ -461,11 +450,11 @@
       <div class="so-panel__col">
         <p class="label">My Contributions</p>
         <ul>
-          <li>Authored the problem statement and research objectives, framing tempering feasibility as the primary research question.</li>
-          <li>Designed the axisymmetric nozzle geometry in Fusion360 and produced all physical schematics for the boundary conditions and governing equations.</li>
-          <li>Selected and implemented the Cross-WLF viscosity model in COMSOL, fitting constants from published 70% dark chocolate rheological data.</li>
-          <li>Validated the model against published PEEK plastic extrusion data from Wang et al., confirming velocity and temperature trends matched the literature.</li>
-          <li>Ran the full sensitivity analysis across nozzle diameter (0.8 to 1.6 mm) and length (8 to 16 mm) and interpreted the results to determine that geometry alone cannot achieve in-nozzle tempering under current operating conditions.</li>
+          <li><strong>Authored the problem statement and research objectives,</strong> framing tempering feasibility as the primary research question.</li>
+          <li><strong>Designed the axisymmetric nozzle geometry in Fusion360</strong> and produced all physical schematics for the boundary conditions and governing equations.</li>
+          <li><strong>Selected and implemented the Cross-WLF viscosity model in COMSOL,</strong> fitting constants from published 70% dark chocolate rheological data.</li>
+          <li><strong>Validated the model against published PEEK plastic extrusion data</strong> from Wang et al., confirming velocity and temperature trends matched the literature.</li>
+          <li><strong>Ran the full sensitivity analysis</strong> across nozzle diameter (0.8 to 1.6 mm) and length (8 to 16 mm) and interpreted the results to determine that geometry alone cannot achieve in-nozzle tempering under current operating conditions.</li>
         </ul>
       </div>
     </div>
@@ -486,9 +475,9 @@
             <div class="gallery__frame">
               <div class="gallery__track" id="psTrack">
                 <div class="gallery__slide">
-                  <img class="gallery__slide-bg" src="../../assets/images/Nozzle_Printer_1.png" alt="" aria-hidden="true" />
-                  <img src="../../assets/images/Nozzle_Printer_1.png" alt="Nozzle geometry schematic with labeled dimensions" loading="lazy" />
-                  <span class="gallery__caption">Example 3D Chocolate Printer</span>
+                  <img class="gallery__slide-bg" src="../../assets/images/Nozzle_Schematic_1.png" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/Nozzle_Schematic_1.png" alt="Nozzle geometry schematic with labeled dimensions" loading="lazy" />
+                  <span class="gallery__caption">Nozzle geometry schematic built in Fusion360</span>
                 </div>
               </div>
             </div>
@@ -671,6 +660,9 @@
         <p>The primary finding is that the Cocoa Press 1 does not achieve chocolate tempering through its nozzle geometry. Across all tested configurations, outlet temperatures remained near 318 to 322 K, well above the tempering window of approximately 306 K. Variation in nozzle diameter and length within the practical range did not meaningfully alter this result. The thermal behavior is dominated by the inlet temperature and wall boundary conditions, not by the nozzle geometry itself.</p>
         <p>Two recommendations follow directly from the analysis. First, active cooling applied to the exterior of the nozzle, particularly near the die exit, would provide a direct mechanism for reducing outlet temperature and potentially bringing it into the tempering range. Second, upstream tempering prior to loading the chocolate into the cartridge remains the most reliable approach for achieving proper crystal structure, which appears to be the implicit assumption behind the current Cocoa Press design. The nozzle in its current form primarily functions as a flow control mechanism, not a thermal regulation mechanism.</p>
         <p>The validated model is documented and available as a reference baseline for future nozzle design work. Extensions of this analysis could include active cooling simulations, time-dependent startup behavior, or material substitution to evaluate alternative chocolate formulations with different rheological profiles.</p>
+      </div>
+      <div class="video-wrapper">
+        <iframe src="https://www.youtube.com/embed/qSIg6Wpe5UM?si=aseo-jeg0_2alV5X" title="Chocolate FEA COMSOL walkthrough" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
       </div>
     </section>
 
