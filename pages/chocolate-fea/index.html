@@ -3,11 +3,371 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>iot-baton Andrew J. D'Onofrio</title>
+  <title>Chocolate FEA: Andrew J. D'Onofrio</title>
+  <meta name="description" content="Nozzle geometry optimization for chocolate 3D printing via FEA in COMSOL: Cross-WLF rheology modeling, coupled heat transfer and fluid flow, model validation, and sensitivity analysis." />
   <link rel="stylesheet" href="../../css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    .proj-hero {
+      position: relative;
+      padding: var(--space-16) var(--page-gutter) var(--space-12);
+      border-bottom: 1px solid rgba(26,32,51,0.06);
+      overflow: hidden;
+    }
+    .proj-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='56' viewBox='0 0 96 56'%3E%3Cpolygon points='24,3 48,15.5 48,40.5 24,53 0,40.5 0,15.5' fill='none' stroke='%231A2033' stroke-width='1' opacity='0.05'/%3E%3Cpolygon points='72,3 96,15.5 96,40.5 72,53 48,40.5 48,15.5' fill='none' stroke='%231A2033' stroke-width='1' opacity='0.05'/%3E%3Cpolygon points='48,-12.5 72,0 72,25 48,37.5 24,25 24,0' fill='none' stroke='%231A2033' stroke-width='1' opacity='0.05'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-position: center;
+      -webkit-mask-image: linear-gradient(to right, transparent, black 30%, black 100%);
+      mask-image: linear-gradient(to right, transparent, black 30%, black 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .proj-hero__inner { position: relative; z-index: 1; max-width: var(--max-w); margin-inline: auto; }
+    .proj-hero__eyebrow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-4);
+      font-size: var(--text-xs);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      margin-bottom: var(--space-6);
+      font-weight: 600;
+      opacity: 0.8;
+    }
+    .proj-hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 5.5vw, 5rem);
+      font-weight: 500;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--clr-ink);
+      margin-bottom: var(--space-6);
+    }
+    .proj-hero__lead {
+      font-size: var(--text-lg);
+      font-weight: 300;
+      color: var(--clr-ink);
+      opacity: 0.78;
+      max-width: 64ch;
+      line-height: 1.8;
+      margin-bottom: var(--space-8);
+    }
+    .proj-hero__lead strong { font-weight: 600; opacity: 1; }
+
+    .hero-gallery { position: relative; z-index: 1; margin-top: var(--space-8); }
+    .hero-gallery__frame {
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--clr-surface);
+      aspect-ratio: 16/8;
+      box-shadow: 0 20px 60px rgba(26,32,51,0.12);
+    }
+    .hero-gallery__track {
+      display: flex;
+      height: 100%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .hero-gallery__track::-webkit-scrollbar { display: none; }
+    .hero-gallery__slide { flex: 0 0 100%; scroll-snap-align: start; position: relative; height: 100%; overflow: hidden; }
+    .hero-gallery__slide-bg {
+      position: absolute;
+      inset: -20px;
+      width: calc(100% + 40px);
+      height: calc(100% + 40px);
+      object-fit: cover;
+      filter: blur(24px) brightness(0.85) saturate(1.1);
+      transform: scale(1.15);
+      z-index: 0;
+    }
+    .hero-gallery__slide img:not(.hero-gallery__slide-bg) {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      z-index: 1;
+    }
+    .hero-gallery__caption {
+      position: absolute;
+      left: 20px;
+      bottom: 18px;
+      font-size: 0.78rem;
+      letter-spacing: 0.02em;
+      color: #fff;
+      background: rgba(26,32,51,0.55);
+      backdrop-filter: blur(4px);
+      padding: 6px 12px;
+      border-radius: 3px;
+      z-index: 2;
+    }
+    .hero-gallery__arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(245,240,232,0.92);
+      border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      z-index: 2;
+      transition: background 0.15s;
+    }
+    .hero-gallery__arrow:hover { background: #fff; }
+    .hero-gallery__arrow svg { width: 16px; height: 16px; stroke: var(--clr-ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .hero-gallery__arrow--prev { left: 16px; }
+    .hero-gallery__arrow--next { right: 16px; }
+    .hero-gallery__dots { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
+    .hero-gallery__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--clr-rule); border: none; padding: 0; cursor: pointer; transition: all 0.15s; }
+    .hero-gallery__dot.active { background: var(--clr-accent); transform: scale(1.3); }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-8); }
+
+    .so-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-6);
+      margin-top: var(--space-8);
+    }
+    .so-panel__col { background: var(--clr-surface); border-radius: 12px; padding: var(--space-6); }
+    .so-panel__col p.label {
+      font-size: var(--text-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      font-weight: 600;
+      margin-bottom: var(--space-3);
+    }
+    .so-panel__col ul { list-style: none; display: flex; flex-direction: column; gap: var(--space-3); }
+    .so-panel__col ul li {
+      font-size: var(--text-sm);
+      color: var(--clr-ink-muted);
+      line-height: 1.6;
+      padding-left: var(--space-4);
+      position: relative;
+    }
+    .so-panel__col ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.6em;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--clr-accent);
+    }
+    .so-panel__col ul li strong { color: var(--clr-ink); font-weight: 600; }
+
+    .proj-section { max-width: var(--max-w); margin-inline: auto; padding-block: var(--space-8); }
+    .proj-section__label {
+      display: flex;
+      align-items: baseline;
+      gap: 2rem;
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid rgba(26,32,51,0.1);
+    }
+    .proj-section__num {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 5vw, 4.5rem);
+      font-weight: 400;
+      color: var(--clr-accent);
+      opacity: 0.5;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .proj-section__title-wrap { display: flex; flex-direction: column; justify-content: center; }
+    .proj-section__eyebrow {
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      font-weight: 600;
+      opacity: 0.9;
+      margin-bottom: 0.3rem;
+    }
+    .proj-section__title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--clr-ink);
+      line-height: 1.1;
+    }
+
+    .prose { max-width: none; }
+    .prose p { font-size: var(--text-base); line-height: 1.8; color: var(--clr-ink-muted); margin-bottom: 1.25rem; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose strong { color: var(--clr-ink); font-weight: 600; }
+    .prose em { font-style: italic; color: var(--clr-ink); }
+
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); align-items: start; }
+    .split--reverse .split__text { order: 2; }
+    .split--reverse .split__media { order: 1; }
+    .split__media img { border-radius: 4px; width: 100%; object-fit: cover; box-shadow: 0 12px 32px rgba(26,32,51,0.1); }
+    .split--match { align-items: stretch; }
+    .split--match .split__media { display: flex; flex-direction: column; }
+    .split--match .split__media img { flex: 1; min-height: 280px; max-height: 560px; height: 100%; }
+    .split__caption { font-size: var(--text-xs); color: var(--clr-ink-muted); margin-top: var(--space-3); }
+    .split__eyebrow {
+      font-size: var(--text-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      font-weight: 600;
+      margin-bottom: var(--space-3);
+    }
+
+    .gallery { position: relative; }
+    .gallery__frame {
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--clr-surface);
+      aspect-ratio: 4/3;
+    }
+    .gallery__track {
+      display: flex;
+      height: 100%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .gallery__track::-webkit-scrollbar { display: none; }
+    .gallery__slide { flex: 0 0 100%; scroll-snap-align: start; position: relative; height: 100%; overflow: hidden; }
+    .gallery__slide-bg {
+      position: absolute;
+      inset: -20px;
+      width: calc(100% + 40px);
+      height: calc(100% + 40px);
+      object-fit: cover;
+      filter: blur(20px) brightness(0.85) saturate(1.1);
+      transform: scale(1.15);
+      z-index: 0;
+    }
+    .gallery__slide img:not(.gallery__slide-bg) {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      z-index: 1;
+    }
+    .gallery__caption {
+      position: absolute;
+      left: 16px;
+      bottom: 14px;
+      font-size: 0.74rem;
+      letter-spacing: 0.02em;
+      color: #fff;
+      background: rgba(26,32,51,0.55);
+      backdrop-filter: blur(4px);
+      padding: 5px 10px;
+      border-radius: 3px;
+      z-index: 2;
+    }
+    .gallery__arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(245,240,232,0.92);
+      border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      z-index: 2;
+      transition: background 0.15s;
+    }
+    .gallery__arrow:hover { background: #fff; }
+    .gallery__arrow svg { width: 14px; height: 14px; stroke: var(--clr-ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .gallery__arrow--prev { left: 12px; }
+    .gallery__arrow--next { right: 12px; }
+    .gallery__dots { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
+    .gallery__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--clr-rule); border: none; padding: 0; cursor: pointer; transition: all 0.15s; }
+    .gallery__dot.active { background: var(--clr-accent); transform: scale(1.3); }
+
+    .software-box {
+      background: var(--clr-surface);
+      border-radius: 10px;
+      padding: var(--space-8);
+      box-shadow: inset 0 0 0 1px rgba(26,32,51,0.04);
+    }
+    .software-box .split { gap: var(--space-8); }
+
+    .spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--space-12); }
+    .spec-table { width: 100%; border-collapse: collapse; }
+    .spec-table tr { border-bottom: 1px solid var(--clr-rule); }
+    .spec-table tr:last-child { border-bottom: none; }
+    .spec-table td { padding: var(--space-3) 0; vertical-align: top; font-size: 0.92rem; }
+    .spec-table td:first-child { font-size: var(--text-sm); color: var(--clr-ink-muted); width: 50%; padding-right: var(--space-4); font-weight: 500; }
+    .spec-table td:last-child { color: var(--clr-ink); font-weight: 500; }
+
+    .result-stats { display: flex; flex-direction: column; gap: var(--space-4); }
+    .result-stats__item { padding-bottom: var(--space-4); border-bottom: 1px solid var(--clr-rule); }
+    .result-stats__item:last-child { border-bottom: none; padding-bottom: 0; }
+    .result-stats__num { font-family: var(--font-serif); font-size: clamp(1.8rem, 3vw, 2.3rem); font-weight: 500; line-height: 1; color: var(--clr-ink); }
+    .result-stats__num--accent { color: var(--clr-accent); }
+    .result-stats__label { font-size: var(--text-xs); letter-spacing: 0.04em; text-transform: uppercase; color: var(--clr-ink-muted); margin-top: var(--space-2); }
+    .result-stats--row {
+      flex-direction: row;
+      justify-content: center;
+      text-align: center;
+      margin-top: var(--space-8);
+      padding-top: var(--space-8);
+      border-top: 1px solid var(--clr-rule);
+      gap: var(--space-8);
+    }
+    .result-stats--row .result-stats__item { padding-bottom: 0; border-bottom: none; padding-right: var(--space-8); border-right: 1px solid var(--clr-rule); }
+    .result-stats--row .result-stats__item:last-child { border-right: none; padding-right: 0; }
+
+    .doc-section { padding-top: var(--space-12); }
+    .doc-section__label {
+      font-size: var(--text-xs);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--clr-ink-muted);
+      font-weight: 600;
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--clr-rule);
+    }
+    .doc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--clr-rule); border: 1px solid var(--clr-rule); border-radius: 4px; overflow: hidden; }
+    .doc-card { background: var(--clr-bg); padding: 1.25rem var(--space-6); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); font-size: 0.9rem; font-weight: 500; color: var(--clr-ink); transition: background 0.15s, color 0.15s; }
+    .doc-card:hover { background: var(--clr-surface); color: var(--clr-accent); }
+    .doc-card svg { width: 14px; height: 14px; stroke: var(--clr-accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+    .proj-close { background: var(--clr-surface); }
+
+    @media (max-width: 900px) {
+      .so-panel { grid-template-columns: 1fr; gap: var(--space-4); }
+      .split { grid-template-columns: 1fr; gap: var(--space-6); }
+      .split--reverse .split__text, .split--reverse .split__media { order: unset; }
+      .spec-grid { grid-template-columns: 1fr; gap: 0; }
+      .doc-grid { grid-template-columns: 1fr; }
+      .result-stats--row { flex-direction: column; gap: var(--space-4); }
+      .result-stats--row .result-stats__item { padding-right: 0; border-right: none; padding-bottom: var(--space-4); border-bottom: 1px solid var(--clr-rule); }
+      .result-stats--row .result-stats__item:last-child { padding-bottom: 0; border-bottom: none; }
+    }
+    @media (max-width: 600px) {
+      .proj-hero { padding: var(--space-12) var(--page-gutter) var(--space-8); }
+      .proj-hero h1 { font-size: clamp(2.2rem, 9vw, 3rem); }
+      .proj-section { padding-block: var(--space-8); }
+      .proj-section__num { font-size: clamp(2.2rem, 9vw, 3rem); }
+    }
+  </style>
 </head>
 <body>
   <nav class="nav" id="nav">
@@ -20,11 +380,295 @@
       <li><a href="../resume-cv/">Resume / CV</a></li>
     </ul>
   </nav>
-  <div class="page-header">
-    <p class="page-header__eyebrow"><a href="../projects/" style="color:var(--clr-accent)">&larr; Back to Projects</a></p>
-    <h1>Full case study coming soon</h1>
-    <p style="margin-top:1rem;color:var(--clr-ink-muted);font-size:1.1rem;">This page is in progress. Check back shortly.</p>
+
+  <!-- ── PROJECT HERO ── -->
+  <header class="proj-hero">
+    <div class="proj-hero__inner">
+      <p class="proj-hero__eyebrow">
+        <a href="../projects/" style="color:inherit; opacity:0.7;">&larr; Back to Projects</a>
+      </p>
+      <h1>Nozzle Geometry Optimization for Chocolate 3D Printing</h1>
+      <p class="proj-hero__lead">I wrote the problem statement, built the physical schematics in Fusion360, determined the Cross-WLF viscosity model for non-Newtonian chocolate flow, and led the COMSOL model validation and sensitivity analysis for this finite-element study of chocolate extrusion nozzle geometry.</p>
+
+      <div class="hero-gallery">
+        <button class="hero-gallery__arrow hero-gallery__arrow--prev" id="heroPrev" aria-label="Previous image">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="hero-gallery__arrow hero-gallery__arrow--next" id="heroNext" aria-label="Next image">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <div class="hero-gallery__frame">
+          <div class="hero-gallery__track" id="heroTrack">
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/Main_Title.png" alt="" aria-hidden="true" />
+              <img src="../../assets/images/Main_Title.png" alt="COMSOL temperature and velocity output for chocolate nozzle simulation" />
+              <span class="hero-gallery__caption">Coupled temperature and velocity output from COMSOL</span>
+            </div>
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/Nozzle_Title_1.png" alt="" aria-hidden="true" />
+              <img src="../../assets/images/Nozzle_Title_1.png" alt="Nozzle geometry and COMSOL model overview" />
+              <span class="hero-gallery__caption">Axisymmetric nozzle model with outlet temperature visualization</span>
+            </div>
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/Nozzle_Validation.png" alt="" aria-hidden="true" />
+              <img src="../../assets/images/Nozzle_Validation.png" alt="PEEK validation results compared to published literature" />
+              <span class="hero-gallery__caption">PEEK validation: velocity and temperature vs. Wang et al.</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-gallery__dots" id="heroDots"></div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag">COMSOL Multiphysics</span>
+        <span class="tag">Finite Element Analysis</span>
+        <span class="tag">Non-Newtonian Fluid Flow</span>
+        <span class="tag">Cross-WLF Viscosity Model</span>
+        <span class="tag">Heat Transfer</span>
+        <span class="tag">Fusion360</span>
+        <span class="tag">Chocolate Rheology</span>
+        <span class="tag">Sensitivity Analysis</span>
+        <span class="tag">Model Validation</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- ── SITUATION / OUTCOMES ── -->
+    <div class="so-panel">
+      <div class="so-panel__col">
+        <p class="label">Situation</p>
+        <ul>
+          <li>Commercial chocolate 3D printers such as the Cocoa Press 1 do not achieve in-nozzle tempering. They rely on pre-tempered material, leaving it unknown whether any nozzle geometry modification could enable proper crystallization during extrusion.</li>
+          <li>Chocolate is a non-Newtonian, shear-thinning fluid with strong temperature-dependent viscosity. Standard Newtonian flow models are not applicable, requiring a specialized rheology model.</li>
+          <li>No published FEA model characterized coupled thermal and fluid behavior inside a chocolate extrusion nozzle, and no systematic geometric sensitivity study existed for this application.</li>
+        </ul>
+      </div>
+      <div class="so-panel__col">
+        <p class="label">My Contributions</p>
+        <ul>
+          <li>Authored the problem statement and research objectives, framing tempering feasibility as the primary research question.</li>
+          <li>Designed the axisymmetric nozzle geometry in Fusion360 and produced all physical schematics for the boundary conditions and governing equations.</li>
+          <li>Selected and implemented the Cross-WLF viscosity model in COMSOL, fitting constants from published 70% dark chocolate rheological data.</li>
+          <li>Validated the model against published PEEK plastic extrusion data from Wang et al., confirming velocity and temperature trends matched the literature.</li>
+          <li>Ran the full sensitivity analysis across nozzle diameter (0.8 to 1.6 mm) and length (8 to 16 mm) and interpreted the results to determine that geometry alone cannot achieve in-nozzle tempering under current operating conditions.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ── BACKGROUND / PROBLEM ── -->
+    <section class="proj-section">
+      <div class="split">
+        <div class="split__text">
+          <p class="split__eyebrow">The Problem</p>
+          <div class="prose">
+            <p>Chocolate tempering is the process of precisely controlling melting, cooling, and reheating to stabilize specific cocoa butter crystal structures. Properly tempered chocolate produces the characteristic gloss, snap, and structural strength found in commercial confectionery. Without controlled crystallization, 3D-printed chocolate parts are softer, warp more easily, and lose fine surface detail.</p>
+            <p>The Cocoa Press 1 is a commercially available chocolate 3D printer that uses a heated reservoir and motor-driven plunger to extrude solid chocolate logs through a stainless steel nozzle. The system does not explicitly advertise in-nozzle tempering and instead relies on pre-tempered chocolate loaded into the cartridge. The printer attempts to maintain the material within an extrudable temperature range, but it is not known whether the nozzle geometry can produce outlet temperatures consistent with the tempering window (approximately 306 K), or whether any geometric modification could enable this.</p>
+            <p>The project objective was to determine, through coupled FEA in COMSOL, whether iterating through nozzle diameters and chamber lengths could bring outlet temperatures into the tempering range, and to identify what process modifications would be required if geometry alone is insufficient.</p>
+          </div>
+        </div>
+        <div class="split__media">
+          <div class="gallery">
+            <div class="gallery__frame">
+              <div class="gallery__track" id="psTrack">
+                <div class="gallery__slide">
+                  <img class="gallery__slide-bg" src="../../assets/images/Nozzle_Schematic_1.png" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/Nozzle_Schematic_1.png" alt="Nozzle geometry schematic with labeled dimensions" loading="lazy" />
+                  <span class="gallery__caption">Nozzle geometry schematic built in Fusion360</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION 01: SCHEMATICS AND COMSOL SETUP ── -->
+    <section class="proj-section">
+      <div class="proj-section__label">
+        <span class="proj-section__num">01</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Physical Setup</span>
+          <span class="proj-section__title">Schematics and Model Geometry</span>
+        </div>
+      </div>
+      <div class="split split--reverse">
+        <div class="split__media">
+          <div class="gallery">
+            <div class="gallery__frame">
+              <div class="gallery__track" id="s1Track">
+                <div class="gallery__slide">
+                  <img class="gallery__slide-bg" src="../../assets/images/Nozzle_Schematic_2.png" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/Nozzle_Schematic_2.png" alt="COMSOL boundary condition schematic for chocolate nozzle model" loading="lazy" />
+                  <span class="gallery__caption">Boundary condition schematic for the COMSOL model</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="split__text">
+          <div class="prose">
+            <p>The physical system was modeled as an axisymmetric cross-section of the Cocoa Press nozzle and the liquid chocolate flowing through it. Rotational symmetry reduces the 3D problem to a 2D domain, capturing both radial and axial behavior while significantly reducing computational cost. Liquid chocolate enters the cartridge body at a controlled inlet temperature and is driven downward by the motor-actuated plunger toward the converging nozzle tip.</p>
+            <p>As the chocolate moves through the nozzle, heat is transferred through the stainless steel walls by conduction and lost to the surrounding environment through convection. The outlet temperature is the primary variable of interest, as it determines whether the chocolate exits within the tempering window.</p>
+            <p>The schematics were built in Fusion360 and define the geometry and boundary conditions used in COMSOL. The chocolate and stainless steel domains are defined separately, with interface conditions applied at the fluid-wall boundary. Inlet velocity and temperature are specified at the cartridge entry, atmospheric pressure is applied at the outlet, and a convective heat transfer coefficient of 8.65 W/m^2K is applied to the exterior nozzle surface. No-slip conditions are applied at all fluid-wall boundaries. The model uses a fully coupled steady-state Laminar Flow and Heat Transfer in Fluids physics setup.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION 02: CROSS-WLF MODEL ── -->
+    <section class="proj-section">
+      <div class="proj-section__label">
+        <span class="proj-section__num">02</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Rheology</span>
+          <span class="proj-section__title">Cross-WLF Viscosity Model</span>
+        </div>
+      </div>
+      <div class="software-box">
+        <div class="split">
+          <div class="split__text">
+            <div class="prose">
+              <p>Chocolate is a non-Newtonian fluid with shear-thinning behavior, meaning its viscosity decreases as shear rate increases. Standard Newtonian models are not applicable. The Cross-WLF model was selected because it captures both shear rate dependence and temperature dependence in a single formulation. The Cross portion of the model accounts for shear-thinning behavior. The WLF (Williams-Landel-Ferry) portion accounts for the exponential dependence of viscosity on temperature.</p>
+              <p>This model is established in FDM simulation literature for thermoplastic materials, and the extrapolation to chocolate-based FDM is valid given the similar extrusion mechanism. Published rheological data for 70% dark chocolate was used to extract the required constants. A linear regression was applied to the viscosity-shear dataset to reconstruct the experimental curve and identify the critical shear stress, power-law index, reference viscosity, glass transition temperature, and WLF coefficients. The resulting model was implemented in COMSOL as a user-defined viscosity function referencing the internally computed shear rate (spf.sr).</p>
+            </div>
+          </div>
+          <div>
+            <p style="font-size:var(--text-xs);letter-spacing:0.1em;text-transform:uppercase;color:var(--clr-accent);font-weight:600;margin-bottom:var(--space-4);">Cross-WLF Constants (70% Dark Chocolate)</p>
+            <table class="spec-table">
+              <tr><td>Critical shear stress (t*)</td><td>168 Pa</td></tr>
+              <tr><td>Power-law index (n)</td><td>0.6226</td></tr>
+              <tr><td>Reference viscosity (D1)</td><td>6 Pa·s</td></tr>
+              <tr><td>Glass transition temp. (D2)</td><td>298.15 K</td></tr>
+              <tr><td>Empirical coefficient (A1)</td><td>10</td></tr>
+              <tr><td>Temp.-shift coefficient (A3)</td><td>51.6</td></tr>
+              <tr><td>Inlet temperature</td><td>323 K</td></tr>
+              <tr><td>Inlet velocity</td><td>25.0 mm/s</td></tr>
+              <tr><td>Outlet pressure</td><td>101325 Pa</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION 03: VALIDATION ── -->
+    <section class="proj-section">
+      <div class="proj-section__label">
+        <span class="proj-section__num">03</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Validation</span>
+          <span class="proj-section__title">Model Validation against PEEK Data</span>
+        </div>
+      </div>
+      <div class="split split--match">
+        <div class="split__text">
+          <div class="prose">
+            <p>To verify that the governing equations, boundary conditions, and COMSOL implementation were correct before applying the model to chocolate, the chocolate material properties were replaced with PEEK plastic properties from Wang et al. PEEK is a high-performance thermoplastic commonly used in FDM simulation studies, with published velocity and temperature profiles available for direct comparison. The goal was not to match exact values, but to confirm that the model produces the correct physical behavior.</p>
+            <p>The simulated PEEK model produced a peak centerline velocity of approximately 0.88 m/s and an average outlet temperature of approximately 482 K. Wang et al. report a peak exit velocity of approximately 90 mm/s and an outlet temperature range of 400 to 500 K. Both the velocity distribution and temperature behavior were consistent with the published results. Additionally, the parabolic velocity profile across the nozzle exit, the acceleration through the converging section, and the viscosity decrease at the nozzle tip all matched the qualitative trends described in the literature. These results confirm that the model infrastructure correctly represents the intended physics, and the approach is transferable to the chocolate case.</p>
+          </div>
+        </div>
+        <div class="split__media">
+          <div class="gallery">
+            <div class="gallery__frame">
+              <div class="gallery__track" id="s3Track">
+                <div class="gallery__slide">
+                  <img class="gallery__slide-bg" src="../../assets/images/Nozzle_Validation.png" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/Nozzle_Validation.png" alt="PEEK validation: velocity and temperature contour comparison" loading="lazy" />
+                  <span class="gallery__caption">PEEK velocity and temperature contours vs. Wang et al.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION 04: SENSITIVITY ANALYSIS ── -->
+    <section class="proj-section">
+      <div class="proj-section__label">
+        <span class="proj-section__num">04</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Results</span>
+          <span class="proj-section__title">Sensitivity Analysis</span>
+        </div>
+      </div>
+
+      <div class="split split--match">
+        <div class="split__text">
+          <div class="prose">
+            <p>With the model validated, a systematic sensitivity analysis was run to evaluate the effect of nozzle geometry on outlet temperature and peak velocity. Nozzle diameter was varied from 0.8 mm to 1.6 mm in 0.2 mm increments. Nozzle length was varied from 8 mm to 16 mm in 2 mm increments. All other parameters, including inlet temperature, inlet velocity, and wall boundary conditions, were held constant at the Cocoa Press baseline operating conditions.</p>
+            <p>Outlet temperature showed minimal sensitivity to both diameter and length. The thermal behavior is dominated by the inlet temperature and wall boundary conditions rather than the nozzle geometry. Larger diameters produced a slight increase in outlet temperature, consistent with a larger fluid volume being more resistant to cooling at the same wall boundary, however the magnitude of the effect was small. Length had no discernible effect on outlet temperature within the range tested.</p>
+            <p>Peak velocity showed strong sensitivity to nozzle length but weak sensitivity to diameter. Longer nozzles produced lower peak velocities as the flow had more distance to develop and viscous resistance accumulated. Beyond approximately 12 to 14 mm, peak velocity leveled off, indicating that the flow had reached a fully developed state. These results confirm that nozzle geometry meaningfully influences flow behavior but does not provide sufficient thermal control to bring outlet temperature into the tempering window of approximately 306 K. Geometry alone is not a viable path to in-nozzle tempering under current operating conditions.</p>
+          </div>
+        </div>
+        <div class="split__media">
+          <div class="gallery">
+            <button class="gallery__arrow gallery__arrow--prev" id="s4Prev" aria-label="Previous image">
+              <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="gallery__arrow gallery__arrow--next" id="s4Next" aria-label="Next image">
+              <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+            <div class="gallery__frame">
+              <div class="gallery__track" id="s4Track">
+                <div class="gallery__slide">
+                  <img class="gallery__slide-bg" src="../../assets/images/Nozzle_Sense_1.png" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/Nozzle_Sense_1.png" alt="Outlet temperature sensitivity to nozzle diameter and length" loading="lazy" />
+                  <span class="gallery__caption">Average outlet temperature vs. diameter and length variation</span>
+                </div>
+                <div class="gallery__slide">
+                  <img class="gallery__slide-bg" src="../../assets/images/Nozzle_Sense_2.png" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/Nozzle_Sense_2.png" alt="Peak velocity sensitivity to nozzle diameter and length" loading="lazy" />
+                  <span class="gallery__caption">Peak velocity vs. diameter and length variation</span>
+                </div>
+              </div>
+            </div>
+            <div class="gallery__dots" id="s4Dots"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-stats result-stats--row">
+        <div class="result-stats__item">
+          <div class="result-stats__num result-stats__num--accent">318 K</div>
+          <div class="result-stats__label">Simulated outlet temp. (baseline)</div>
+        </div>
+        <div class="result-stats__item">
+          <div class="result-stats__num">306 K</div>
+          <div class="result-stats__label">Target tempering temperature</div>
+        </div>
+        <div class="result-stats__item">
+          <div class="result-stats__num">25</div>
+          <div class="result-stats__label">COMSOL configurations simulated</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CLOSE ── -->
+    <section class="proj-section proj-close" style="border-radius: 12px; padding: var(--space-12) var(--space-8);">
+      <div class="proj-section__label" style="border-bottom-color: rgba(26,32,51,0.08);">
+        <span class="proj-section__num">05</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Conclusions</span>
+          <span class="proj-section__title">Findings and Design Recommendations</span>
+        </div>
+      </div>
+      <div class="prose">
+        <p>The primary finding is that the Cocoa Press 1 does not achieve chocolate tempering through its nozzle geometry. Across all tested configurations, outlet temperatures remained near 318 to 322 K, well above the tempering window of approximately 306 K. Variation in nozzle diameter and length within the practical range did not meaningfully alter this result. The thermal behavior is dominated by the inlet temperature and wall boundary conditions, not by the nozzle geometry itself.</p>
+        <p>Two recommendations follow directly from the analysis. First, active cooling applied to the exterior of the nozzle, particularly near the die exit, would provide a direct mechanism for reducing outlet temperature and potentially bringing it into the tempering range. Second, upstream tempering prior to loading the chocolate into the cartridge remains the most reliable approach for achieving proper crystal structure, which appears to be the implicit assumption behind the current Cocoa Press design. The nozzle in its current form primarily functions as a flow control mechanism, not a thermal regulation mechanism.</p>
+        <p>The validated model is documented and available as a reference baseline for future nozzle design work. Extensions of this analysis could include active cooling simulations, time-dependent startup behavior, or material substitution to evaluate alternative chocolate formulations with different rheological profiles.</p>
+      </div>
+    </section>
+
+    <!-- ── DOCUMENTS ── -->
+    <section class="proj-section doc-section">
+      <p class="doc-section__label">Project Documents</p>
+      <div class="doc-grid">
+        <a class="doc-card" href="../../assets/docs/Nozzle_Final_Report.pdf" target="_blank" rel="noopener">Final Report <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      </div>
+    </section>
   </div>
+
   <footer class="footer">
     <div class="container footer__inner">
       <span>&copy; 2026 Andrew J. D'Onofrio</span>
@@ -34,6 +678,44 @@
       </div>
     </div>
   </footer>
+
   <script src="../../js/main.js"></script>
+  <script>
+    function initSlider(trackId, dotsId, prevId, nextId, slideSel, dotClass) {
+      const track = document.getElementById(trackId);
+      const dotsWrap = document.getElementById(dotsId);
+      const prevBtn = document.getElementById(prevId);
+      const nextBtn = document.getElementById(nextId);
+      if (!track || !dotsWrap) return;
+      const slides = track.querySelectorAll(slideSel);
+      const count = slides.length;
+      slides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = dotClass + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', 'Go to image ' + (i + 1));
+        dot.addEventListener('click', () => goTo(i));
+        dotsWrap.appendChild(dot);
+      });
+      const dots = dotsWrap.querySelectorAll('.' + dotClass);
+      function currentIndex() { return Math.round(track.scrollLeft / track.clientWidth); }
+      function goTo(i) {
+        const clamped = ((i % count) + count) % count;
+        track.scrollTo({ left: track.clientWidth * clamped, behavior: 'smooth' });
+      }
+      track.addEventListener('scroll', () => {
+        const index = currentIndex();
+        dots.forEach((d, i) => d.classList.toggle('active', i === index));
+      });
+      if (prevBtn) prevBtn.addEventListener('click', () => goTo(currentIndex() - 1));
+      if (nextBtn) nextBtn.addEventListener('click', () => goTo(currentIndex() + 1));
+    }
+
+    initSlider('heroTrack', 'heroDots', 'heroPrev', 'heroNext', '.hero-gallery__slide', 'hero-gallery__dot');
+    initSlider('s4Track',   's4Dots',   's4Prev',   's4Next',   '.gallery__slide', 'gallery__dot');
+
+    function toggleMenu() {
+      document.getElementById('navLinks').classList.toggle('open');
+    }
+  </script>
 </body>
 </html>
