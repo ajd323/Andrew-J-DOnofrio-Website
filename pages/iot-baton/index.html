@@ -469,27 +469,22 @@
             <div class="hero-gallery__slide">
               <img class="hero-gallery__slide-bg" src="../../assets/images/Baton_Visual_1.png" alt="" aria-hidden="true" />
               <img src="../../assets/images/Baton_Visual_1.png" alt="IoT Baton final prototype, the Finalist" />
-              <span class="hero-gallery__caption">Final prototype: the Finalist</span>
+              <span class="hero-gallery__caption">Final prototype (the Finalist) at Seneca 7 Race</span>
+            </div>
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/Baton_Render_1.png" alt="" aria-hidden="true" />
+              <img src="../../assets/images/Baton_Render_1.png" alt="IoT Baton CAD drawings and form factor rendering" />
+              <span class="hero-gallery__caption">Portable gateway with custom baton</span>
             </div>
             <div class="hero-gallery__slide">
               <img class="hero-gallery__slide-bg" src="../../assets/images/Baton_Visual_2.png" alt="" aria-hidden="true" />
               <img src="../../assets/images/Baton_Visual_2.png" alt="IoT Baton, alternate view" />
-              <span class="hero-gallery__caption">Ergonomic grips and carabiner loop</span>
+              <span class="hero-gallery__caption">Final prototype (the Finalist) at Bell Sherman 5k Run</span>
             </div>
             <div class="hero-gallery__slide">
               <img class="hero-gallery__slide-bg" src="../../assets/images/Baton_Drawings.png" alt="" aria-hidden="true" />
               <img src="../../assets/images/Baton_Drawings.png" alt="IoT Baton CAD drawings and form factor rendering" />
-              <span class="hero-gallery__caption">Form factor rendering, with Red Newt Racing branding</span>
-            </div>
-            <div class="hero-gallery__slide">
-              <img class="hero-gallery__slide-bg" src="../../assets/images/Baton_Test_1.png" alt="" aria-hidden="true" />
-              <img src="../../assets/images/Baton_Test_1.png" alt="Field testing the baton near Seneca Lake" />
-              <span class="hero-gallery__caption">Field testing near Seneca Lake</span>
-            </div>
-            <div class="hero-gallery__slide">
-              <img class="hero-gallery__slide-bg" src="../../assets/images/Baton_Workflow.png" alt="" aria-hidden="true" />
-              <img src="../../assets/images/Baton_Workflow.png" alt="System block diagram: baton to TTN to Streamlit UI" />
-              <span class="hero-gallery__caption">System architecture: baton, TTN, and live UI</span>
+              <span class="hero-gallery__caption">Engineering Drawing of the Finalist</span>
             </div>
           </div>
         </div>
@@ -536,18 +531,27 @@
 
     <!-- ── BACKGROUND ── -->
     <section class="proj-section">
-      <div class="split split--match">
+      <div class="split">
         <div class="split__text">
           <p class="split__eyebrow">The Problem</p>
           <div class="prose">
-            <p>Seneca 7 is organized by Red Newt Racing and the Finger Lakes Running Club, an annual 77.7-mile relay around Seneca Lake that draws over 2,000 participants from 16+ states across 300+ teams, and raises roughly $20,000 per edition for 20+ local non-profits. The race currently uses a slap bracelet as the baton: no real-time location data, no per-runner performance metrics, no automated handoff detection. That puts a real operational burden on the 200+ volunteers staffing the course and leaves participants without the data modern endurance events routinely provide.</p>
-            <p>The actual engineering problem is connectivity, not tracking. Cellular coverage along the lake, especially the eastern shore through Yates and Schuyler counties and the western shore between Watkins Glen and Dresden, is inconsistent enough that a standard cellular GPS device would simply fail in those zones. RFID was explicitly ruled out by race staff after past dead-zone failures in the gorge sections. That left LoRaWAN: a low-power wide-area protocol that can transmit 10 to 16 km in rural line-of-sight conditions with no cellular infrastructure at all.</p>
-            <p>I built the tracker against that constraint: a reusable baton that logs GPS position, detects handoffs via an integrated button, and streams live data to a custom web interface, working entirely over a private LoRaWAN network the team stood up specifically for this race.</p>
+            <p>The Seneca 7 is a 77.7-mile relay race organized by Red Newt Racing and the Finger Lakes Running Club that circles Seneca Lake, drawing over 2,000 participants from 16+ states across 300+ competing teams annually. The race raises approximately $20,000 per edition for 20+ local non-profit organizations. The existing setup uses a slap bracelet as the baton, which provides no real-time location data, no per-runner performance metrics, and no automated handoff detection. This creates a significant operational burden for volunteers and limits the race data available to participants and staff.</p>
+            <p>The core engineering challenge is connectivity. Cellular coverage along the lake, particularly on the eastern shore through Yates and Schuyler counties and the western shore between Watkins Glen and Dresden, is inconsistent. A standard cellular GPS device would fail in these zones. RFID was explicitly excluded by race staff based on past dead-zone failures in the gorge sections along the course. LoRaWAN was selected as the communication protocol given its ability to transmit data up to 10 to 16 km in rural line-of-sight conditions without cellular infrastructure.</p>
+            <p>The project objective was to design, fabricate, and deploy a reusable IoT baton that tracks GPS position at 30-second intervals, detects handoffs via an integrated push-button, and streams live data to race officials and runners through a custom web interface, operating entirely over a private LoRaWAN network.</p>
           </div>
         </div>
         <div class="split__media">
-          <img src="../../assets/images/Baton_Test_2.png" alt="Field testing the IoT baton tracker" loading="lazy" />
-          <p class="split__caption">Field testing near Seneca Lake, where cellular coverage drops out along significant stretches of the course</p>
+          <div class="gallery">
+            <div class="gallery__frame">
+              <div class="gallery__track" id="psTrack">
+                <div class="gallery__slide">
+                  <img class="gallery__slide-bg" src="../../assets/images/Baton_Gateway_Map.png" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/Baton_Gateway_Map.png" alt="Gateway coverage and race route map around Seneca Lake" loading="lazy" />
+                  <span class="gallery__caption">Race route and gateway coverage, with dead zones at high elevation</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -564,13 +568,34 @@
       <div class="split">
         <div class="split__text">
           <div class="prose">
-            <p>I evaluated three gateway concepts before settling on the final architecture. A satellite uplink would have worked regardless of geography, but the terrain around Seneca Lake has dense tree cover that breaks satellite line-of-sight, and the cost and latency weren't justified for this timeline. A fixed high-elevation gateway, sited in Dundee for its elevation advantage over the course, was the second option, but I couldn't secure a deployment site from a property owner in time.</p>
-            <p>The architecture that actually shipped is a mobile gateway: a MultiTech MTCDT-L4N1 LoRa gateway, powered by a 99.9 Wh portable power station, riding in a support vehicle that trails the race field. That solved the elevation and siting problem at once, the gateway just stays close to whichever runner is currently carrying the baton, with a car-outlet inverter as backup power for unlimited runtime. Each baton broadcasts a unique ID, GPS coordinates, and button state to The Things Network every 30 seconds; the gateway picks it up and forwards it into the same pipeline regardless of where on the course it is.</p>
+            <p>Three gateway configurations were explored before selecting the final approach. A satellite uplink would provide coverage regardless of geography, however the dense tree cover around Seneca Lake breaks satellite line-of-sight, and the cost and latency were not practical for this project. A fixed high-elevation gateway in Dundee was the second option, given the city's elevation advantage over the race route, however a deployment site could not be secured from a willing property owner within the project timeline.</p>
+            <p>The selected approach is a mobile gateway: a MultiTech MTCDT-L4N1 LoRa gateway powered by a 99.9 Wh JIYHF P100 portable power station, deployed in a support vehicle that follows the race field. This configuration maintains consistent proximity to the baton throughout the race and eliminates the siting problem. A PowerDrive PWD120 car-outlet inverter provides backup power for extended runtime when a vehicle is available. Each baton transmits a unique ID, GPS coordinates, and button state to The Things Network every 30 seconds, and the gateway forwards the data into the processing pipeline regardless of where on the course the baton is located.</p>
           </div>
         </div>
         <div class="split__media">
-          <img src="../../assets/images/Baton_Workflow.png" alt="System block diagram: baton hardware, TTN network layer, and Streamlit backend" loading="lazy" />
-          <p class="split__caption">Three-layer system: baton hardware, TTN network transmission, and the Streamlit backend</p>
+          <div class="gallery">
+            <button class="gallery__arrow gallery__arrow--prev" id="swPrev" aria-label="Previous image">
+              <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="gallery__arrow gallery__arrow--next" id="swNext" aria-label="Next image">
+              <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+            <div class="gallery__frame">
+              <div class="gallery__track" id="swTrack">
+                <div class="gallery__slide">
+                  <img class="gallery__slide-bg" src="../../assets/images/Baton_Workflow_1.png" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/Baton_Workflow_1.png" alt="System block diagram: baton hardware, TTN network layer, and Streamlit backend" loading="lazy" />
+                  <span class="gallery__caption">System block diagram (baton hardware, TTN network layer, and Streamlit backend)</span>
+                </div>
+                <div class="gallery__slide">
+                  <img class="gallery__slide-bg" src="../../assets/images/Baton_Package.png" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/Baton_Package.png" alt="Streamlit Racer Dashboard" loading="lazy" />
+                  <span class="gallery__caption">Streamlit Racer Dashboard</span>
+                </div>
+              </div>
+            </div>
+            <div class="gallery__dots" id="swDots"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -590,17 +615,17 @@
           <div class="timeline__row">
             <div class="timeline__item">
               <div class="timeline__dot">Minion</div>
-              <h3 class="timeline__ver">First Fixture</h3>
+              <h3 class="timeline__ver">First Fixture (V1)</h3>
               <p class="timeline__desc">The first 3D-printed alpha prototype, named for its blue-and-yellow color scheme. A larger casing with room for the battery, the Feather M0 board, antenna, and the rest of the electronics. Confirmed basic TTN connectivity and GPS acquisition before anything else was optimized.</p>
             </div>
             <div class="timeline__item">
               <div class="timeline__dot">Newt</div>
-              <h3 class="timeline__ver">Reliability Pass</h3>
+              <h3 class="timeline__ver">Reliability Pass (V2)</h3>
               <p class="timeline__desc">Swapped the GPS module for a NEO-M8 over TX/RX, added heat shrink inside the button for reliability, and slimmed the casing. Split into two parallel designs, V2a for fixturing reliability and V2b for ergonomics, after a design contradiction between the two goals forced a real tradeoff decision.</p>
             </div>
             <div class="timeline__item">
               <div class="timeline__dot">Finalist</div>
-              <h3 class="timeline__ver">Race-Ready</h3>
+              <h3 class="timeline__ver">Race-Ready (V3)</h3>
               <p class="timeline__desc">The first fully usable electromechanical design: ergonomic grips, a carabiner loop, weather-protected access ports, and a woven rear strap, all printed in matte PLA. This is the version used for all verification testing, the Seneca 7 race, and the Belle Sherman 5K.</p>
             </div>
           </div>
@@ -608,7 +633,7 @@
       </div>
 
       <div class="prose" style="margin-top: var(--space-6);">
-        <p>The V2a/V2b split is the real engineering story here. V2a prioritized high-reliability fixturing for the button and Feather board; V2b prioritized ergonomics and got the outer diameter down to about 1.5 inches based on direct user testing. Those two goals genuinely fought each other in CAD, which is exactly why I built both as separate models rather than trying to force a compromise blind. The Finalist is what came out of a design review across both: keep the reliable fixturing from V2a, keep the ergonomic target from V2b, and add the weatherproofing and strap mounting the user study said the device actually needed.</p>
+        <p>The V2a/V2b split reflected a direct design contradiction. V2a was optimized for reliable fixturing of the button and Feather board. V2b was optimized for ergonomics and brought the outer diameter down to approximately 1.5 inches based on user testing feedback. Both objectives were valid but could not be fully satisfied by a single design, which is why two separate models were developed in parallel. A design review across both produced the Finalist: reliable fixturing from V2a, the ergonomic form factor from V2b, and the addition of weather-protected ports and a multi-configuration strap system informed by the user study results.</p>
       </div>
 
       <div class="hw-layout">
@@ -624,22 +649,22 @@
               <div class="gallery__slide">
                 <img class="gallery__slide-bg" src="../../assets/images/Baton_V1_Comps.png" alt="" aria-hidden="true" />
                 <img src="../../assets/images/Baton_V1_Comps.png" alt="The Minion: internal component layout, V1" loading="lazy" />
-                <span class="gallery__caption">The Minion: internal component layout</span>
+                <span class="gallery__caption">The Minion (V1): internal component layout</span>
               </div>
               <div class="gallery__slide">
                 <img class="gallery__slide-bg" src="../../assets/images/Baton_V2_Comps.png" alt="" aria-hidden="true" />
                 <img src="../../assets/images/Baton_V2_Comps.png" alt="The Newt: revised internal fixturing, V2" loading="lazy" />
-                <span class="gallery__caption">The Newt: revised internal fixturing</span>
+                <span class="gallery__caption">The Finalist (V3): internal fixturing</span>
+              </div>
+              <div class="gallery__slide">
+                <img class="gallery__slide-bg" src="../../assets/images/Baton_Electronics.png" alt="" aria-hidden="true" />
+                <img src="../../assets/images/Baton_Electronics.png" alt="The Finalist V3 electronics" loading="lazy" />
+                <span class="gallery__caption">The Finalist (V3): electronics</span>
               </div>
               <div class="gallery__slide">
                 <img class="gallery__slide-bg" src="../../assets/images/Baton_Drawings.png" alt="" aria-hidden="true" />
                 <img src="../../assets/images/Baton_Drawings.png" alt="CAD drawings and form factor rendering" loading="lazy" />
-                <span class="gallery__caption">Form factor CAD, with Red Newt Racing branding</span>
-              </div>
-              <div class="gallery__slide">
-                <img class="gallery__slide-bg" src="../../assets/images/Baton_Visual_1.png" alt="" aria-hidden="true" />
-                <img src="../../assets/images/Baton_Visual_1.png" alt="The Finalist: final assembled prototype" loading="lazy" />
-                <span class="gallery__caption">The Finalist: final assembled prototype</span>
+                <span class="gallery__caption">The Finalist (V3): engineering drawing</span>
               </div>
             </div>
           </div>
@@ -665,48 +690,99 @@
     <section class="proj-section">
       <div class="software-box">
         <div class="split split--reverse">
-          <div class="split__media split__media--wide">
-            <img src="../../assets/images/Baton_Electronics.png" alt="Baton internal electronics and Feather M0 wiring" loading="lazy" />
-            <p class="split__caption">Internal electronics: Feather M0, GPS module, and LoRaWAN radio</p>
+          <div class="split__media">
+            <div class="gallery">
+              <button class="gallery__arrow gallery__arrow--prev" id="uiPrev" aria-label="Previous image">
+                <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <button class="gallery__arrow gallery__arrow--next" id="uiNext" aria-label="Next image">
+                <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+              <div class="gallery__frame">
+                <div class="gallery__track" id="uiTrack">
+                  <div class="gallery__slide">
+                    <img class="gallery__slide-bg" src="../../assets/images/Baton_UI.png" alt="" aria-hidden="true" />
+                    <img src="../../assets/images/Baton_UI.png" alt="Baton internal electronics and Feather M0 wiring" loading="lazy" />
+                    <span class="gallery__caption">Streamlit UI on Desktop</span>
+                  </div>
+                  <div class="gallery__slide">
+                    <img class="gallery__slide-bg" src="../../assets/images/Baton_Workflow.png" alt="" aria-hidden="true" />
+                    <img src="../../assets/images/Baton_Workflow.png" alt="Live Streamlit tracking interface showing GPS map and runner statistics" loading="lazy" />
+                    <span class="gallery__caption">Live Streamlit UI Components</span>
+                  </div>
+                </div>
+              </div>
+              <div class="gallery__dots" id="uiDots"></div>
+            </div>
           </div>
           <div class="split__text">
             <p class="split__eyebrow">Software</p>
             <div class="prose">
-              <p>I built both halves of the software stack. Onboard the Feather M0, firmware reads the GPS module and button state and packages a unique baton ID, latitude, longitude, and handoff status into a LoRaWAN packet sent to TTN every 30 seconds, with basic encryption on the payload given the scale of the data involved. On the backend, I built a Streamlit application with a custom MQTT listener that authenticates against the TTN console and decodes incoming packets in a standard Python script, rendering a live map and per-runner statistics in the browser, desktop or mobile, with caching so anyone with the link can see both historic and live data.</p>
-              <p>The interface has two controls at the top: Clear All, to reset the session, and Export All, to pull the full historic dataset as a CSV for post-race analysis. Keeping the architecture this minimal was deliberate, every layer between the baton and the browser is a place data can get delayed or dropped, and 30-second freshness only matters if the rest of the pipeline doesn't introduce its own lag.</p>
+              <p>The software stack has two components. Onboard the Feather M0, firmware reads the GPS module and button state and packages a unique baton ID, latitude, longitude, and handoff status into a LoRaWAN packet transmitted to TTN every 30 seconds. Basic encryption is applied to the payload given the scale of the data involved. On the backend, I built a Streamlit application hosted on GitHub with a custom MQTT listener that authenticates against the TTN console, decodes incoming packets using a Python script, and renders a live map and per-runner statistics accessible from desktop and mobile browsers. The app uses caching to store transmitted data, so anyone with the link can view both live updates and historical records.</p>
+              <p>The interface includes two controls at the top: Clear All to reset the session data, and Export All to download the full dataset as a CSV for post-race analysis. The architecture was kept intentionally minimal to limit streaming delays. Every layer between the baton and the browser is a potential point of delay or data loss, and the 30-second transmit interval is only meaningful if the rest of the pipeline does not introduce additional lag.</p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ── USER RESEARCH ── -->
-    <section class="proj-section">
-      <div class="proj-section__label">
-        <span class="proj-section__num">03</span>
-        <div class="proj-section__title-wrap">
-          <span class="proj-section__eyebrow">Background</span>
-          <span class="proj-section__title">User Research</span>
-        </div>
-      </div>
-      <div class="prose">
-        <p>Before locking the Finalist form factor, I ran a user study with 45 runners (25 female, 20 male) targeting exactly the question that mattered for design: how do distance runners actually carry things on their body. 65% said they don't carry items in their pockets while running, which immediately ruled out a pocket-only design as the primary form factor. 47% said they hold their phone during a run, evidence that runners will tolerate gripping a handheld object, which supported keeping a grippable baton on the table instead of forcing a fully hands-free design.</p>
-        <p>The third question, how runners prefer to strap things to their body, came back split: waist packs led at 42%, followed by arm straps at 20%, back-mounted at 19%, and pocket carry at 15%. No single method dominated, which is the finding that actually drove the design decision: instead of optimizing the Finalist for one mounting style, I built it with a multi-configuration attachment system, a carabiner loop, a woven strap, and a slim enough profile to be gripped by hand, so it would work across whatever a given runner already uses. I paid particular attention to female athletes, who made up the majority of the study sample and generally have less built-in storage in standard running apparel, a constraint that's easy to miss if you only design around your own habits.</p>
-      </div>
-    </section>
-
     <!-- ── FIELD TESTING ── -->
     <section class="proj-section">
       <div class="proj-section__label">
-        <span class="proj-section__num">04</span>
+        <span class="proj-section__num">03</span>
         <div class="proj-section__title-wrap">
           <span class="proj-section__eyebrow">Testing</span>
           <span class="proj-section__title">Field Testing</span>
         </div>
       </div>
-      <div class="prose" style="margin-bottom: var(--space-6);">
-        <p>I ran verification in three stages. First, campus runs: pressing the handoff button every few minutes while watching the Streamlit UI update live, confirming the basic data pipeline end to end before trusting it anywhere else. Second, a field deployment near Seneca Lake with the mobile gateway running from the support vehicle, which confirmed the gateway could connect to the baton but didn't yet establish a clean range curve, the signal was strong but I hadn't isolated exactly how far the baton could be from the gateway and stay connected.</p>
-        <p>The Belle Sherman 5K closed that gap. With fewer trees and less elevation change than the lake course, it was a cleaner environment to isolate the variable that mattered: distance. With a stationary gateway, only two data points were successfully received over TTN for the full run, which led directly to the key technical finding of the project, the baton and gateway only communicate reliably within about 600 feet of each other. I ran the resulting signal data through MATLAB to characterize received signal strength as a function of baton-to-gateway distance, which is now the baseline range data any future enclosure redesign needs to beat.</p>
+
+      <div class="split split--match">
+        <div class="split__text">
+          <div class="prose">
+            <p>Verification testing ran in three stages. The first stage was campus runs with the Finalist baton, pressing the handoff button at regular intervals while monitoring the Streamlit UI in real time to confirm the full data pipeline end to end. The second stage was a field deployment near Seneca Lake with the mobile gateway operating from the support vehicle, which confirmed gateway-to-baton connectivity but did not yet establish a clear range curve. The signal was strong in close proximity, however the maximum reliable transmission distance had not been isolated.</p>
+            <p>The Belle Sherman 5K served as the third stage and produced the key technical finding. The environment had fewer obstructions and less elevation change than the lake course, which provided a cleaner test to isolate the critical variable: distance from the gateway. With a stationary gateway, only two data points were received over TTN across the full run. This led to the primary technical observation: the baton and gateway communicate reliably only within approximately 600 feet of each other. Signal data from the run was processed in MATLAB to characterize received signal strength as a function of baton-to-gateway distance, and this now serves as the baseline for future enclosure redesigns.</p>
+          </div>
+        </div>
+        <div class="split__media">
+          <div class="gallery">
+            <button class="gallery__arrow gallery__arrow--prev" id="ftPrev" aria-label="Previous image">
+              <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="gallery__arrow gallery__arrow--next" id="ftNext" aria-label="Next image">
+              <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+            <div class="gallery__frame">
+              <div class="gallery__track" id="ftTrack">
+                <div class="gallery__slide">
+                  <img class="gallery__slide-bg" src="../../assets/images/Baton_Test_1.png" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/Baton_Test_1.png" alt="Running with the Finalist baton during field testing" loading="lazy" />
+                  <span class="gallery__caption">Minion Testing at Cornell University</span>
+                </div>
+                <div class="gallery__slide">
+                  <img class="gallery__slide-bg" src="../../assets/images/Baton_Belle_1.png" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/Baton_Belle_1.png" alt="Mobile gateway deployed in support vehicle during field testing" loading="lazy" />
+                  <span class="gallery__caption">Belle Sherman 5k testing on Streamlit UI</span>
+                </div>
+                <div class="gallery__slide">
+                  <img class="gallery__slide-bg" src="../../assets/images/Baton_Belle_2.png" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/Baton_Belle_2.png" alt="Mobile gateway deployed in support vehicle during field testing" loading="lazy" />
+                  <span class="gallery__caption">Belle Sherman 5k testing post-processed</span>
+                </div>
+                <div class="gallery__slide">
+                  <img class="gallery__slide-bg" src="../../assets/images/Baton_Visual_2.png" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/Baton_Visual_2.png" alt="Finalist baton showing woven strap and ergonomic grips" loading="lazy" />
+                  <span class="gallery__caption">Running with finalist (V3) baton at the 5k Belle Sherman </span>
+                </div>
+                <div class="gallery__slide">
+                  <img class="gallery__slide-bg" src="../../assets/images/Baton_Visual_1.png" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/Baton_Visual_1.png" alt="Finalist baton showing woven strap and ergonomic grips" loading="lazy" />
+                  <span class="gallery__caption">Final prototype (the Finalist) at Seneca 7 Race</span>
+                </div>
+              </div>
+            </div>
+            <div class="gallery__dots" id="ftDots"></div>
+          </div>
+        </div>
       </div>
 
       <div class="result-stats result-stats--row">
@@ -728,16 +804,16 @@
     <!-- ── CLOSE ── -->
     <section class="proj-section proj-close" style="border-radius: 12px; padding: var(--space-12) var(--space-8);">
       <div class="proj-section__label" style="border-bottom-color: rgba(26,32,51,0.08);">
-        <span class="proj-section__num">05</span>
+        <span class="proj-section__num">04</span>
         <div class="proj-section__title-wrap">
           <span class="proj-section__eyebrow">Impact</span>
           <span class="proj-section__title">Beyond the Prototype</span>
         </div>
       </div>
       <div class="prose">
-        <p>The Finalist enclosure has a real, known limitation: the compact V3 redesign measurably degraded antenna performance to get the ergonomic profile down to 1.5 inches, a tradeoff I made deliberately but flagged clearly for whoever picks this up next. The next enclosure revision needs dedicated antenna clearance, or an external stub antenna through a sealed port, before the range numbers can improve. Full-course gateway range wasn't completed in this cycle either, and the current enclosure hasn't been tested against a formal IP ingress standard, both real gaps, not oversights I'm glossing over.</p>
-        <p>Only one Finalist unit exists. Race-scale deployment means roughly 300 simultaneous transmitting batons sharing TTN gateway bandwidth, which is a fundamentally different engineering problem than the single-device testing I was able to run, packet collision rates and duty-cycle compliance at that scale are untested. I documented all of this explicitly in the final report specifically so the next team doesn't have to rediscover it: a batch of 10+ units for load testing, a systematic RSSI survey of the full 77.7-mile course, and a move from PLA to PETG or ABS for UV and impact resistance across multiple race seasons are the next priorities, in that order.</p>
-        <p>What I'm proudest of here isn't any single component, it's that the full pipeline, GPS acquisition, LoRaWAN transmission, TTN routing, MQTT decoding, and live display, worked end to end, verified across three different real-world environments, for a race that genuinely had no working alternative before this.</p>
+        <p>The most significant limitation of the current prototype is the degradation of LoRaWAN transmission range caused by antenna compression within the V3 enclosure. Compacting the design to reach the 1.5-inch ergonomic target reduced antenna clearance and measurably reduced effective range. The next enclosure iteration should allocate dedicated clearance volume for the antenna or evaluate an external stub antenna routed through a sealed port. Additionally, the current enclosure has not been tested against any formal ingress standard. Given the outdoor race environment and exposure to rain and sweat, a minimum IP54 rating is recommended for future iterations.</p>
+        <p>Only one Finalist unit was produced in this development cycle. Race-scale deployment requires one baton per competing team, meaning approximately 300 devices transmitting simultaneously over shared TTN gateway bandwidth. Packet collision rates, duty-cycle compliance, and gateway throughput at that scale are untested. A batch of at least 10 units should be fabricated and tested concurrently to characterize network behavior under realistic load. A systematic LoRaWAN signal survey of the full 77.7-mile course is also needed to identify coverage gaps before race deployment. Transitioning the enclosure material from PLA to PETG or ABS would also improve UV and impact resistance across multiple race seasons.</p>
+        <p>The complete data pipeline from GPS acquisition through LoRaWAN transmission, TTN routing, MQTT decoding, and live display was verified end to end across three real-world test environments. That is the foundation the next development cycle can build on.</p>
       </div>
     </section>
 
@@ -798,7 +874,10 @@
     }
 
     initSlider('heroTrack', 'heroDots', 'heroPrev', 'heroNext', '.hero-gallery__slide', 'hero-gallery__dot');
-    initSlider('hwTrack', 'hwDots', 'hwPrev', 'hwNext', '.gallery__slide', 'gallery__dot');
+    initSlider('hwTrack',   'hwDots',   'hwPrev',   'hwNext',   '.gallery__slide', 'gallery__dot');
+    initSlider('swTrack',   'swDots',   'swPrev',   'swNext',   '.gallery__slide', 'gallery__dot');
+    initSlider('uiTrack',   'uiDots',   'uiPrev',   'uiNext',   '.gallery__slide', 'gallery__dot');
+    initSlider('ftTrack',   'ftDots',   'ftPrev',   'ftNext',   '.gallery__slide', 'gallery__dot');
 
     function toggleMenu() {
       document.getElementById('navLinks').classList.toggle('open');
