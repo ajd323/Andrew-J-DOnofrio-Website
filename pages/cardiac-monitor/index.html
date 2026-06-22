@@ -52,19 +52,6 @@
       color: var(--clr-ink);
       margin-bottom: var(--space-6);
     }
-    .proj-hero__affil {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: var(--space-3);
-      font-size: var(--text-xs);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--clr-accent);
-      margin-bottom: var(--space-6);
-      font-weight: 600;
-      opacity: 0.55;
-    }
     .proj-hero__lead {
       font-size: var(--text-lg);
       font-weight: 300;
@@ -495,7 +482,6 @@
         <a href="../projects/" style="color:inherit; opacity:0.7;">&larr; Back to Projects</a>
       </p>
       <h1>Carotid Artery Cardiac Output Monitor</h1>
-      <p class="proj-hero__affil">Orthopaedic Bioengineering Reserach Lab 4340 &nbsp;·&nbsp; Stony Brook University &nbsp;·&nbsp; 2-person Team</p>
       <p class="proj-hero__lead">I developed the electrical and mechanical systems for a wearable continuous cardiac output monitor, combining Doppler ultrasound and arterial applanation tonometry on a single neck-worn device, with FEA-validated pressure estimation under <strong>5% error</strong>.</p>
 
       <div class="hero-gallery">
@@ -565,9 +551,9 @@
       <div class="so-panel__col">
         <p class="label">Outcomes</p>
         <ul>
-          <li>Developed Arduino-based electrical control systems through KiCAD, schematics and 2-layer PCBs, for ultrasound and pressure sensors.</li>
-          <li>Iterated 3 mechanical prototypes with 50+ PLA components in Fusion360 to fixture ultrasound and pressure sensors and provide adjustment modularity.</li>
-          <li>Formulated carotid artery FEA in ANSYS for applanation tonometry to estimate arterial deformation and pressure with &lt;5% error.</li>
+          <li><strong>Developed Arduino-based electrical control systems</strong> through KiCAD schematics and a 2-layer PCB for both ultrasound and pressure sensors.</li>
+          <li><strong>Iterated 3 mechanical prototype generations</strong> with 50+ PLA components in Fusion360 to fixture sensors and provide modular adjustment across neck sizes.</li>
+          <li><strong>Formulated carotid artery FEA in ANSYS</strong> for applanation tonometry to estimate arterial deformation and pressure with &lt;5% error.</li>
         </ul>
       </div>
     </div>
@@ -660,6 +646,11 @@
           <div class="gallery__frame">
             <div class="gallery__track" id="hwTrack">
               <div class="gallery__slide">
+                <img class="gallery__slide-bg" src="../../assets/images/CACOM_Render_1.webp" alt="" aria-hidden="true" />
+                <img src="../../assets/images/CACOM_Render_1.webp" alt="CACOM design rendering, V1.0 initial form factor" loading="lazy" />
+                <span class="gallery__caption">V1.0 rendering: initial form factor concept</span>
+              </div>
+              <div class="gallery__slide">
                 <img class="gallery__slide-bg" src="../../assets/images/CACOM_Render_V2.png" alt="" aria-hidden="true" />
                 <img src="../../assets/images/CACOM_Render_V2.png" alt="CACOM design rendering, V2.0 working prototype" loading="lazy" />
                 <span class="gallery__caption">V2.0 rendering: working prototype</span>
@@ -673,11 +664,6 @@
                 <img class="gallery__slide-bg" src="../../assets/images/CACOM_Sensor_1.webp" alt="" aria-hidden="true" />
                 <img src="../../assets/images/CACOM_Sensor_1.webp" alt="CACOM sensor fixture detail" loading="lazy" />
                 <span class="gallery__caption">Sensor fixture: ultrasound and pressure sensor mounting</span>
-              </div>
-              <div class="gallery__slide">
-                <img class="gallery__slide-bg" src="../../assets/images/CACOM_Title_2.webp" alt="" aria-hidden="true" />
-                <img src="../../assets/images/CACOM_Title_2.webp" alt="CACOM full assembled device" loading="lazy" />
-                <span class="gallery__caption">V3.0: full assembled device</span>
               </div>
             </div>
           </div>
@@ -747,11 +733,11 @@
                   <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </a>
                 <a class="inline-doc" href="../../assets/docs/CACOM_Schem_V2.1.pdf" target="_blank" rel="noopener">
-                  Schematic V2.1
+                  Schematic V2 (Front)
                   <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </a>
                 <a class="inline-doc" href="../../assets/docs/CACOM_Schem_V2.2.pdf" target="_blank" rel="noopener">
-                  Schematic V2.2
+                  Schematic V2 (Back)
                   <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </a>
               </div>
@@ -761,25 +747,10 @@
       </div>
     </section>
 
-    <!-- ── LAB CONTEXT ── -->
-    <section class="proj-section">
-      <div class="proj-section__label">
-        <span class="proj-section__num">03</span>
-        <div class="proj-section__title-wrap">
-          <span class="proj-section__eyebrow">Background</span>
-          <span class="proj-section__title">Lab Context</span>
-        </div>
-      </div>
-      <div class="prose">
-        <p>CACOM was developed at the Orthopedic Bioengineering Research Laboratory at Stony Brook University, under Dr. Yi-Xian Qin. The project was the foundation for a feasibility study, not a finished clinical device, so the goal throughout was building enough of a working operational dataset and verification record to justify continued research investment, rather than chasing a final product immediately.</p>
-        <p>That meant prioritizing differently than a commercialization-track project would: every sensor and mechanical decision had to produce data the lab could actually use to evaluate feasibility, which is why both sensing modalities were verified independently (FEA against a physical pump rig for applanation, FFT against both a separate Python computation and a hand calculation for ultrasound) before being integrated onto one device.</p>
-      </div>
-    </section>
-
     <!-- ── VALIDATION ── -->
     <section class="proj-section">
       <div class="proj-section__label">
-        <span class="proj-section__num">04</span>
+        <span class="proj-section__num">03</span>
         <div class="proj-section__title-wrap">
           <span class="proj-section__eyebrow">Testing</span>
           <span class="proj-section__title">Validation</span>
@@ -816,7 +787,7 @@
     <!-- ── CLOSE ── -->
     <section class="proj-section proj-close" style="border-radius: 12px; padding: var(--space-12) var(--space-8);">
       <div class="proj-section__label" style="border-bottom-color: rgba(26,32,51,0.08);">
-        <span class="proj-section__num">05</span>
+        <span class="proj-section__num">04</span>
         <div class="proj-section__title-wrap">
           <span class="proj-section__eyebrow">Impact</span>
           <span class="proj-section__title">Beyond the Prototype</span>
@@ -835,8 +806,8 @@
         <a class="doc-card" href="../../assets/docs/CACOM_Final_Report.pdf" target="_blank" rel="noopener">Final Report <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
         <a class="doc-card" href="../../assets/docs/CACOM_Final_Slides.pdf" target="_blank" rel="noopener">Final Slides <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
         <a class="doc-card" href="../../assets/docs/CACOM_Schem_V1.pdf" target="_blank" rel="noopener">Schematic V1 <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-        <a class="doc-card" href="../../assets/docs/CACOM_Schem_V2.1.pdf" target="_blank" rel="noopener">Schematic V2.1 <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-        <a class="doc-card" href="../../assets/docs/CACOM_Schem_V2.2.pdf" target="_blank" rel="noopener">Schematic V2.2 <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <a class="doc-card" href="../../assets/docs/CACOM_Schem_V2.1.pdf" target="_blank" rel="noopener">Schematic V2 (Front) <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <a class="doc-card" href="../../assets/docs/CACOM_Schem_V2.2.pdf" target="_blank" rel="noopener">Schematic V2 (Back) <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
       </div>
     </section>
   </div>
