@@ -3,11 +3,198 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>iot-baton Andrew J. D'Onofrio</title>
+  <title>Blade Optimization: Andrew J. D'Onofrio</title>
+  <meta name="description" content="FEA-based wing blade weight optimization in ANSYS: 41.8% mass reduction through parametric rib, spar, and skin thickness iteration while satisfying Von Mises stress and tip deflection constraints." />
   <link rel="stylesheet" href="../../css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    .proj-hero {
+      position: relative;
+      padding: var(--space-16) var(--page-gutter) var(--space-12);
+      border-bottom: 1px solid rgba(26,32,51,0.06);
+      overflow: hidden;
+    }
+    .proj-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='56' viewBox='0 0 96 56'%3E%3Cpolygon points='24,3 48,15.5 48,40.5 24,53 0,40.5 0,15.5' fill='none' stroke='%231A2033' stroke-width='1' opacity='0.05'/%3E%3Cpolygon points='72,3 96,15.5 96,40.5 72,53 48,40.5 48,15.5' fill='none' stroke='%231A2033' stroke-width='1' opacity='0.05'/%3E%3Cpolygon points='48,-12.5 72,0 72,25 48,37.5 24,25 24,0' fill='none' stroke='%231A2033' stroke-width='1' opacity='0.05'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-position: center;
+      -webkit-mask-image: linear-gradient(to right, transparent, black 30%, black 100%);
+      mask-image: linear-gradient(to right, transparent, black 30%, black 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .proj-hero__inner { position: relative; z-index: 1; max-width: var(--max-w); margin-inline: auto; }
+    .proj-hero__eyebrow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-4);
+      font-size: var(--text-xs);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      margin-bottom: var(--space-3);
+      font-weight: 600;
+      opacity: 0.8;
+    }
+    .proj-hero__affil {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: var(--text-xs);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      margin-bottom: var(--space-6);
+      font-weight: 600;
+      opacity: 0.55;
+    }
+    .proj-hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 5.5vw, 5rem);
+      font-weight: 500;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--clr-ink);
+      margin-bottom: var(--space-6);
+    }
+    .proj-hero__lead {
+      font-size: var(--text-lg);
+      font-weight: 300;
+      color: var(--clr-ink);
+      opacity: 0.78;
+      max-width: 64ch;
+      line-height: 1.8;
+      margin-bottom: var(--space-8);
+    }
+
+    .hero-gallery { position: relative; z-index: 1; margin-top: var(--space-8); }
+    .hero-gallery__frame { position: relative; border-radius: 4px; overflow: hidden; background: var(--clr-surface); aspect-ratio: 16/8; box-shadow: 0 20px 60px rgba(26,32,51,0.12); }
+    .hero-gallery__track { display: flex; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .hero-gallery__track::-webkit-scrollbar { display: none; }
+    .hero-gallery__slide { flex: 0 0 100%; scroll-snap-align: start; position: relative; height: 100%; overflow: hidden; }
+    .hero-gallery__slide-bg { position: absolute; inset: -20px; width: calc(100% + 40px); height: calc(100% + 40px); object-fit: cover; filter: blur(24px) brightness(0.85) saturate(1.1); transform: scale(1.15); z-index: 0; }
+    .hero-gallery__slide img:not(.hero-gallery__slide-bg) { position: relative; width: 100%; height: 100%; object-fit: contain; z-index: 1; }
+    .hero-gallery__caption { position: absolute; left: 20px; bottom: 18px; font-size: 0.78rem; letter-spacing: 0.02em; color: #fff; background: rgba(26,32,51,0.55); backdrop-filter: blur(4px); padding: 6px 12px; border-radius: 3px; z-index: 2; }
+    .hero-gallery__arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border-radius: 50%; background: rgba(245,240,232,0.92); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2; transition: background 0.15s; }
+    .hero-gallery__arrow:hover { background: #fff; }
+    .hero-gallery__arrow svg { width: 16px; height: 16px; stroke: var(--clr-ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .hero-gallery__arrow--prev { left: 16px; }
+    .hero-gallery__arrow--next { right: 16px; }
+    .hero-gallery__dots { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
+    .hero-gallery__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--clr-rule); border: none; padding: 0; cursor: pointer; transition: all 0.15s; }
+    .hero-gallery__dot.active { background: var(--clr-accent); transform: scale(1.3); }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-8); }
+
+    .so-panel { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); margin-top: var(--space-8); }
+    .so-panel__col { background: var(--clr-surface); border-radius: 12px; padding: var(--space-6); }
+    .so-panel__col p.label { font-size: var(--text-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--clr-accent); font-weight: 600; margin-bottom: var(--space-3); }
+    .so-panel__col ul { list-style: none; display: flex; flex-direction: column; gap: var(--space-3); }
+    .so-panel__col ul li { font-size: var(--text-sm); color: var(--clr-ink-muted); line-height: 1.6; padding-left: var(--space-4); position: relative; }
+    .so-panel__col ul li::before { content: ''; position: absolute; left: 0; top: 0.6em; width: 5px; height: 5px; border-radius: 50%; background: var(--clr-accent); }
+    .so-panel__col ul li strong { color: var(--clr-ink); font-weight: 600; }
+
+    .proj-section { max-width: var(--max-w); margin-inline: auto; padding-block: var(--space-8); }
+    .proj-section__label { display: flex; align-items: baseline; gap: 2rem; margin-bottom: var(--space-6); padding-bottom: var(--space-4); border-bottom: 1px solid rgba(26,32,51,0.1); }
+    .proj-section__num { font-family: var(--font-serif); font-size: clamp(3rem, 5vw, 4.5rem); font-weight: 400; color: var(--clr-accent); opacity: 0.5; line-height: 1; letter-spacing: -0.03em; flex-shrink: 0; user-select: none; }
+    .proj-section__title-wrap { display: flex; flex-direction: column; justify-content: center; }
+    .proj-section__eyebrow { font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--clr-accent); font-weight: 600; opacity: 0.9; margin-bottom: 0.3rem; }
+    .proj-section__title { font-family: var(--font-serif); font-size: clamp(1.6rem, 2.5vw, 2.2rem); font-weight: 500; letter-spacing: -0.02em; color: var(--clr-ink); line-height: 1.1; }
+
+    .prose { max-width: none; }
+    .prose p { font-size: var(--text-base); line-height: 1.8; color: var(--clr-ink-muted); margin-bottom: 1.25rem; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose strong { color: var(--clr-ink); font-weight: 600; }
+
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); align-items: start; }
+    .split--reverse .split__text { order: 2; }
+    .split--reverse .split__media { order: 1; }
+    .split--match { align-items: stretch; }
+    .split--match .split__media { display: flex; flex-direction: column; }
+    .split__media img { border-radius: 4px; width: 100%; object-fit: cover; box-shadow: 0 12px 32px rgba(26,32,51,0.1); }
+    .split--match .split__media img { flex: 1; min-height: 280px; max-height: 560px; height: 100%; }
+    .split__caption { font-size: var(--text-xs); color: var(--clr-ink-muted); margin-top: var(--space-3); }
+    .split__eyebrow { font-size: var(--text-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--clr-accent); font-weight: 600; margin-bottom: var(--space-3); }
+
+    .gallery { position: relative; }
+    .gallery__frame { position: relative; border-radius: 4px; overflow: hidden; background: var(--clr-surface); aspect-ratio: 4/3; }
+    .gallery__track { display: flex; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .gallery__track::-webkit-scrollbar { display: none; }
+    .gallery__slide { flex: 0 0 100%; scroll-snap-align: start; position: relative; height: 100%; overflow: hidden; }
+    .gallery__slide-bg { position: absolute; inset: -20px; width: calc(100% + 40px); height: calc(100% + 40px); object-fit: cover; filter: blur(20px) brightness(0.85) saturate(1.1); transform: scale(1.15); z-index: 0; }
+    .gallery__slide img:not(.gallery__slide-bg) { position: relative; width: 100%; height: 100%; object-fit: contain; display: block; z-index: 1; }
+    .gallery__caption { position: absolute; left: 16px; bottom: 14px; font-size: 0.74rem; letter-spacing: 0.02em; color: #fff; background: rgba(26,32,51,0.55); backdrop-filter: blur(4px); padding: 5px 10px; border-radius: 3px; z-index: 2; }
+    .gallery__arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; border-radius: 50%; background: rgba(245,240,232,0.92); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2; transition: background 0.15s; }
+    .gallery__arrow:hover { background: #fff; }
+    .gallery__arrow svg { width: 14px; height: 14px; stroke: var(--clr-ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .gallery__arrow--prev { left: 12px; }
+    .gallery__arrow--next { right: 12px; }
+    .gallery__dots { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
+    .gallery__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--clr-rule); border: none; padding: 0; cursor: pointer; transition: all 0.15s; }
+    .gallery__dot.active { background: var(--clr-accent); transform: scale(1.3); }
+
+    .software-box { background: var(--clr-surface); border-radius: 10px; padding: var(--space-8); box-shadow: inset 0 0 0 1px rgba(26,32,51,0.04); }
+    .software-box .split { gap: var(--space-8); }
+
+    .result-stats { display: flex; flex-direction: column; gap: var(--space-4); }
+    .result-stats__item { padding-bottom: var(--space-4); border-bottom: 1px solid var(--clr-rule); }
+    .result-stats__item:last-child { border-bottom: none; padding-bottom: 0; }
+    .result-stats__num { font-family: var(--font-serif); font-size: clamp(1.8rem, 3vw, 2.3rem); font-weight: 500; line-height: 1; color: var(--clr-ink); }
+    .result-stats__num--accent { color: var(--clr-accent); }
+    .result-stats__label { font-size: var(--text-xs); letter-spacing: 0.04em; text-transform: uppercase; color: var(--clr-ink-muted); margin-top: var(--space-2); }
+    .result-stats--row { flex-direction: row; justify-content: center; text-align: center; margin-top: var(--space-8); padding-top: var(--space-8); border-top: 1px solid var(--clr-rule); gap: var(--space-8); }
+    .result-stats--row .result-stats__item { padding-bottom: 0; border-bottom: none; padding-right: var(--space-8); border-right: 1px solid var(--clr-rule); }
+    .result-stats--row .result-stats__item:last-child { border-right: none; padding-right: 0; }
+
+    .spec-table { width: 100%; border-collapse: collapse; }
+    .spec-table tr { border-bottom: 1px solid var(--clr-rule); }
+    .spec-table tr:last-child { border-bottom: none; }
+    .spec-table td { padding: var(--space-3) 0; vertical-align: top; font-size: 0.92rem; }
+    .spec-table td:first-child { font-size: var(--text-sm); color: var(--clr-ink-muted); width: 55%; padding-right: var(--space-4); font-weight: 500; }
+    .spec-table td:last-child { color: var(--clr-ink); font-weight: 500; }
+
+    .design-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); margin-top: var(--space-6); }
+    .design-card { background: var(--clr-bg); border: 1px solid var(--clr-rule); border-radius: 8px; padding: var(--space-5); }
+    .design-card__label { font-size: var(--text-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--clr-accent); font-weight: 600; margin-bottom: var(--space-2); }
+    .design-card__title { font-family: var(--font-serif); font-size: 1.1rem; font-weight: 500; color: var(--clr-ink); margin-bottom: var(--space-3); }
+    .design-card p { font-size: 0.88rem; color: var(--clr-ink-muted); line-height: 1.6; margin: 0; }
+    .design-card__weight { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 500; color: var(--clr-ink); margin-top: var(--space-3); }
+    .design-card--best { border-color: var(--clr-accent); background: var(--clr-surface); }
+    .design-card--best .design-card__label { opacity: 1; }
+
+    .doc-section { padding-top: var(--space-12); }
+    .doc-section__label { font-size: var(--text-xs); letter-spacing: 0.16em; text-transform: uppercase; color: var(--clr-ink-muted); font-weight: 600; margin-bottom: var(--space-6); padding-bottom: var(--space-4); border-bottom: 1px solid var(--clr-rule); }
+    .doc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--clr-rule); border: 1px solid var(--clr-rule); border-radius: 4px; overflow: hidden; }
+    .doc-card { background: var(--clr-bg); padding: 1.25rem var(--space-6); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); font-size: 0.9rem; font-weight: 500; color: var(--clr-ink); transition: background 0.15s, color 0.15s; }
+    .doc-card:hover { background: var(--clr-surface); color: var(--clr-accent); }
+    .doc-card svg { width: 14px; height: 14px; stroke: var(--clr-accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+    .proj-close { background: var(--clr-surface); }
+
+    @media (max-width: 900px) {
+      .so-panel { grid-template-columns: 1fr; gap: var(--space-4); }
+      .split { grid-template-columns: 1fr; gap: var(--space-6); }
+      .split--reverse .split__text, .split--reverse .split__media { order: unset; }
+      .design-grid { grid-template-columns: 1fr; }
+      .doc-grid { grid-template-columns: 1fr; }
+      .result-stats--row { flex-direction: column; gap: var(--space-4); }
+      .result-stats--row .result-stats__item { padding-right: 0; border-right: none; padding-bottom: var(--space-4); border-bottom: 1px solid var(--clr-rule); }
+      .result-stats--row .result-stats__item:last-child { padding-bottom: 0; border-bottom: none; }
+    }
+    @media (max-width: 600px) {
+      .proj-hero { padding: var(--space-12) var(--page-gutter) var(--space-8); }
+      .proj-hero h1 { font-size: clamp(2.2rem, 9vw, 3rem); }
+      .proj-section { padding-block: var(--space-8); }
+      .proj-section__num { font-size: clamp(2.2rem, 9vw, 3rem); }
+    }
+  </style>
 </head>
 <body>
   <nav class="nav" id="nav">
@@ -20,11 +207,288 @@
       <li><a href="../resume-cv/">Resume / CV</a></li>
     </ul>
   </nav>
-  <div class="page-header">
-    <p class="page-header__eyebrow"><a href="../projects/" style="color:var(--clr-accent)">&larr; Back to Projects</a></p>
-    <h1>Full case study coming soon</h1>
-    <p style="margin-top:1rem;color:var(--clr-ink-muted);font-size:1.1rem;">This page is in progress. Check back shortly.</p>
+
+  <!-- ── PROJECT HERO ── -->
+  <header class="proj-hero">
+    <div class="proj-hero__inner">
+      <p class="proj-hero__eyebrow">
+        <a href="../projects/" style="color:inherit; opacity:0.7;">&larr; Back to Projects</a>
+      </p>
+      <p class="proj-hero__affil">MAE 4700 &nbsp;·&nbsp; Cornell University &nbsp;·&nbsp; with Chris Sawicki</p>
+      <h1>Wing Blade Weight Optimization via FEA</h1>
+      <p class="proj-hero__lead">I led the problem framing, mathematical modeling, mesh refinement strategy, and design comparison computations for an FEA-based parametric optimization of a NACA 0012 wing blade in ANSYS, achieving a 41.8% weight reduction while satisfying all stress and deflection constraints.</p>
+
+      <div class="hero-gallery">
+        <button class="hero-gallery__arrow hero-gallery__arrow--prev" id="heroPrev" aria-label="Previous image">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="hero-gallery__arrow hero-gallery__arrow--next" id="heroNext" aria-label="Next image">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <div class="hero-gallery__frame">
+          <div class="hero-gallery__track" id="heroTrack">
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/Blade_Title_1.png" alt="" aria-hidden="true" />
+              <img src="../../assets/images/Blade_Title_1.png" alt="ANSYS deformation and stress output for the optimized wing blade" />
+              <span class="hero-gallery__caption">ANSYS deformation and Von Mises stress for the optimized design</span>
+            </div>
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/Blade_Ideal_1.png" alt="" aria-hidden="true" />
+              <img src="../../assets/images/Blade_Ideal_1.png" alt="Final recommended wing blade design with 15 ribs and 2 spars" />
+              <span class="hero-gallery__caption">Final design: 15 ribs, 2 spars (Design 4D)</span>
+            </div>
+            <div class="hero-gallery__slide">
+              <img class="hero-gallery__slide-bg" src="../../assets/images/Blade_Dim.png" alt="" aria-hidden="true" />
+              <img src="../../assets/images/Blade_Dim.png" alt="Wing blade geometry and dimensional parameters" />
+              <span class="hero-gallery__caption">Blade geometry and parametric design variables</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-gallery__dots" id="heroDots"></div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag">ANSYS Mechanical</span>
+        <span class="tag">Finite Element Analysis</span>
+        <span class="tag">Thin Shell Theory</span>
+        <span class="tag">Parametric Optimization</span>
+        <span class="tag">Structural Analysis</span>
+        <span class="tag">Mesh Refinement</span>
+        <span class="tag">Von Mises Stress</span>
+        <span class="tag">Weight Reduction</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- ── SITUATION / OUTCOMES ── -->
+    <div class="so-panel">
+      <div class="so-panel__col">
+        <p class="label">Situation</p>
+        <ul>
+          <li>A NACA 0012 wing blade (15 m span, Aluminum 2024-T36, 13,669 kg) required weight reduction while satisfying a maximum Von Mises stress limit of 252 MPa and a maximum tip deflection of 0.375 m under aerodynamic pressure loads.</li>
+          <li>Design variables were limited to skin, spar, and rib thickness and the number and placement of ribs and spars, with all external geometry held constant.</li>
+          <li>Evaluating combinations of these parameters manually was not practical, requiring a systematic parametric sweep in ANSYS to isolate the effect of each variable.</li>
+        </ul>
+      </div>
+      <div class="so-panel__col">
+        <p class="label">Outcomes</p>
+        <ul>
+          <li>Authored the abstract, introduction, mesh refinement methodology, and mesh sensitivity analysis sections of the report.</li>
+          <li>Ran all design comparison computations across four geometric configurations and multiple sub-variants, generating the parameter sweep data used to select the final design.</li>
+          <li>Identified that increasing rib count from 2 to 15 was the primary driver of weight reduction, enabling significant thickness reduction across all components.</li>
+          <li>Final design achieved <strong>7,955 kg (41.8% reduction)</strong> with tip deflection of 0.374 m and Von Mises stress of 156.9 MPa, both within constraints at a factor of safety of 1.61.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ── BACKGROUND ── -->
+    <section class="proj-section">
+      <div class="split">
+        <div class="split__text">
+          <p class="split__eyebrow">The Problem</p>
+          <div class="prose">
+            <p>Wing blade weight reduction is a standard structural optimization problem in aerospace design, and finite element analysis is the standard tool for evaluating it. The blade analyzed here is a NACA 0012 airfoil, 15 m in span, made of Aluminum 2024-T36, subject to a lower surface pressure of 2,500 Pa and an upper surface pressure of negative 6,000 Pa representing typical aerodynamic loading. The starting design has a mass of 13,669 kg with 1 rib and 2 spars, all components at a uniform thickness of 1.0 cm.</p>
+            <p>The optimization problem has three hard constraints: maximum Von Mises stress below 252 MPa (yield strength of 378 MPa divided by a factor of safety of 1.5), maximum tip deflection below 0.375 m (2.5% of span), and no changes to the external mold line, span, aspect ratio, or outer geometry. The design variables available within those constraints are the thickness of the skin, spars, and ribs, and the number and placement of ribs and spars. The study systematically varied these inputs across four structural configurations to identify the combination that minimized total weight.</p>
+          </div>
+        </div>
+        <div class="split__media">
+          <div class="gallery">
+            <div class="gallery__frame">
+              <div class="gallery__track" id="psTrack">
+                <div class="gallery__slide">
+                  <img class="gallery__slide-bg" src="../../assets/images/Blade_Dim.png" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/Blade_Dim.png" alt="Wing blade geometry with labeled dimensional parameters" loading="lazy" />
+                  <span class="gallery__caption">NACA 0012 blade geometry and design variable definitions</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION 01: MATHEMATICAL MODEL ── -->
+    <section class="proj-section">
+      <div class="proj-section__label">
+        <span class="proj-section__num">01</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Modeling</span>
+          <span class="proj-section__title">Thin Shell Theory and Numerical Setup</span>
+        </div>
+      </div>
+      <div class="split split--reverse">
+        <div class="split__media">
+          <div class="gallery">
+            <div class="gallery__frame">
+              <div class="gallery__track" id="s1Track">
+                <div class="gallery__slide">
+                  <img class="gallery__slide-bg" src="../../assets/images/Blade_Element_Ex.png" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/Blade_Element_Ex.png" alt="4-node shell element diagram for ANSYS numerical formulation" loading="lazy" />
+                  <span class="gallery__caption">4-node shell element used in the ANSYS numerical formulation</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="split__text">
+          <div class="prose">
+            <p>The blade is modeled using Thin Shell Theory, which simplifies the 3D structure to a 2D mid-surface by removing the thickness dimension from the geometry. This is valid because the wall thickness is much smaller than the overall blade dimensions, and it is consistent across all components. The mid-surface representation eliminates thickness-direction elements from the mesh, significantly reducing the number of degrees of freedom the solver must evaluate while still capturing the dominant structural response.</p>
+            <p>The Principle of Minimum Potential Energy governs the mechanical response of the shell elements, driving ANSYS to find the deformation state that minimizes total potential energy. This is formulated analogously to a multi-element spring system, where strain energy and external work terms are summed across all discretized shell elements. Each 4-node shell element contributes 24 degrees of freedom (6 per node: 3 translational and 3 rotational), and the global stiffness matrix is assembled from the element-level stiffness contributions based on Young's modulus, Poisson's ratio, and moment of inertia.</p>
+            <p>Singularities arise at mid-surface intersections where two shell planes meet. At these locations, the effective thickness is doubled in the automatic mesh, producing artificially elevated stress concentrations. Manual and adaptive mesh refinements were applied specifically at these locations to correct this behavior.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION 02: MESH REFINEMENT ── -->
+    <section class="proj-section">
+      <div class="proj-section__label">
+        <span class="proj-section__num">02</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Mesh Strategy</span>
+          <span class="proj-section__title">Mesh Refinement and Sensitivity</span>
+        </div>
+      </div>
+      <div class="software-box">
+        <div class="split">
+          <div class="split__text">
+            <div class="prose">
+              <p>Three mesh strategies were evaluated to verify that the solution was mesh-independent before running the full parameter sweep. The automatic ANSYS mesh produced 21,013 elements and 19,834 nodes but contained singularities at mid-surface intersections where two shell planes overlap. A manual sphere-of-influence refinement targeted these locations, increasing the element count to 27,833 elements and 26,516 nodes and producing a more physically accurate stress distribution in the affected regions.</p>
+              <p>An adaptive Von Mises stress-based refinement was applied as the final step, concentrating additional elements in high-stress regions identified from the previous solution. This produced 32,754 elements and 31,620 nodes. The tip deflection converged closely across all three methods, however the Von Mises stress increased substantially from 97.1 MPa to 143.2 MPa as singularity artifacts were resolved. The adaptive mesh was used for all subsequent design comparisons, as it produced the most physically consistent stress field.</p>
+            </div>
+          </div>
+          <div>
+            <p style="font-size:var(--text-xs);letter-spacing:0.1em;text-transform:uppercase;color:var(--clr-accent);font-weight:600;margin-bottom:var(--space-4);">Mesh Comparison (Baseline Geometry)</p>
+            <table class="spec-table">
+              <tr><td>Auto mesh</td><td>21,013 elements &nbsp;·&nbsp; 97.1 MPa</td></tr>
+              <tr><td>Sphere of influence</td><td>27,833 elements &nbsp;·&nbsp; 121.9 MPa</td></tr>
+              <tr><td>Adaptive Von Mises</td><td>32,754 elements &nbsp;·&nbsp; 143.2 MPa</td></tr>
+              <tr><td>Tip deflection (all)</td><td>~0.2275 m (converged)</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION 03: DESIGN EXPLORATION ── -->
+    <section class="proj-section">
+      <div class="proj-section__label">
+        <span class="proj-section__num">03</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Parametric Study</span>
+          <span class="proj-section__title">Design Exploration</span>
+        </div>
+      </div>
+      <div class="prose" style="margin-bottom: var(--space-6);">
+        <p>Four structural configurations were evaluated, each with multiple sub-variants produced through ANSYS parametric sweeps on skin, spar, and rib thickness. Each variant was assessed against the three constraints (Von Mises stress, tip deflection, factor of safety) and the best feasible point within each configuration was identified. The parameter sweep for each design included approximately four to five candidate points, for a total of roughly 25 ANSYS simulations across the full study.</p>
+      </div>
+
+      <div class="design-grid">
+        <div class="design-card">
+          <p class="design-card__label">Design 1 &nbsp;·&nbsp; 1 Rib, 2 Spars</p>
+          <p class="design-card__title">Baseline</p>
+          <p>Starting geometry provided by course staff. Establishes the weight and structural performance reference point. All subsequent designs are evaluated relative to this baseline.</p>
+          <p class="design-card__weight">11,039 kg</p>
+        </div>
+        <div class="design-card">
+          <p class="design-card__label">Design 2 &nbsp;·&nbsp; 2 Ribs, 1 Spar</p>
+          <p class="design-card__title">Spar Reduction</p>
+          <p>Removing one spar reduced material, however the resulting stress concentration required thicker skin and ribs to compensate, producing a heavier overall assembly than the baseline.</p>
+          <p class="design-card__weight">12,345 kg</p>
+        </div>
+        <div class="design-card">
+          <p class="design-card__label">Design 3 &nbsp;·&nbsp; 2 Ribs, 2 Spars</p>
+          <p class="design-card__title">Rib Addition</p>
+          <p>Adding a second rib distributed aerodynamic load more evenly, enabling modest thickness reductions across all components. Demonstrated that more ribs enable thinner walls.</p>
+          <p class="design-card__weight">10,797 kg</p>
+        </div>
+        <div class="design-card design-card--best">
+          <p class="design-card__label">Design 4 &nbsp;·&nbsp; 15 Ribs, 2 Spars &nbsp;·&nbsp; Selected</p>
+          <p class="design-card__title">Optimized Configuration</p>
+          <p>Scaling to 15 ribs, spaced approximately every 1 m along the span, allowed significant thickness reductions throughout. Spar thickness dropped to 5.85 mm and rib thickness to 1.03 mm, approaching the structural floor for commercial aluminum sheet.</p>
+          <p class="design-card__weight">7,955 kg</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION 04: FINAL DESIGN ── -->
+    <section class="proj-section">
+      <div class="proj-section__label">
+        <span class="proj-section__num">04</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Result</span>
+          <span class="proj-section__title">Optimized Design</span>
+        </div>
+      </div>
+
+      <div class="split split--match">
+        <div class="split__text">
+          <div class="prose">
+            <p>The final design uses 15 ribs spaced approximately every 1 m along the span and 2 spars, with spar thickness of 5.85 mm, rib thickness of 1.03 mm, and skin thickness of 17.9 mm. This configuration produced a total mass of 7,955 kg, a 41.8% reduction from the 13,669 kg baseline.</p>
+            <p>All design constraints were satisfied. Maximum tip deflection reached 0.374 m, just inside the 0.375 m limit. Von Mises stress after applying the factor of safety was 156.9 MPa, below the 252 MPa allowable. The factor of safety was 1.61, above the 1.5 minimum.</p>
+            <p>The 1.03 mm rib thickness is significant because it approaches the practical manufacturing floor for structural aluminum. The nearest standard commercial sheet thicknesses are 1/32 inch (1.02 mm) and 1/16 inch (1.59 mm). A rib thinner than 1.02 mm would not correspond to any commercially available aluminum sheet gauge, which means the optimization has converged on a realistic lower bound rather than an arbitrary numerical minimum. This grounds the result in actual manufacturing constraints and supports the conclusion that further geometric reduction is not practically achievable with this material and configuration.</p>
+          </div>
+        </div>
+        <div class="split__media">
+          <div class="gallery">
+            <div class="gallery__frame">
+              <div class="gallery__track" id="s4Track">
+                <div class="gallery__slide">
+                  <img class="gallery__slide-bg" src="../../assets/images/Blade_Ideal_1.png" alt="" aria-hidden="true" />
+                  <img src="../../assets/images/Blade_Ideal_1.png" alt="ANSYS output for the final optimized wing blade design" loading="lazy" />
+                  <span class="gallery__caption">Final design (4D): deformation and stress in ANSYS</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-stats result-stats--row">
+        <div class="result-stats__item">
+          <div class="result-stats__num result-stats__num--accent">41.8%</div>
+          <div class="result-stats__label">Total weight reduction</div>
+        </div>
+        <div class="result-stats__item">
+          <div class="result-stats__num">1.61</div>
+          <div class="result-stats__label">Factor of safety (min. 1.5)</div>
+        </div>
+        <div class="result-stats__item">
+          <div class="result-stats__num">156.9 MPa</div>
+          <div class="result-stats__label">Von Mises stress (limit 252 MPa)</div>
+        </div>
+        <div class="result-stats__item">
+          <div class="result-stats__num">0.374 m</div>
+          <div class="result-stats__label">Tip deflection (limit 0.375 m)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CLOSE ── -->
+    <section class="proj-section proj-close" style="border-radius: 12px; padding: var(--space-12) var(--space-8);">
+      <div class="proj-section__label" style="border-bottom-color: rgba(26,32,51,0.08);">
+        <span class="proj-section__num">05</span>
+        <div class="proj-section__title-wrap">
+          <span class="proj-section__eyebrow">Conclusions</span>
+          <span class="proj-section__title">Findings and Future Work</span>
+        </div>
+      </div>
+      <div class="prose">
+        <p>The primary finding is that rib count is the most effective lever for weight reduction in this blade configuration. Increasing from 2 to 15 ribs distributed the aerodynamic load more evenly along the span, which reduced the structural demand on the skin and spars and allowed their thicknesses to be reduced substantially. Removing a spar, by contrast, increased stress concentration and required compensating thickness increases elsewhere, producing a net weight increase. The two-spar configuration was retained in the final design because it produced consistently lower maximum stress across all parameter variations.</p>
+        <p>Future work could extend this analysis in several directions. Testing additional rib counts beyond 15, or non-uniform rib spacing tuned to the bending moment distribution, may yield further reductions. Substituting higher strength-to-weight materials such as carbon fiber composites would allow further thickness reduction below the current aluminum sheet floor. Additionally, the current model assumes constant chord, so exploring tapered or swept planform geometries would introduce additional design freedom not available in this parameterization.</p>
+      </div>
+    </section>
+
+    <!-- ── DOCUMENTS ── -->
+    <section class="proj-section doc-section">
+      <p class="doc-section__label">Project Documents</p>
+      <div class="doc-grid">
+        <a class="doc-card" href="../../assets/docs/Blade_Final_Report.pdf" target="_blank" rel="noopener">Final Report <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      </div>
+    </section>
   </div>
+
   <footer class="footer">
     <div class="container footer__inner">
       <span>&copy; 2026 Andrew J. D'Onofrio</span>
@@ -34,6 +498,39 @@
       </div>
     </div>
   </footer>
+
   <script src="../../js/main.js"></script>
+  <script>
+    function initSlider(trackId, dotsId, prevId, nextId, slideSel, dotClass) {
+      const track = document.getElementById(trackId);
+      const dotsWrap = document.getElementById(dotsId);
+      const prevBtn = document.getElementById(prevId);
+      const nextBtn = document.getElementById(nextId);
+      if (!track || !dotsWrap) return;
+      const slides = track.querySelectorAll(slideSel);
+      const count = slides.length;
+      slides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = dotClass + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', 'Go to image ' + (i + 1));
+        dot.addEventListener('click', () => goTo(i));
+        dotsWrap.appendChild(dot);
+      });
+      const dots = dotsWrap.querySelectorAll('.' + dotClass);
+      function currentIndex() { return Math.round(track.scrollLeft / track.clientWidth); }
+      function goTo(i) {
+        const clamped = ((i % count) + count) % count;
+        track.scrollTo({ left: track.clientWidth * clamped, behavior: 'smooth' });
+      }
+      track.addEventListener('scroll', () => {
+        const index = currentIndex();
+        dots.forEach((d, i) => d.classList.toggle('active', i === index));
+      });
+      if (prevBtn) prevBtn.addEventListener('click', () => goTo(currentIndex() - 1));
+      if (nextBtn) nextBtn.addEventListener('click', () => goTo(currentIndex() + 1));
+    }
+    initSlider('heroTrack', 'heroDots', 'heroPrev', 'heroNext', '.hero-gallery__slide', 'hero-gallery__dot');
+    function toggleMenu() { document.getElementById('navLinks').classList.toggle('open'); }
+  </script>
 </body>
 </html>
